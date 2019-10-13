@@ -1,0 +1,63 @@
+<html>
+<head>
+<script type="text/javascript">
+// http://wiki.dominionstrategy.com/index.php/List_of_cards
+
+function getCards() {
+	let getCardsXhr = new XMLHttpRequest();
+	getCardsXhr.open("GET", "https://cors-anywhere.herokuapp.com/http://wiki.dominionstrategy.com/index.php/List_of_cards");
+	getCardsXhr.responseType = "document";
+	getCardsXhr.onload = (document) => {
+		let rows = document.srcElement.response.body.querySelectorAll("tr");
+		let cards = [];
+		rows.forEach((row, idx) => {
+			if(idx === 0)
+				return;
+			let cells = row.children;
+			let card = {};
+			let costSrc = cells[3] != null ? cells[3].children.length > 0 ? cells[3].children[0].children[0].src : "" : "";
+			card.name = cells[0] != null ? cells[0].textContent : "";
+			card.set = cells[1] != null ? cells[1].textContent : "";
+			card.types = cells[2] != null ? cells[2].textContent : "";
+			card.costSrc = costSrc;
+			card.cost = costSrc != null ? parseInt(costSrc[costSrc.lastIndexOf("Coin")+4], 10) : "";
+			card.text = cells[4] != null ? cells[4].textContent : "";
+			card.actions = cells[5] != null ? cells[5].textContent : "";
+			card.cards = cells[6] != null ? cells[6].textContent : "";
+			card.buys = cells[7] != null ? cells[7].textContent : "";
+			card.coins = cells[8] != null ? cells[8].textContent : "";
+			card.trash = cells[9] != null ? cells[9].textContent : "";
+			card.junk = cells[10] != null ? cells[10].textContent : "";
+			card.gain = cells[11] != null ? cells[11].textContent : "";
+			card.points = cells[12] != null ? cells[12].textContent : "";
+			cards.push(card);
+		});
+		download(JSON.stringify(cards), "DominionCards", ".json");
+	};
+	getCardsXhr.send();
+}
+
+function download(data, filename, type) {
+    var file = new Blob([data], {type: type});
+    if (window.navigator.msSaveOrOpenBlob) // IE10+
+        window.navigator.msSaveOrOpenBlob(file, filename);
+    else { // Others
+        var a = document.createElement("a"),
+                url = URL.createObjectURL(file);
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(function() {
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);  
+        }, 0); 
+    }
+}
+
+getCards();
+</script>
+</head>
+<body>
+</body>
+</html>
