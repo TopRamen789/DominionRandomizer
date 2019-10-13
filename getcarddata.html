@@ -16,23 +16,25 @@ function getCards() {
 			let cells = row.children;
 			let card = {};
 			let costSrc = cells[3] != null ? cells[3].children.length > 0 ? cells[3].children[0].children[0].src : "" : "";
-			card.name = cells[0] != null ? cells[0].textContent : "";
-			card.set = cells[1] != null ? cells[1].textContent : "";
-			card.types = cells[2] != null ? cells[2].textContent : "";
+			card.name = cells[0] != null ? cells[0].textContent.trim() : "";
+			card.set = cells[1] != null ? cells[1].textContent.trim() : "";
+			card.types = cells[2] != null ? cells[2].textContent.trim() : "";
 			card.costSrc = costSrc;
 			card.cost = costSrc != null ? parseInt(costSrc[costSrc.lastIndexOf("Coin")+4], 10) : "";
-			card.text = cells[4] != null ? cells[4].textContent : "";
-			card.actions = cells[5] != null ? cells[5].textContent : "";
-			card.cards = cells[6] != null ? cells[6].textContent : "";
-			card.buys = cells[7] != null ? cells[7].textContent : "";
-			card.coins = cells[8] != null ? cells[8].textContent : "";
-			card.trash = cells[9] != null ? cells[9].textContent : "";
-			card.junk = cells[10] != null ? cells[10].textContent : "";
-			card.gain = cells[11] != null ? cells[11].textContent : "";
-			card.points = cells[12] != null ? cells[12].textContent : "";
+			card.text = cells[4] != null ? cells[4].textContent.trim() : "";
+			card.actions = cells[5] != null ? cells[5].textContent.trim() : "";
+			card.cards = cells[6] != null ? cells[6].textContent.trim() : "";
+			card.buys = cells[7] != null ? cells[7].textContent.trim() : "";
+			card.coins = cells[8] != null ? cells[8].textContent.trim() : "";
+			card.trash = cells[9] != null ? cells[9].textContent.trim() : "";
+			card.junk = cells[10] != null ? cells[10].textContent.trim() : "";
+			card.gain = cells[11] != null ? cells[11].textContent.trim() : "";
+			card.points = cells[12] != null ? cells[12].textContent.trim() : "";
 			cards.push(card);
 		});
-		download(JSON.stringify(cards), "DominionCards", ".json");
+		let json = JSON.stringify(cards, null, "/t");
+		download(json, "DominionCards", ".json");
+		document.querySelector("#data").textContent = json;
 	};
 	getCardsXhr.send();
 }
@@ -59,5 +61,6 @@ getCards();
 </script>
 </head>
 <body>
+	<div id="data"/>
 </body>
 </html>

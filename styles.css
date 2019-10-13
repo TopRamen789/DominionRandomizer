@@ -1,0 +1,24 @@
+.flex {
+	display: flex;
+}
+
+.inputs {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end;
+}
+
+.cardList {
+	margin-left: 20px;
+	display: grid;
+	grid-template-columns: 40px 120px auto;
+	justify-items: "start";
+}
+
+.displaySets {
+	width: 260px;
+}
+
+#error {
+	color: red;
+}
