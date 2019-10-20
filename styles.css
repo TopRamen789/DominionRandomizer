@@ -22,3 +22,11 @@
 #error {
 	color: red;
 }
+
+#displayEvents {
+	display: hidden;
+}
+
+#displayProjects {
+	display: hidden;
+}
