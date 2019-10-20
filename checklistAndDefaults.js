@@ -1,32 +1,33 @@
 function buildSetChecklist() {
 	let setsList = [
-		" Base, 1E",
-		" Base, 2E",
-		" Base ",
-		" Intrigue, 2E",
-		" Intrigue, 1E",
-		" Intrigue ",
-		" Seaside ",
-		" Alchemy ",
-		" Prosperity ",
-		" Cornucopia ",
-		" Hinterlands ",
-		" Dark Ages ",
-		" Guilds ",
-		" Adventures ",
-		" Empires ",
-		" Nocturne ",
-		" Renaissance ",
-		" Promo "
+		"Base, 1E",
+		"Base, 2E",
+		"Base",
+		"Intrigue, 2E",
+		"Intrigue, 1E",
+		"Intrigue",
+		"Seaside",
+		"Alchemy",
+		"Prosperity",
+		"Cornucopia",
+		"Hinterlands",
+		"Dark Ages",
+		"Guilds",
+		"Adventures",
+		"Empires",
+		"Nocturne",
+		"Renaissance",
+		"Promo "
 	];
 
 	let ownedList = [
-		" Base, 1E",
-		" Base ",
-		" Intrigue, 2E",
-		" Intrigue ",
-		" Nocturne ",
-		" Adventures ",
+		"Base, 1E",
+		"Base",
+		"Intrigue, 2E",
+		"Intrigue",
+		"Nocturne",
+		"Adventures",
+		"Renaissance",
 	];
 
 	let setElements = document.querySelector("#sets");

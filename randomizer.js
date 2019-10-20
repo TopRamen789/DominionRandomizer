@@ -17,6 +17,13 @@ function shuffle(array) {
   return array;
 }
 
+function filterByType(cardSet, filterTypes) {
+	return cardSet.filter((card) => {
+		let types = card.types.split(" - ");
+		return !types.filter(type => filterTypes.indexOf(type) > -1).length > 0;
+	});
+}
+
 function sortByCost(cardSet) {
 	return cardSet.sort((a,b) => {
 		if(a.cost < b.cost)
@@ -91,10 +98,7 @@ function validateNocturne(cardSet) {
 		"Spirit",
 		"Zombie"
 	];
-	return cardSet.filter((card) => {
-		let types = card.types.split(" - ");
-		return !types.filter(type => nocturneTypes.indexOf(type) > -1).length > 0;
-	});
+ 	return filterByType(cardSet, nocturneTypes);
 }
 
 function validateAdventures(cardSet) {
@@ -109,6 +113,13 @@ function validateAdventures(cardSet) {
 		"Champion"
 	];
 	return cardSet.filter(card => adventuresUpgradeCards.indexOf(card.name) === -1 && card.types.indexOf("Event") === -1);
+}
+
+function validateRenaissance(cardSet) {
+	let renaissanceTypes = [
+		"Project"
+	];
+	return filterByType(cardSet, renaissanceTypes);
 }
 
 function filterNonPicks(cardSet, alreadyPicked) {
@@ -140,7 +151,9 @@ function getAvailableCards(currentCards, sets, cost) {
 	validatedCards = filterNonPicks(validatedCards, alreadyPickedCards);
 	validatedCards = validateNotBasicSet(validatedCards);
 	validatedCards = validateNocturne(validatedCards);
-	return validateAdventures(validatedCards);
+	validatedCards = validateAdventures(validatedCards);
+	validatedCards = validateRenaissance(validatedCards);
+	return validatedCards;
 }
 
 function enforceOneFromEachSet(checkedSets, currentSelection) {
@@ -215,6 +228,35 @@ function addEventCards() {
 	return randomCards;
 }
 
+
+function addEventCards(checkedSets) {
+	if(checkedSets.indexOf("Adventures") > -1 || checkedSets.indexOf("Empires") > -1) {
+		let randomCards = [];
+		let eventCardCount = document.querySelector("#eventInput").value;
+		let eventCards = cards.filter((card) => {
+			return card.types.indexOf("Event") > -1 && checkedSets.indexOf(card.set) > -1;
+		});
+		for(let i = 0; i < eventCardCount; i++)
+			randomCards.push(shuffle(eventCards).pop());
+		return randomCards;
+	}
+	return [];
+}
+
+function addProjectCards(checkedSets) {
+	if(checkedSets.indexOf("Renaissance") > -1) {
+		let randomCards = [];
+		let projectCardCount = document.querySelector("#projectInput").value;
+		let projectCards = cards.filter((card) => {
+			return card.types.indexOf("Project") > -1 && card.set.indexOf("Renaissance") > -1;
+		});
+		for(let i = 0; i < projectCardCount; i++)
+			randomCards.push(shuffle(projectCards).pop());
+		return randomCards;
+	}
+	return [];
+}
+
 function displaySelectedSets() {
 	let checkedSets = getCheckedSets();
 	let sets = cards.filter((card) => {
@@ -231,10 +273,13 @@ function randomize() {
 		return acc += val.number;
 	}, 0);
 	document.querySelector("#total").value = total;
-	const randomCards = selectCards(cardNumbers, checkedSets);
-	const eventCards = addEventCards();
+	let randomCards = selectCards(cardNumbers, checkedSets);
+	const eventCards = addEventCards(checkedSets);
+	const projectCards = addProjectCards(checkedSets);
 	if(!validateTenCardsTotal(randomCards)) {
 		return;
 	}
-	buildSelectedCardSet(randomCards.concat(eventCards));
+	randomCards = randomCards.concat(eventCards);
+	randomCards = randomCards.concat(projectCards);
+	buildSelectedCardSet(randomCards);
 }
