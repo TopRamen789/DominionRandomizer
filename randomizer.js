@@ -17,9 +17,13 @@ function shuffle(array) {
   return array;
 }
 
-function getCardsWithCostInSets(sets, cost) {
-	return cards.filter(card => card.cost).filter((card) => {
-		return card.cost === cost && sets.indexOf(card.set) !== -1;
+function sortByCost(cardSet) {
+	return cardSet.sort((a,b) => {
+		if(a.cost < b.cost)
+			return -1;
+		if(a.cost > b.cost)
+			return 1;
+		return 0;
 	});
 }
 
@@ -51,35 +55,6 @@ function getCardNumbers() {
 		return card;
 	});
 	return cardNumbers;
-}
-
-function filterByType(cardSet, filterTypes) {
-	return cardSet.filter((card) => {
-		let typesOfCardSet = card.types.split(" - ");
-		return !typesOfCardSet.filter(type => filterTypes.indexOf(type) > -1).length > 0;
-	});
-}
-
-function filterNonPicks(cardSet, alreadyPicked) {
-	return cardSet.filter(card => alreadyPicked.indexOf(card.name) === -1);
-}
-
-function filterByCost(cardSet, cost) {
-	return cardSet.filter(card => card.cost);
-}
-
-function filterBySet(cardSet, set) {
-	return cardSet.filter(card => card.set);
-}
-
-function sortByCost(cardSet) {
-	return cardSet.sort((a,b) => {
-		if(a.cost < b.cost)
-			return -1;
-		if(a.cost > b.cost)
-			return 1;
-		return 0;
-	});
 }
 
 function validateTenCardsTotal(cardSet) {
@@ -116,7 +91,10 @@ function validateNocturne(cardSet) {
 		"Spirit",
 		"Zombie"
 	];
-	return filterByType(cardSet, nocturneTypes);
+	return cardSet.filter((card) => {
+		let types = card.types.split(" - ");
+		return !types.filter(type => nocturneTypes.indexOf(type) > -1).length > 0;
+	});
 }
 
 function validateAdventures(cardSet) {
@@ -133,22 +111,14 @@ function validateAdventures(cardSet) {
 	return cardSet.filter(card => adventuresUpgradeCards.indexOf(card.name) === -1 && card.types.indexOf("Event") === -1);
 }
 
-function validateRenaissance(cardSet) {
-	let renaissanceTypes = [
-		"Project"
-	];
-	return filterByType(cardSet, renaissanceTypes);
+function filterNonPicks(cardSet, alreadyPicked) {
+	return cardSet.filter(card => alreadyPicked.indexOf(card.name) === -1);
 }
 
-function getAvailableCards(currentCards, sets, cost) {
-	let alreadyPickedCards = currentCards.filter(card => card.cost === cost).map(card => card.name);
-	let validatedCards = getCardsWithCostInSets(sets, cost);
-	validatedCards = filterNonPicks(validatedCards, alreadyPickedCards);
-	validatedCards = validateNotBasicSet(validatedCards);
-	validatedCards = validateNocturne(validatedCards);
-	validatedCards = validateAdventures(validatedCards);
-	validatedCards = validateRenaissance(validatedCards);
-	return validatedCards;
+function getCardsWithCostInSets(sets, cost) {
+	return cards.filter(card => card.cost).filter((card) => {
+		return card.cost === cost && sets.indexOf(card.set) !== -1;
+	});
 }
 
 function buildRandomSet(cardNumbers, checkedSets) {
@@ -162,6 +132,15 @@ function buildRandomSet(cardNumbers, checkedSets) {
 		}
 	});
 	return randomizedCardSet;
+}
+
+function getAvailableCards(currentCards, sets, cost) {
+	let alreadyPickedCards = currentCards.filter(card => card.cost === cost).map(card => card.name);
+	let validatedCards = getCardsWithCostInSets(sets, cost);
+	validatedCards = filterNonPicks(validatedCards, alreadyPickedCards);
+	validatedCards = validateNotBasicSet(validatedCards);
+	validatedCards = validateNocturne(validatedCards);
+	return validateAdventures(validatedCards);
 }
 
 function enforceOneFromEachSet(checkedSets, currentSelection) {
@@ -199,92 +178,22 @@ function selectCards(cardNumbers, checkedSets) {
 	return randomizedCardSet;
 }
 
-function buildCheckbox(onchange) {
-	let checkbox = document.createElement('input');
-	checkbox.type = 'checkbox';
-	checkbox.onchange = onchange;
-	return checkbox;
-}
-
-function buildCardCostControl(card) {
-	let cardCostSpan = document.createElement('span');
-	cardCostSpan.textContent = "Cost";
-	let cardCostCheckbox = buildCheckbox((evt) => {
-		if(evt.target.checked) {
-			let newOptions = filterByCost(cardOptions, card.cost);
-			combobox.options = [];
-		}
-		newOptions.forEach(option => combobox.add(option));
-	});
-	cardCostSpan.appendChild(cardCostCheckbox);
-	return cardCostSpan;
-}
-
-function buildCardSetControl(card) {
-	let cardSetSpan = document.createElement('span');
-	cardSetSpan.textContent = "Set";
-	let cardSetCheckbox = buildCheckbox((evt) => {
-		if(evt.target.checked) {
-			let newOptions = filterBySet(cardOptions, card.set);
-			combobox.options = [];
-		}
-		newOptions.forEach(option => combobox.add(option));
-	});
-	cardSetSpan.appendChild(cardSetCheckbox);
-	return cardSetSpan;
-}
-
-function buildCardTypeControl(card) {
-	let cardTypeSpan = document.createElement('span');
-	cardTypeSpan.textContent = "Type";
-	let cardTypeCheckbox = buildCheckbox((evt) => {
-		if(evt.target.checked) {
-			let newOptions = filterByType(cardOptions, card.type);
-			combobox.options = [];
-		}
-		newOptions.forEach(option => combobox.add(option));
-	});
-	cardTypeSpan.appendChild(cardTypeCheckbox);
-	return cardTypeSpan;
-}
-
-var cardOptions = [];
 function buildCardSetUI(cardSet, cardsDiv) {
-	cardOptions = cardSet.map((card) => {
-		let option = document.createElement("option");
-		option.value = card.name;
-		option.text = card.name;
-		option.cost = card.cost;
-		option.set = card.set;
-		option.type = card.type;
-		return option;
-	});
-	cardSet.forEach((card, idx) => {
+	cardSet.forEach((card) => {
 		if(card == null)
 			return;
-		let combobox = document.createElement("select");
-		cardOptions.forEach((option) => {
-			combobox.add(option);
-			if(option.name === card.name)
-				combobox.selected = option;
-		});
-
 		let img = document.createElement("img");
-		img.src = "gold/" + card.cost + ".png";
+		img.src = card.cost + ".png";
+
+		let name = document.createElement("span");
+		name.textContent = card.name;
 
 		let set = document.createElement("span");
 		set.textContent = card.set;
 
-		let costControl = buildCardCostControl(card);
-		let setControl = buildCardSetControl(card);
-		let typeControl = buildCardTypeControl(card);
-
 		cardsDiv.appendChild(img);
 		cardsDiv.appendChild(set);
-		cardsDiv.appendChild(combobox);
-		cardsDiv.appendChild(costControl);
-		cardsDiv.appendChild(setControl);
-		cardsDiv.appendChild(typeControl);
+		cardsDiv.appendChild(name);
 	});
 }
 
@@ -295,33 +204,15 @@ function buildSelectedCardSet(cardSet) {
 	buildCardSetUI(cardSet, cardsDiv);
 }
 
-// hard coded and we should get an input from the set later, change the set checked to equal the selected sets.
-function addEventCards(checkedSets) {
-	if(checkedSets.indexOf("Adventures") > -1 || checkedSets.indexOf("Empires") > -1) {
-		let randomCards = [];
-		let eventCardCount = document.querySelector("#eventInput").value;
-		let eventCards = cards.filter((card) => {
-			return card.types.indexOf("Event") > -1 && checkedSets.indexOf(card.set) > -1;
-		});
-		for(let i = 0; i < eventCardCount; i++)
-			randomCards.push(shuffle(eventCards).pop());
-		return randomCards;
-	}
-	return [];
-}
-
-function addProjectCards(checkedSets) {
-	if(checkedSets.indexOf("Renaissance") > -1) {
-		let randomCards = [];
-		let projectCardCount = document.querySelector("#projectInput").value;
-		let projectCards = cards.filter((card) => {
-			return card.types.indexOf("Project") > -1 && card.set.indexOf("Renaissance") > -1;
-		});
-		for(let i = 0; i < projectCardCount; i++)
-			randomCards.push(shuffle(projectCards).pop());
-		return randomCards;
-	}
-	return [];
+function addEventCards() {
+	let randomCards = [];
+	let eventCardCount = document.querySelector("#eventInput").value;
+	let eventCards = cards.filter((card) => {
+		return card.types.indexOf("Event") > -1 && card.set.indexOf("Adventures") > -1;
+	});
+	for(let i = 0; i < eventCardCount; i++)
+		randomCards.push(shuffle(eventCards).pop());
+	return randomCards;
 }
 
 function displaySelectedSets() {
@@ -340,13 +231,10 @@ function randomize() {
 		return acc += val.number;
 	}, 0);
 	document.querySelector("#total").value = total;
-	let randomCards = selectCards(cardNumbers, checkedSets);
-	const eventCards = addEventCards(checkedSets);
-	const projectCards = addProjectCards(checkedSets);
+	const randomCards = selectCards(cardNumbers, checkedSets);
+	const eventCards = addEventCards();
 	if(!validateTenCardsTotal(randomCards)) {
 		return;
 	}
-	randomCards = randomCards.concat(eventCards);
-	randomCards = randomCards.concat(projectCards);
-	buildSelectedCardSet(randomCards);
+	buildSelectedCardSet(randomCards.concat(eventCards));
 }
