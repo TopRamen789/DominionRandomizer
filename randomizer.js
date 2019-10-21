@@ -455,6 +455,21 @@ function setBiasedCost(biasedSet, costIdx) {
 	return biasedSet;
 }
 
+function getBiases() {
+	let biases = [];
+	// biases.push(biasDuration);
+	// biases.push(biasBuys);
+	// biases.push(biasAttack);
+	// biases.push(biasTrash);
+	biases.push(biasTavern);
+	biases.push(biasVillagers);
+	biases.push(biasCoffers);
+	biases.push(biasNight);
+	biases = shuffle(biases);
+	// biasTokens(currentSet, availableSet); // data isn't great on this one...
+	return biases;
+}
+
 function createBiasedSet(availableSet) {
 	let currentSet = [];
 	let biasedSet = [0,0,0,0,0];
@@ -475,16 +490,12 @@ function createBiasedSet(availableSet) {
 
 		// this should be biased a little differently
 		// the first one to be checked for a bias is most likely to be biased.
-		
-		// currentlyAvailableSet = biasDuration(currentSet, currentlyAvailableSet);
-		// currentlyAvailableSet = biasBuys(currentSet, currentlyAvailableSet);
-		// currentlyAvailableSet = biasAttack(currentSet, currentlyAvailableSet);
-		// currentlyAvailableSet = biasTrash(currentSet, currentlyAvailableSet);
-		currentlyAvailableSet = biasTavern(currentSet, currentlyAvailableSet);
-		currentlyAvailableSet = biasVillagers(currentSet, currentlyAvailableSet);
-		currentlyAvailableSet = biasCoffers(currentSet, currentlyAvailableSet);
-		currentlyAvailableSet = biasNight(currentSet, currentlyAvailableSet);
-		// biasTokens(currentSet, availableSet); // data isn't great on this one...
+		let biases = getBiases();
+		while(biases.length > 0) {
+			let bias = biases.pop();
+			currentlyAvailableSet = bias(currentSet, currentlyAvailableSet);
+		}
+
 		let card = currentlyAvailableSet.pop();
 		if(card != null)
 			currentSet.push(card);
@@ -492,16 +503,16 @@ function createBiasedSet(availableSet) {
 	return currentSet;
 }
 
-function enforceEngineCards(currentSet) {
-	let availableSet = [];
+function enforceEngineCards(currentSet, availableCards) {
+	let newAvailableSet = [];
 	let newSet = currentSet.slice();
 	// we might be removing some bias if we do this.
 	let newActionsCard;
 	if(filterByActionCount(newSet, 2).length === 0) {
 		newSet = shuffle(newSet);
 		newSet.pop();
-		availableSet = filterByActionCount(cards, 2);
-		newActionsCard = shuffle(availableSet).pop();
+		newAvailableSet = filterByActionCount(availableCards, 2);
+		newActionsCard = shuffle(newAvailableSet).pop();
 		newSet.push(newActionsCard);
 	}
 
@@ -516,12 +527,12 @@ function enforceEngineCards(currentSet) {
 			newActionsCard = shuffle(filterByActionCount(newSet, 2))[0];
 
 		let topCard = newSet.pop();
-		availableSet = filterByCardDraw(cards, 2);
+		newAvailableSet = filterByCardDraw(availableCards, 2);
 		
 		if(topCard.name === newActionsCard.name)
 			newSet.push(topCard);
 		else {
-			newCard = shuffle(availableSet).pop();
+			newCard = shuffle(newAvailableSet).pop();
 			newSet.push(newCard);
 		}
 		otherSafeCounter++;
@@ -538,7 +549,7 @@ function proceduralGeneration() {
 	availableSet = validateRenaissance(availableSet);
 
 	let currentSet = createBiasedSet(availableSet);
-	currentSet = enforceEngineCards(currentSet);
+	currentSet = enforceEngineCards(currentSet, availableSet);
 	// currentSet = eventsOrProjects(availableSet, currentSet);
 
 	currentSet = sortByCost(currentSet);
