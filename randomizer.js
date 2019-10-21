@@ -17,6 +17,18 @@ function shuffle(array) {
   return array;
 }
 
+function filterByCardDraw(cardSet, cardDraw) {
+	return cardSet.filter((card) => {
+		return card.cards >= cardDraw;
+	});
+}
+
+function filterByActionCount(cardSet, actionCount) {
+	return cardSet.filter((card) => {
+		return card.actions >= actionCount;
+	});
+}
+
 function filterByType(cardSet, filterTypes) {
 	return cardSet.filter((card) => {
 		let types = card.types.split(" - ");
@@ -282,4 +294,21 @@ function randomize() {
 	randomCards = randomCards.concat(eventCards);
 	randomCards = randomCards.concat(projectCards);
 	buildSelectedCardSet(randomCards);
+}
+
+// procedural generation of cardsets.
+function createBias(attribute) {
+	// ok, so we have an attribute
+	// we need to figure out what it is.
+}
+
+function proceduralGeneration() {
+	// let i = 0; do {i++;} while(i < 10);
+	// find mechanic theme from current cards
+	// find current card costs and distribute
+	// enforce engine cards
+	// at least one card with 2 cards
+	// at least one card with 2 actions
+	// filterByActions(cards, 2);
+	// filterByCards(cards, 2);
 }

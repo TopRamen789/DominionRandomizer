@@ -1,8 +1,7 @@
 function modifyCardsJson(cards) {
-	cards.forEach((card) => {
-		card.types = card.types.trim();
-		card.points = parseInt(card.points.replace(/\n+/g, '').trim(), 10);
-	});
+	// cards.forEach((card) => {
+	// 	delete card.costSrc;
+	// });
 	let json = JSON.stringify(cards, null, 4);
 	download(json, "ModifiedJson", ".js")
 }
@@ -32,19 +31,19 @@ document.querySelector('#file-input')
 
 
 function download(data, filename, type) {
-var file = new Blob([data], {type: type});
-if (window.navigator.msSaveOrOpenBlob) // IE10+
-    window.navigator.msSaveOrOpenBlob(file, filename);
-else { // Others
-    var a = document.createElement("a"),
-            url = URL.createObjectURL(file);
-    a.href = url;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    setTimeout(function() {
-        document.body.removeChild(a);
-        window.URL.revokeObjectURL(url);  
-    }, 0); 
-}
+  var file = new Blob([data], {type: type});
+  if (window.navigator.msSaveOrOpenBlob) // IE10+
+      window.navigator.msSaveOrOpenBlob(file, filename);
+  else { // Others
+      var a = document.createElement("a"),
+              url = URL.createObjectURL(file);
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(function() {
+          document.body.removeChild(a);
+          window.URL.revokeObjectURL(url);  
+      }, 0);
+  }
 }

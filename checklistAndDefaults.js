@@ -20,6 +20,7 @@ function buildSetChecklist() {
 		"Promo "
 	];
 
+	// these are sets that me/family currently own, if you're browsing this, feel free to rip this out.
 	let ownedList = [
 		"Base, 1E",
 		"Base",
@@ -38,7 +39,7 @@ function buildSetChecklist() {
 		checkbox.value = "value";
 		checkbox.name = "name";
 		checkbox.id = set;
-		checkbox.checked = ownedList.indexOf(set) > -1;
+		checkbox.checked = ownedList.indexOf(set) > -1; // don't forget this too!
 		let label = document.createElement("label");
 		label.textContent = set.trim();
 		label.htmlFor = set;

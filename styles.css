@@ -22,3 +22,19 @@
 #error {
 	color: red;
 }
+
+/*dark mode*/
+body {
+	background-color: black;
+	color: #C0C0C0;
+}
+
+button {
+	background-color: black;
+	color: #C0C0C0;
+}
+
+input {
+	background-color: black;
+	color: #C0C0C0;
+}
