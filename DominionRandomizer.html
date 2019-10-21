@@ -1,5 +1,6 @@
 <html>
 <head>
+<meta charset="utf-8"/>
 <link rel="stylesheet" href="styles.css" />
 <script type="text/javascript" src="cards.js"></script>
 <script type="text/javascript" src="randomizer.js"></script>
@@ -26,6 +27,7 @@
 				<div><span><button type="button" onClick="randomize();">Randomize</button></span></div>
 				<div><span><input id="forceSets" type="checkbox"/><label htmlFor="forceSets">Enforce at least one card from each checked set </label></div>
 				<div><span><input id="validateTenCards" type="checkbox"/><label htmlFor="validateTenCards">Enforce 10 cards</label></div>
+				<div><span><button type="button" onClick="proceduralGeneration();">Procedural Generation</button></span></div>
 				<div><span id="error" class="error" /></div>
 			</form>
 		</div>

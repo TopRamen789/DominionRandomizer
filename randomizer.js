@@ -17,6 +17,24 @@ function shuffle(array) {
   return array;
 }
 
+function filterByTavern(cardSet) {
+	return cardSet.filter((card) => {
+		return card.useTavern;
+	});
+}
+
+function filterByVillagers(cardSet) {
+	return cardSet.filter((card) => {
+		return card.useVillagers;
+	});
+}
+
+function filterByCoffers(cardSet) {
+	return cardSet.filter((card) => {
+		return card.useCoffers;
+	})
+}
+
 function filterByCardDraw(cardSet, cardDraw) {
 	return cardSet.filter((card) => {
 		return card.cards >= cardDraw;
@@ -33,6 +51,18 @@ function filterByType(cardSet, filterTypes) {
 	return cardSet.filter((card) => {
 		let types = card.types.split(" - ");
 		return !types.filter(type => filterTypes.indexOf(type) > -1).length > 0;
+	});
+}
+
+function filterByCost(cardSet, cost) {
+	return cardSet.filter((card) => {
+		return card.cost === cost;
+	});
+}
+
+function filterBySets(cardSet, sets) {
+	return cardSet.filter((card) => {
+		return sets.indexOf(card.set) > -1;
 	});
 }
 
@@ -135,7 +165,8 @@ function validateRenaissance(cardSet) {
 }
 
 function filterNonPicks(cardSet, alreadyPicked) {
-	return cardSet.filter(card => alreadyPicked.indexOf(card.name) === -1);
+	let names = alreadyPicked.map(card => card.name);
+	return cardSet.filter(card => names.indexOf(card.name) === -1);
 }
 
 function getCardsWithCostInSets(sets, cost) {
@@ -158,7 +189,7 @@ function buildRandomSet(cardNumbers, checkedSets) {
 }
 
 function getAvailableCards(currentCards, sets, cost) {
-	let alreadyPickedCards = currentCards.filter(card => card.cost === cost).map(card => card.name);
+	let alreadyPickedCards = currentCards.filter(card => card.cost === cost);
 	let validatedCards = getCardsWithCostInSets(sets, cost);
 	validatedCards = filterNonPicks(validatedCards, alreadyPickedCards);
 	validatedCards = validateNotBasicSet(validatedCards);
@@ -271,9 +302,10 @@ function addProjectCards(checkedSets) {
 
 function displaySelectedSets() {
 	let checkedSets = getCheckedSets();
-	let sets = cards.filter((card) => {
-		return checkedSets.indexOf(card.set) > -1;
-	});
+	// let sets = cards.filter((card) => {
+	// 	return checkedSets.indexOf(card.set) > -1;
+	// });
+	let sets = filterBySets(cards, checkedSets);
 	buildCardSetUI(sets, document.querySelector("#displaySets"));
 	console.log(sets.length);
 }
@@ -297,18 +329,218 @@ function randomize() {
 }
 
 // procedural generation of cardsets.
-function createBias(attribute) {
-	// ok, so we have an attribute
-	// we need to figure out what it is.
+// how could one do this?
+var _biasPercent = 0.05;
+
+function bias(uses) {
+	let bias = uses * _biasPercent;
+	return (Math.random() + bias) > 0.5;
+}
+
+function biasAttack(currentSet, availableCards) {
+	let biasedSet = availableCards.slice();
+	/* 
+	if(filterBy().length > 0) {
+		let users = filterBy(currentSet).length;
+		if(bias(uses))
+			biasedSet = filterBy(availableCards);
+	}
+	*/ 
+	return shuffle(biasedSet);
+}
+
+function biasTrash(currentSet, availableCards) {
+	let biasedSet = availableCards.slice();
+	/* 
+	if(filterBy().length > 0) {
+		let users = filterBy(currentSet).length;
+		if(bias(uses))
+			biasedSet = filterBy(availableCards);
+	}
+	*/ 
+	return shuffle(biasedSet);
+}
+
+function biasDuration(currentSet, availableCards) {
+	let biasedSet = availableCards.slice();
+	/* 
+	if(filterBy().length > 0) {
+		let users = filterBy(currentSet).length;
+		if(bias(uses))
+			biasedSet = filterBy(availableCards);
+	}
+	*/ 
+	return shuffle(biasedSet);
+}
+
+function biasBuys(currentSet, availableCards) {
+	let biasedSet = availableCards.slice();
+	/* 
+	if(filterBy().length > 0) {
+		let users = filterBy(currentSet).length;
+		if(bias(uses))
+			biasedSet = filterBy(availableCards);
+	}
+	*/ 
+	return shuffle(biasedSet);
+}
+
+function biasNight(currentSet, availableCards) {
+	let biasedSet = availableCards.slice();
+	if(filterByType(availableCards, ['Night']).length > 0) {
+		let uses = filterByType(currentSet, ['Night']).length;
+		if(bias(uses))
+			biasedSet = filterByType(availableCards, ['Night']);
+	}
+	return shuffle(biasedSet);
+}
+
+function biasTavern(currentSet, availableCards) {
+	let biasedSet = availableCards.slice();
+	if(filterByTavern(availableCards).length > 0) {
+		let uses = filterByTavern(currentSet);
+		if(bias(uses))
+			biasedSet = filterByTavern(availableCards);
+	}
+	return shuffle(biasedSet);
+}
+
+function biasVillagers(currentSet, availableCards) {
+	let biasedSet = availableCards.slice();
+	if(filterByVillagers(availableCards).length > 0) {
+		let uses = filterByVillagers(currentSet);
+		if(bias(uses))
+			biasedSet = filterByVillagers(availableCards);
+	}
+	return shuffle(biasedSet);
+}
+
+function biasCoffers(currentSet, availableCards) {
+	let biasedSet = availableCards.slice();
+	if(filterByCoffers(availableCards).length > 0) {
+		let uses = filterByCoffers(currentSet);
+		if(bias(uses))
+			biasedSet = filterByCoffers(availableCards);
+	}
+	return shuffle(biasedSet);
+}
+
+// still need to modify the data set more for this one.
+// function biasTokens(currentSet, availableCards) {
+// 	let biasedSet = availableCards.slice();
+// 	if(filterByTokens(availableCards).length > 0) {
+// 		let uses = filterByTokens(currentSet);
+// 		if(bias(uses))
+// 			biasedSet = filterByTokens(availableCards);
+// 	}
+// 	return shuffle(biasedSet);
+// }
+
+function useEvents(currentSet) {
+	// we could do a math.random here or set it based on the currentSet.
+	// let uses = filterByTavern(currentSet);
+	// if(bias(uses))
+	// bias the events?
+}
+
+function useProjects() {
+	//
+}
+
+function setBiasedCost(biasedSet, costIdx) {
+	biasedSet.forEach((cost, idx) => {
+		if(idx != costIdx)
+			cost += 2;
+	});
+	return biasedSet;
+}
+
+function createBiasedSet(availableSet) {
+	let currentSet = [];
+	let biasedSet = [0,0,0,0,0];
+	// biasCostCurve(currentSet, availableSet);
+
+	while(currentSet.length != 10) {
+		let currentlyAvailableSet = filterNonPicks(availableSet, currentSet);
+
+		// filter out cost if we manage to bias it.
+		for(let i = 0; i < biasedSet.length; i++) {
+			if(bias(biasedSet[i])) {
+				biasedSet[i] -= 2;
+				currentlyAvailableSet = filterByCost(currentlyAvailableSet, i+2);
+				biasedSet = setBiasedCost(biasedSet, i);
+				break;
+			}
+		}
+
+		// this should be biased a little differently
+		// the first one to be checked for a bias is most likely to be biased.
+		
+		// currentlyAvailableSet = biasDuration(currentSet, currentlyAvailableSet);
+		// currentlyAvailableSet = biasBuys(currentSet, currentlyAvailableSet);
+		// currentlyAvailableSet = biasAttack(currentSet, currentlyAvailableSet);
+		// currentlyAvailableSet = biasTrash(currentSet, currentlyAvailableSet);
+		currentlyAvailableSet = biasTavern(currentSet, currentlyAvailableSet);
+		currentlyAvailableSet = biasVillagers(currentSet, currentlyAvailableSet);
+		currentlyAvailableSet = biasCoffers(currentSet, currentlyAvailableSet);
+		currentlyAvailableSet = biasNight(currentSet, currentlyAvailableSet);
+		// biasTokens(currentSet, availableSet); // data isn't great on this one...
+		let card = currentlyAvailableSet.pop();
+		if(card != null)
+			currentSet.push(card);
+	}
+	return currentSet;
+}
+
+function enforceEngineCards(currentSet) {
+	let availableSet = [];
+	let newSet = currentSet.slice();
+	// we might be removing some bias if we do this.
+	let newActionsCard;
+	if(filterByActionCount(newSet, 2).length === 0) {
+		newSet = shuffle(newSet);
+		newSet.pop();
+		availableSet = filterByActionCount(cards, 2);
+		newActionsCard = shuffle(availableSet).pop();
+		newSet.push(newActionsCard);
+	}
+
+	let otherSafeCounter = 0;
+
+	// while we don't have a card that lets us draw 2 card, keep doing this.
+	while(filterByCardDraw(newSet, 2).length === 0 && otherSafeCounter !== 10) {
+		newSet = shuffle(newSet);
+
+		// make sure we don't inadverntently undo our previous action
+		if(newActionsCard == null)
+			newActionsCard = shuffle(filterByActionCount(newSet, 2))[0];
+
+		let topCard = newSet.pop();
+		availableSet = filterByCardDraw(cards, 2);
+		
+		if(topCard.name === newActionsCard.name)
+			newSet.push(topCard);
+		else {
+			newCard = shuffle(availableSet).pop();
+			newSet.push(newCard);
+		}
+		otherSafeCounter++;
+	}
+	return newSet;
 }
 
 function proceduralGeneration() {
-	// let i = 0; do {i++;} while(i < 10);
-	// find mechanic theme from current cards
-	// find current card costs and distribute
-	// enforce engine cards
-	// at least one card with 2 cards
-	// at least one card with 2 actions
-	// filterByActions(cards, 2);
-	// filterByCards(cards, 2);
+	let sets = getCheckedSets();
+	let availableSet = filterBySets(cards, sets);
+	availableSet = validateNotBasicSet(availableSet);
+	availableSet = validateNocturne(availableSet);
+	availableSet = validateAdventures(availableSet);
+	availableSet = validateRenaissance(availableSet);
+
+	let currentSet = createBiasedSet(availableSet);
+	currentSet = enforceEngineCards(currentSet);
+	// currentSet = eventsOrProjects(availableSet, currentSet);
+
+	currentSet = sortByCost(currentSet);
+	buildSelectedCardSet(currentSet);
 }
