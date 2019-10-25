@@ -76,7 +76,7 @@ function enforceEngineCards(currentSet, availableCards) {
 
 function proceduralGeneration() {
 	let sets = getCheckedSets();
-	let availableSet = filterBySets(cards, sets);
+	let availableSet = filterBySets(_cards, sets);
 	availableSet = validateNotBasicSet(availableSet);
 	availableSet = validateNocturne(availableSet);
 	availableSet = validateAdventures(availableSet);
@@ -88,7 +88,6 @@ function proceduralGeneration() {
 
 	currentSet = sortByCost(currentSet);
 	displayBiasData(currentSet);
-	displayCardPercentages(currentSet);
 	buildSelectedCardSet(currentSet);
 }
 

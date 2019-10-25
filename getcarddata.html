@@ -1,5 +1,6 @@
 <html>
 <head>
+<script type="text/javascript" src="genericutils.js"></script>
 <script type="text/javascript">
 // http://wiki.dominionstrategy.com/index.php/List_of_cards
 
@@ -37,24 +38,6 @@ function getCards() {
 		document.querySelector("#data").textContent = json;
 	};
 	getCardsXhr.send();
-}
-
-function download(data, filename, type) {
-    var file = new Blob([data], {type: type});
-    if (window.navigator.msSaveOrOpenBlob) // IE10+
-        window.navigator.msSaveOrOpenBlob(file, filename);
-    else { // Others
-        var a = document.createElement("a"),
-                url = URL.createObjectURL(file);
-        a.href = url;
-        a.download = filename;
-        document.body.appendChild(a);
-        a.click();
-        setTimeout(function() {
-            document.body.removeChild(a);
-            window.URL.revokeObjectURL(url);  
-        }, 0); 
-    }
 }
 
 getCards();

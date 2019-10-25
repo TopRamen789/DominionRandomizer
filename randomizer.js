@@ -84,60 +84,11 @@ function selectCards(cardNumbers, checkedSets) {
 	return randomizedCardSet;
 }
 
-function buildHeader(cardsDiv) {
-	let cost = span("Cost");
-	let set = span("Set");
-	let name = span("Name");
-	let type = span("Type");
-
-	cardsDiv.appendChild(cost);
-	cardsDiv.appendChild(set);
-	cardsDiv.appendChild(name);
-	cardsDiv.appendChild(type);
-}
-
-function buildCardSetUI(cardSet, cardsDiv) {
-	let header = buildHeader(cardsDiv);
-	cardSet.forEach((card) => {
-		if(card == null)
-			return;
-		let image = img();
-		image.src = card.cost + ".png";
-
-		let name = span(card.name);
-		let set = span(card.set);
-		let type = span(card.types);
-
-		cardsDiv.appendChild(image);
-		cardsDiv.appendChild(set);
-		cardsDiv.appendChild(name);
-		cardsDiv.appendChild(type);
-	});
-}
-
-function buildSelectedCardSet(cardSet) {
-	let cardsDiv = document.querySelector("#randomizedCards");
-	disposeChildren(cardsDiv);
-	buildCardSetUI(cardSet, cardsDiv);
-}
-
-function addEventCards() {
-	let randomCards = [];
-	let eventCardCount = document.querySelector("#eventInput").value;
-	let eventCards = cards.filter((card) => {
-		return card.types.includes("Event") && card.set.includes("Adventures");
-	});
-	for(let i = 0; i < eventCardCount; i++)
-		randomCards.push(shuffle(eventCards).pop());
-	return randomCards;
-}
-
-
 function addEventCards(checkedSets) {
 	if(checkedSets.includes("Adventures") || checkedSets.includes("Empires")) {
 		let randomCards = [];
 		let eventCardCount = document.querySelector("#eventInput").value;
-		let eventCards = cards.filter((card) => {
+		let eventCards = _cards.filter((card) => {
 			return card.types.includes("Event") && checkedSets.includes(card.set);
 		});
 		for(let i = 0; i < eventCardCount; i++)
@@ -151,7 +102,7 @@ function addProjectCards(checkedSets) {
 	if(checkedSets.includes("Renaissance")) {
 		let randomCards = [];
 		let projectCardCount = document.querySelector("#projectInput").value;
-		let projectCards = cards.filter((card) => {
+		let projectCards = _cards.filter((card) => {
 			return card.types.includes("Project") && card.set.includes("Renaissance");
 		});
 		for(let i = 0; i < projectCardCount; i++)
@@ -182,5 +133,6 @@ function randomize() {
 	}
 	randomCards = randomCards.concat(eventCards);
 	randomCards = randomCards.concat(projectCards);
+	clearBiasData();
 	buildSelectedCardSet(randomCards);
 }

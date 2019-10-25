@@ -125,7 +125,60 @@ function getDistinctCardTypes(cardSet) {
 }
 
 function getCardsWithCostInSets(sets, cost) {
-	return cards.filter(card => card.cost).filter((card) => {
+	return _cards.filter(card => card.cost).filter((card) => {
 		return card.cost === cost && sets.includes(card.set);
 	});
+}
+
+function getSelectedCards(selectedCards) {
+	return _cards.filter((card) => {
+		return selectedCards.includes(card.name);
+	});
+}
+
+function buildHeader(cardsDiv) {
+	let cost = span("Cost");
+	let set = span("Set");
+	let name = span("Name");
+	let type = span("Type");
+
+	cardsDiv.appendChild(cost);
+	cardsDiv.appendChild(set);
+	cardsDiv.appendChild(name);
+	cardsDiv.appendChild(type);
+}
+
+function buildCardSetUI(cardSet, cardsDiv) {
+	let header = buildHeader(cardsDiv);
+	cardSet.forEach((card) => {
+		if(card == null)
+			return;
+		let image = img();
+		image.src = `gold/${card.cost}.png`;
+
+		let name = span(card.name);
+		let set = span(card.set);
+		let type = span(card.types);
+
+		cardsDiv.appendChild(image);
+		cardsDiv.appendChild(set);
+		cardsDiv.appendChild(name);
+		cardsDiv.appendChild(type);
+	});
+}
+
+function buildRandomizedCardSetUI(cardSet) {
+	let cardsDiv = document.querySelector("#randomizedCards");
+	buildCardSetUI(cardSet, cardsDiv);
+}
+
+function clearCardData() {
+	let cardsDiv = document.querySelector("#randomizedCards");
+	disposeChildren(cardsDiv);
+}
+
+function buildSelectedCardSet(cardSet) {
+	clearCardData();
+	displayCardPercentages(cardSet);
+	buildRandomizedCardSetUI(cardSet);
 }

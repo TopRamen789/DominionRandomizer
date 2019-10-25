@@ -40,6 +40,10 @@
 	border-color: white;
 }
 
+.load-set {
+	content: 'Load Set';
+}
+
 #error {
 	color: red;
 }

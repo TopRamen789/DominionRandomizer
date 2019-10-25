@@ -25,10 +25,14 @@
 		<div id="displaySets" class="cardList displaySets"></div>
 		-also dislabed, related to above-
 		-->
-		<div style="margin-left: 20px;">
-			<div>
+		<div style="margin-left: 20px; width: 480px;">
+			<div style="display: flex; justify-content: end;">
 				<span><input id="hideControlsCheckbox" type="checkbox" onClick="hideControls();" checked />Hide Controls</span>
 				<span><button type="button" onClick="proceduralGeneration();">Procedural Generation</button></span>
+			</div>
+			<div style="display: flex; margin-top: 4px; margin-bottom: 4px; justify-content: end;">
+				<button type="button" onClick="saveCardSet();">Save Set</button>
+				<input id="loadFile" class="load-set" style="margin-left: 6px;" type="file" onchange="loadCardSet();" />
 			</div>
 			<form id="controls" class="inputs" style="display: none;">
  				<div id="displayEvents"><span>(Adventures/Empires) Number of event cards:<input id="eventInput" type="text"/></span></div>
@@ -56,7 +60,7 @@
 			<div id="cardData" class="dataList"></div>
 		</div>
 	</div>
-	<div>
+	<div style="display: none;">
 		<input type="file" id="file-input" />
 		<h3>Contents of the file:</h3>
 		<pre id="file-content"></pre>

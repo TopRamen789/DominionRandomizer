@@ -1,4 +1,4 @@
-var cards = [
+var _cards = [
     {
         "name": "Cellar",
         "set": "Base",
