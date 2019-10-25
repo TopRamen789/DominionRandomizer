@@ -1,101 +1,20 @@
-function shuffle(array) {
-  var currentIndex = array.length, temporaryValue, randomIndex;
-
-  // While there remain elements to shuffle...
-  while (0 !== currentIndex) {
-
-    // Pick a remaining element...
-    randomIndex = Math.floor(Math.random() * currentIndex);
-    currentIndex -= 1;
-
-    // And swap it with the current element.
-    temporaryValue = array[currentIndex];
-    array[currentIndex] = array[randomIndex];
-    array[randomIndex] = temporaryValue;
-  }
-
-  return array;
-}
-
-function filterByTavern(cardSet) {
-	return cardSet.filter((card) => {
-		return card.useTavern;
-	});
-}
-
-function filterByVillagers(cardSet) {
-	return cardSet.filter((card) => {
-		return card.useVillagers;
-	});
-}
-
-function filterByCoffers(cardSet) {
-	return cardSet.filter((card) => {
-		return card.useCoffers;
-	})
-}
-
-function filterByCardDraw(cardSet, cardDraw) {
-	return cardSet.filter((card) => {
-		return card.cards >= cardDraw;
-	});
-}
-
-function filterByActionCount(cardSet, actionCount) {
-	return cardSet.filter((card) => {
-		return card.actions >= actionCount;
-	});
-}
-
-function filterByType(cardSet, filterTypes) {
-	return cardSet.filter((card) => {
-		let types = card.types.split(" - ");
-		return !types.filter(type => filterTypes.indexOf(type) > -1).length > 0;
-	});
-}
-
-function filterByCost(cardSet, cost) {
-	return cardSet.filter((card) => {
-		return card.cost === cost;
-	});
-}
-
-function filterBySets(cardSet, sets) {
-	return cardSet.filter((card) => {
-		return sets.indexOf(card.set) > -1;
-	});
-}
-
-function sortByCost(cardSet) {
-	return cardSet.sort((a,b) => {
-		if(a.cost < b.cost)
-			return -1;
-		if(a.cost > b.cost)
-			return 1;
-		return 0;
-	});
-}
-
-function getDistinctArrayValues(array) {
-	return array.filter((value, index, self) => {
-		return self.indexOf(value) === index;
-	});
-}
-
 function getCheckedSets() {
 	let inputs = [].slice.call(document.querySelectorAll("input"));
 	let selectedCheckboxes = inputs.filter((input) => {
-		return input.type === "checkbox" && input.checked && input.id !== "forceSets" && input.id !== "validateTenCards";
+		return input.type === "checkbox" && input.checked 
+			&& input.id !== "forceSets" 
+			&& input.id !== "validateTenCards"
+			&& input.id !== "hideControlsCheckbox";
 	}).map((input) => {
 		return [].find.call(input.parentNode.children, child => child.tagName.toLowerCase() === "label").textContent;
 	});
 	return selectedCheckboxes;
 }
 
-function getCardNumbers() {
+function getCardNumberInputs() {
 	let inputs = [].slice.call(document.querySelectorAll("input"));
 	let cardNumbers = inputs.filter((input) => {
-		return !isNaN(parseInt(input.attributes["id"].value[0], 10)) && input.attributes["id"].value.indexOf("cost") > 0;
+		return !isNaN(parseInt(input.attributes["id"].value[0], 10)) && input.attributes["id"].value.includes("cost");
 	}).map((input) => {
 		let card = {
 			number: parseInt(input.value, 10),
@@ -106,76 +25,7 @@ function getCardNumbers() {
 	return cardNumbers;
 }
 
-function validateTenCardsTotal(cardSet) {
-	let inputIsChecked = document.querySelector("#validateTenCards").checked;
-	if(!inputIsChecked)
-		return true;
-	
-	let total = cardSet.length;
-	let isExactlyTen = total === 10;
-	let text = "";
-	if(!isExactlyTen)
-		text = `10 cards in the supply require!\r\n You have ${total}!`;
-
-	document.querySelector("#error").textContent = text;
-	return isExactlyTen;
-}
-
-function validateNotBasicSet(cardSet) {
-	let basicSetCards = [
-		"Copper",
-		"Silver",
-		"Gold",
-		"Estate",
-		"Gardens",
-		"Province",
-		"Duchy"
-	];
-	return cardSet.filter(card => basicSetCards.indexOf(card.name) === -1);
-}
-
-function validateNocturne(cardSet) {
-	let nocturneTypes = [
-		"Heirloom",
-		"Spirit",
-		"Zombie"
-	];
- 	return filterByType(cardSet, nocturneTypes);
-}
-
-function validateAdventures(cardSet) {
-	let adventuresUpgradeCards = [
-		"Soldier",
-		"Fugitive",
-		"Disciple",
-		"Teacher",
-		"Treasure Hunter",
-		"Warrior",
-		"Hero",
-		"Champion"
-	];
-	return cardSet.filter(card => adventuresUpgradeCards.indexOf(card.name) === -1 && card.types.indexOf("Event") === -1);
-}
-
-function validateRenaissance(cardSet) {
-	let renaissanceTypes = [
-		"Project"
-	];
-	return filterByType(cardSet, renaissanceTypes);
-}
-
-function filterNonPicks(cardSet, alreadyPicked) {
-	let names = alreadyPicked.map(card => card.name);
-	return cardSet.filter(card => names.indexOf(card.name) === -1);
-}
-
-function getCardsWithCostInSets(sets, cost) {
-	return cards.filter(card => card.cost).filter((card) => {
-		return card.cost === cost && sets.indexOf(card.set) !== -1;
-	});
-}
-
-function buildRandomSet(cardNumbers, checkedSets) {
+function buildRandomSetFromInputs(cardNumbers, checkedSets) {
 	let randomizedCardSet = [];
 	cardNumbers.forEach((cardNumber, idx) => {
 		for(let i = 0; i < cardNumber.number; i++) {
@@ -191,7 +41,7 @@ function buildRandomSet(cardNumbers, checkedSets) {
 function getAvailableCards(currentCards, sets, cost) {
 	let alreadyPickedCards = currentCards.filter(card => card.cost === cost);
 	let validatedCards = getCardsWithCostInSets(sets, cost);
-	validatedCards = filterNonPicks(validatedCards, alreadyPickedCards);
+	validatedCards = filterByOtherCardSet(validatedCards, alreadyPickedCards);
 	validatedCards = validateNotBasicSet(validatedCards);
 	validatedCards = validateNocturne(validatedCards);
 	validatedCards = validateAdventures(validatedCards);
@@ -203,11 +53,11 @@ function enforceOneFromEachSet(checkedSets, currentSelection) {
 	let randomizedCardSet = currentSelection.slice();
 	let forceSets = document.querySelector("#forceSets").checked;
 	if(forceSets) {
-		let allSetsPicked = checkedSets.filter(input => randomizedCardSet.map(card => card.set).indexOf(input) === -1);
+		let allSetsPicked = checkedSets.filter(input => randomizedCardSet.map(card => card.set).includes(input));
 		let randomCard = null;
 		while(allSetsPicked.length > 0) {
 			// filter for set that aren't in the randomized set
-			allSetsPicked = checkedSets.filter(input => randomizedCardSet.map(card => card.set).indexOf(input) === -1);
+			allSetsPicked = checkedSets.filter(input => randomizedCardSet.map(card => card.set).includes(input));
 			
 			// pick a card
 			randomizedCardSet = shuffle(randomizedCardSet);
@@ -228,35 +78,46 @@ function enforceOneFromEachSet(checkedSets, currentSelection) {
 }
 
 function selectCards(cardNumbers, checkedSets) {
-	let randomizedCardSet = buildRandomSet(cardNumbers, checkedSets);
+	let randomizedCardSet = buildRandomSetFromInputs(cardNumbers, checkedSets);
 	randomizedCardSet = enforceOneFromEachSet(checkedSets, randomizedCardSet);
 	randomizedCardSet = sortByCost(randomizedCardSet);
 	return randomizedCardSet;
 }
 
+function buildHeader(cardsDiv) {
+	let cost = span("Cost");
+	let set = span("Set");
+	let name = span("Name");
+	let type = span("Type");
+
+	cardsDiv.appendChild(cost);
+	cardsDiv.appendChild(set);
+	cardsDiv.appendChild(name);
+	cardsDiv.appendChild(type);
+}
+
 function buildCardSetUI(cardSet, cardsDiv) {
+	let header = buildHeader(cardsDiv);
 	cardSet.forEach((card) => {
 		if(card == null)
 			return;
-		let img = document.createElement("img");
-		img.src = card.cost + ".png";
+		let image = img();
+		image.src = card.cost + ".png";
 
-		let name = document.createElement("span");
-		name.textContent = card.name;
+		let name = span(card.name);
+		let set = span(card.set);
+		let type = span(card.types);
 
-		let set = document.createElement("span");
-		set.textContent = card.set;
-
-		cardsDiv.appendChild(img);
+		cardsDiv.appendChild(image);
 		cardsDiv.appendChild(set);
 		cardsDiv.appendChild(name);
+		cardsDiv.appendChild(type);
 	});
 }
 
 function buildSelectedCardSet(cardSet) {
 	let cardsDiv = document.querySelector("#randomizedCards");
-	while(cardsDiv.firstChild)
-		cardsDiv.removeChild(cardsDiv.firstChild);
+	disposeChildren(cardsDiv);
 	buildCardSetUI(cardSet, cardsDiv);
 }
 
@@ -264,7 +125,7 @@ function addEventCards() {
 	let randomCards = [];
 	let eventCardCount = document.querySelector("#eventInput").value;
 	let eventCards = cards.filter((card) => {
-		return card.types.indexOf("Event") > -1 && card.set.indexOf("Adventures") > -1;
+		return card.types.includes("Event") && card.set.includes("Adventures");
 	});
 	for(let i = 0; i < eventCardCount; i++)
 		randomCards.push(shuffle(eventCards).pop());
@@ -273,11 +134,11 @@ function addEventCards() {
 
 
 function addEventCards(checkedSets) {
-	if(checkedSets.indexOf("Adventures") > -1 || checkedSets.indexOf("Empires") > -1) {
+	if(checkedSets.includes("Adventures") || checkedSets.includes("Empires")) {
 		let randomCards = [];
 		let eventCardCount = document.querySelector("#eventInput").value;
 		let eventCards = cards.filter((card) => {
-			return card.types.indexOf("Event") > -1 && checkedSets.indexOf(card.set) > -1;
+			return card.types.includes("Event") && checkedSets.includes(card.set);
 		});
 		for(let i = 0; i < eventCardCount; i++)
 			randomCards.push(shuffle(eventCards).pop());
@@ -287,11 +148,11 @@ function addEventCards(checkedSets) {
 }
 
 function addProjectCards(checkedSets) {
-	if(checkedSets.indexOf("Renaissance") > -1) {
+	if(checkedSets.includes("Renaissance")) {
 		let randomCards = [];
 		let projectCardCount = document.querySelector("#projectInput").value;
 		let projectCards = cards.filter((card) => {
-			return card.types.indexOf("Project") > -1 && card.set.indexOf("Renaissance") > -1;
+			return card.types.includes("Project") && card.set.includes("Renaissance");
 		});
 		for(let i = 0; i < projectCardCount; i++)
 			randomCards.push(shuffle(projectCards).pop());
@@ -302,17 +163,13 @@ function addProjectCards(checkedSets) {
 
 function displaySelectedSets() {
 	let checkedSets = getCheckedSets();
-	// let sets = cards.filter((card) => {
-	// 	return checkedSets.indexOf(card.set) > -1;
-	// });
 	let sets = filterBySets(cards, checkedSets);
 	buildCardSetUI(sets, document.querySelector("#displaySets"));
-	console.log(sets.length);
 }
 
 function randomize() {
 	let checkedSets = getCheckedSets();
-	let cardNumbers = getCardNumbers();
+	let cardNumbers = getCardNumberInputs();
 	let total = cardNumbers.reduce((acc, val) => {
 		return acc += val.number;
 	}, 0);
@@ -326,232 +183,4 @@ function randomize() {
 	randomCards = randomCards.concat(eventCards);
 	randomCards = randomCards.concat(projectCards);
 	buildSelectedCardSet(randomCards);
-}
-
-// procedural generation of cardsets.
-// how could one do this?
-var _biasPercent = 0.05;
-
-function bias(uses) {
-	let bias = uses * _biasPercent;
-	return (Math.random() + bias) > 0.5;
-}
-
-function biasAttack(currentSet, availableCards) {
-	let biasedSet = availableCards.slice();
-	/* 
-	if(filterBy().length > 0) {
-		let users = filterBy(currentSet).length;
-		if(bias(uses))
-			biasedSet = filterBy(availableCards);
-	}
-	*/ 
-	return shuffle(biasedSet);
-}
-
-function biasTrash(currentSet, availableCards) {
-	let biasedSet = availableCards.slice();
-	/* 
-	if(filterBy().length > 0) {
-		let users = filterBy(currentSet).length;
-		if(bias(uses))
-			biasedSet = filterBy(availableCards);
-	}
-	*/ 
-	return shuffle(biasedSet);
-}
-
-function biasDuration(currentSet, availableCards) {
-	let biasedSet = availableCards.slice();
-	/* 
-	if(filterBy().length > 0) {
-		let users = filterBy(currentSet).length;
-		if(bias(uses))
-			biasedSet = filterBy(availableCards);
-	}
-	*/ 
-	return shuffle(biasedSet);
-}
-
-function biasBuys(currentSet, availableCards) {
-	let biasedSet = availableCards.slice();
-	/* 
-	if(filterBy().length > 0) {
-		let users = filterBy(currentSet).length;
-		if(bias(uses))
-			biasedSet = filterBy(availableCards);
-	}
-	*/ 
-	return shuffle(biasedSet);
-}
-
-function biasNight(currentSet, availableCards) {
-	let biasedSet = availableCards.slice();
-	if(filterByType(availableCards, ['Night']).length > 0) {
-		let uses = filterByType(currentSet, ['Night']).length;
-		if(bias(uses))
-			biasedSet = filterByType(availableCards, ['Night']);
-	}
-	return shuffle(biasedSet);
-}
-
-function biasTavern(currentSet, availableCards) {
-	let biasedSet = availableCards.slice();
-	if(filterByTavern(availableCards).length > 0) {
-		let uses = filterByTavern(currentSet);
-		if(bias(uses))
-			biasedSet = filterByTavern(availableCards);
-	}
-	return shuffle(biasedSet);
-}
-
-function biasVillagers(currentSet, availableCards) {
-	let biasedSet = availableCards.slice();
-	if(filterByVillagers(availableCards).length > 0) {
-		let uses = filterByVillagers(currentSet);
-		if(bias(uses))
-			biasedSet = filterByVillagers(availableCards);
-	}
-	return shuffle(biasedSet);
-}
-
-function biasCoffers(currentSet, availableCards) {
-	let biasedSet = availableCards.slice();
-	if(filterByCoffers(availableCards).length > 0) {
-		let uses = filterByCoffers(currentSet);
-		if(bias(uses))
-			biasedSet = filterByCoffers(availableCards);
-	}
-	return shuffle(biasedSet);
-}
-
-// still need to modify the data set more for this one.
-// function biasTokens(currentSet, availableCards) {
-// 	let biasedSet = availableCards.slice();
-// 	if(filterByTokens(availableCards).length > 0) {
-// 		let uses = filterByTokens(currentSet);
-// 		if(bias(uses))
-// 			biasedSet = filterByTokens(availableCards);
-// 	}
-// 	return shuffle(biasedSet);
-// }
-
-function useEvents(currentSet) {
-	// we could do a math.random here or set it based on the currentSet.
-	// let uses = filterByTavern(currentSet);
-	// if(bias(uses))
-	// bias the events?
-}
-
-function useProjects() {
-	//
-}
-
-function setBiasedCost(biasedSet, costIdx) {
-	biasedSet.forEach((cost, idx) => {
-		if(idx != costIdx)
-			cost += 2;
-	});
-	return biasedSet;
-}
-
-function getBiases() {
-	let biases = [];
-	// biases.push(biasDuration);
-	// biases.push(biasBuys);
-	// biases.push(biasAttack);
-	// biases.push(biasTrash);
-	biases.push(biasTavern);
-	biases.push(biasVillagers);
-	biases.push(biasCoffers);
-	biases.push(biasNight);
-	biases = shuffle(biases);
-	// biasTokens(currentSet, availableSet); // data isn't great on this one...
-	return biases;
-}
-
-function createBiasedSet(availableSet) {
-	let currentSet = [];
-	let biasedSet = [0,0,0,0,0];
-	// biasCostCurve(currentSet, availableSet);
-
-	while(currentSet.length != 10) {
-		let currentlyAvailableSet = filterNonPicks(availableSet, currentSet);
-
-		// filter out cost if we manage to bias it.
-		for(let i = 0; i < biasedSet.length; i++) {
-			if(bias(biasedSet[i])) {
-				biasedSet[i] -= 2;
-				currentlyAvailableSet = filterByCost(currentlyAvailableSet, i+2);
-				biasedSet = setBiasedCost(biasedSet, i);
-				break;
-			}
-		}
-
-		// this should be biased a little differently
-		// the first one to be checked for a bias is most likely to be biased.
-		let biases = getBiases();
-		while(biases.length > 0) {
-			let bias = biases.pop();
-			currentlyAvailableSet = bias(currentSet, currentlyAvailableSet);
-		}
-
-		let card = currentlyAvailableSet.pop();
-		if(card != null)
-			currentSet.push(card);
-	}
-	return currentSet;
-}
-
-function enforceEngineCards(currentSet, availableCards) {
-	let newAvailableSet = [];
-	let newSet = currentSet.slice();
-	// we might be removing some bias if we do this.
-	let newActionsCard;
-	if(filterByActionCount(newSet, 2).length === 0) {
-		newSet = shuffle(newSet);
-		newSet.pop();
-		newAvailableSet = filterByActionCount(availableCards, 2);
-		newActionsCard = shuffle(newAvailableSet).pop();
-		newSet.push(newActionsCard);
-	}
-
-	let otherSafeCounter = 0;
-
-	// while we don't have a card that lets us draw 2 card, keep doing this.
-	while(filterByCardDraw(newSet, 2).length === 0 && otherSafeCounter !== 10) {
-		newSet = shuffle(newSet);
-
-		// make sure we don't inadverntently undo our previous action
-		if(newActionsCard == null)
-			newActionsCard = shuffle(filterByActionCount(newSet, 2))[0];
-
-		let topCard = newSet.pop();
-		newAvailableSet = filterByCardDraw(availableCards, 2);
-		
-		if(topCard.name === newActionsCard.name)
-			newSet.push(topCard);
-		else {
-			newCard = shuffle(newAvailableSet).pop();
-			newSet.push(newCard);
-		}
-		otherSafeCounter++;
-	}
-	return newSet;
-}
-
-function proceduralGeneration() {
-	let sets = getCheckedSets();
-	let availableSet = filterBySets(cards, sets);
-	availableSet = validateNotBasicSet(availableSet);
-	availableSet = validateNocturne(availableSet);
-	availableSet = validateAdventures(availableSet);
-	availableSet = validateRenaissance(availableSet);
-
-	let currentSet = createBiasedSet(availableSet);
-	currentSet = enforceEngineCards(currentSet, availableSet);
-	// currentSet = eventsOrProjects(availableSet, currentSet);
-
-	currentSet = sortByCost(currentSet);
-	buildSelectedCardSet(currentSet);
 }

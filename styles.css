@@ -8,15 +8,36 @@
 	align-items: flex-end;
 }
 
+.cardListWrapper {
+	display: flex;
+	width: 550px;
+}
+
 .cardList {
 	margin-left: 20px;
 	display: grid;
-	grid-template-columns: 40px 120px auto;
-	justify-items: "start";
+	grid-template-columns: 52px 120px 140px auto;
+	justify-items: start;
+}
+
+.biasList {
+	display: grid;
+	grid-template-columns: 52px auto;
+}
+
+.dataList {
+	display: grid;
+	grid-template-columns: 24px 52px auto;
 }
 
 .displaySets {
 	width: 260px;
+}
+
+.border {
+	border-style: solid;
+	border-width: 1px;
+	border-color: white;
 }
 
 #error {
@@ -36,5 +57,9 @@ button {
 
 input {
 	background-color: black;
+	color: #C0C0C0;
+}
+
+div {
 	color: #C0C0C0;
 }
