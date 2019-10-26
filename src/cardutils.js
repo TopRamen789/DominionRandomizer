@@ -21,6 +21,12 @@ function filterByTavern(cardSet) {
 	});
 }
 
+function filterByVillagersAndCoffers(cardSet) {
+	return cardSet.filter((card) => {
+		return card.useVillagers || card.useCoffers;
+	});
+}
+
 function filterByVillagers(cardSet) {
 	return cardSet.filter((card) => {
 		return card.useVillagers;

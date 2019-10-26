@@ -1,8 +1,9 @@
 // procedural generation of cardsets.
-var _biasPercent = .05;
+const _biasPercent = .05;
+const _setOffset = getCheckedSets().length * _biasPercent;
 
 function bias(uses) {
-	let bias = uses * _biasPercent;
+	let bias = (uses * _biasPercent) + _setOffset;
 	return (Math.random() + bias) > 0.5;
 }
 
@@ -111,17 +112,6 @@ function biasCoffers(currentSet, availableCards) {
 // 	return shuffle(biasedSet);
 // }
 
-// function useEvents(currentSet) {
-// 	// we could do a math.random here or set it based on the currentSet.
-// 	// let uses = filterByTavern(currentSet);
-// 	// if(bias(uses))
-// 	// bias the events?
-// }
-
-// function useProjects() {
-// 	//
-// }
-
 function getBiases() {
 	let biases = [];
 	biases.push(biasDuration);
@@ -142,7 +132,7 @@ function displayNocturneBias(currentSet) {
 	if(hasNocturne(currentSet))
 		biasData.push({
 			type: 'Night',
-			percent: filterByTypes(currentSet, ['Night']).length * _biasPercent
+			percent: (filterByTypes(currentSet, ['Night']).length * _biasPercent)*100
 		});
 	return biasData;
 }
@@ -152,7 +142,7 @@ function displayAdventuresBias(currentSet) {
 	if(hasAdventures(currentSet))
 		biasData.push({
 			type: 'Tavern',
-			percent: filterByTavern(currentSet).length * _biasPercent
+			percent: (filterByTavern(currentSet).length * _biasPercent)*100
 		});
 	return biasData;
 }
@@ -161,13 +151,8 @@ function displayRenaissanceBias(currentSet) {
 	let biasData = [];
 	if(hasRenaissance(currentSet)) {
 		biasData.push({
-			type: 'Villagers',
-			percent: filterByVillagers(currentSet).length * _biasPercent
-		});
-
-		biasData.push({
-			type: 'Coffers',
-			percent: filterByCoffers(currentSet).length * _biasPercent
+			type: 'Villagers/Coffers',
+			percent: ((filterByVillagers(currentSet).length * _biasPercent)*100) + ((filterByCoffers(currentSet).length * _biasPercent)*100)
 		});
 	}
 	return biasData;
@@ -178,7 +163,7 @@ function displayAttackBias(currentSet) {
 	if(hasAttack(currentSet))
 		biasData.push({
 			type: 'Attack',
-			percent: filterByTypes(currentSet, ['Attack']).length * _biasPercent
+			percent: (filterByTypes(currentSet, ['Attack']).length * _biasPercent)*100
 		});
 	return biasData;
 }
@@ -188,7 +173,7 @@ function displayTrashBias(currentSet) {
 	if(hasTrash(currentSet))
 		biasData.push({
 			type: 'Trash',
-			percent: filterByTrashCount(currentSet, 1).length * _biasPercent
+			percent: (filterByTrashCount(currentSet, 1).length * _biasPercent)*100
 		});
 	return biasData;
 }
@@ -198,7 +183,7 @@ function displayDurationBias(currentSet) {
 	if(hasDuration(currentSet))
 		biasData.push({
 			type: 'Duration',
-			percent: filterByTypes(currentSet, ['Duration']).length * _biasPercent
+			percent: (filterByTypes(currentSet, ['Duration']).length * _biasPercent)*100
 		});
 	return biasData;
 }
@@ -208,7 +193,7 @@ function displayBuysBias(currentSet) {
 	if(hasBuys(currentSet))
 		biasData.push({
 			type: 'Buys',
-			percent: filterByBuyCount(currentSet, 1).length * _biasPercent
+			percent: (filterByBuyCount(currentSet, 1).length * _biasPercent)*100
 		});
 	return biasData;
 }
@@ -238,14 +223,11 @@ function displayBiasData(currentSet) {
 
 	let biasDataUI = document.querySelector("#biasData");
 	biasData.map((bias) => {
-		let style = bias.percent > 0.2 ? 'background-color: #a62f00' : '';
-
-		let percent = div(`${round(bias.percent, 2)}%`);
-		percent.style = style;
-		
-		let type = div(bias.type);
-		type.style = style;
-
+		let className = '';
+		if(bias.percent > 20)
+			className = 'anomalous';
+		let percent = div(`${round(bias.percent, 2)}%`, {className: className});
+		let type = div(bias.type, {className: className});
 		biasDataUI.appendChild(percent);
 		biasDataUI.appendChild(type);
 	});

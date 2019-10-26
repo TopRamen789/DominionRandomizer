@@ -38,8 +38,22 @@ function loadCardSet(data) {
 	reader.onload = (evt) => {
 		let cardFile = evt.target.result.split(',');
 		let loadedSet = getSelectedCards(cardFile);
+		loadedSet = sortByCost(loadedSet);
 		buildSelectedCardSet(loadedSet);
 	};
+}
+
+function getCheckedSets() {
+	let inputs = [].slice.call(document.querySelectorAll("input"));
+	let selectedCheckboxes = inputs.filter((input) => {
+		return input.type === "checkbox" && input.checked 
+			&& input.id !== "forceSets" 
+			&& input.id !== "validateTenCards"
+			&& input.id !== "hideControlsCheckbox";
+	}).map((input) => {
+		return [].find.call(input.parentNode.children, child => child.tagName.toLowerCase() === "label").textContent;
+	});
+	return selectedCheckboxes;
 }
 
 function hideControls() {
@@ -60,9 +74,12 @@ function disposeChildren(element) {
 		element.removeChild(element.firstChild);
 }
 
-function buildElement(text) {
+function buildElement(text, elementProps) {
 	let element = document.createElement(this.name);
 	element.textContent = text;
+	if(elementProps != null)
+		for(let i = 0; i < Object.keys(elementProps).length; i++)
+			element[Object.keys(elementProps)[i]] = elementProps[Object.keys(elementProps)[i]];
 	return element;
 }
 

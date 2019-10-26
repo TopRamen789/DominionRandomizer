@@ -4,10 +4,12 @@ function getActionsPercent(currentSet) {
 		label: 'Actions'
 	});
 	for(let i = 0; i < 3; i++) {
+		if(i === 0)
+			continue;
 		let number = filterByActionCount(currentSet, i).length;
 		cardData.push({
 			type: `+${i} Actions`,
-			percent: number/currentSet.length,
+			percent: (number/currentSet.length)*100,
 			number: number
 		});
 	}
@@ -20,10 +22,12 @@ function getCardsPercent(currentSet) {
 		label: 'Cards'
 	});
 	for(let i = 0; i < 5; i++) {
+		if(i === 0)
+			continue;
 		let number = filterByCardDrawCount(currentSet, i).length;
 		cardData.push({
 			type: `+${i} Cards`,
-			percent: number/currentSet.length,
+			percent: (number/currentSet.length)*100,
 			number: number
 		});
 	}
@@ -36,10 +40,12 @@ function getTrashPercent(currentSet) {
 		label: 'Trash'
 	});
 	for(let i = 0; i < 5; i++) {
+		if(i === 0)
+			continue;
 		let number = filterByTrashCount(currentSet, i).length;
 		cardData.push({
 			type: `+${i} Trash`,
-			percent: number/currentSet.length,
+			percent: (number/currentSet.length)*100,
 			number: number
 		});
 	}
@@ -52,10 +58,12 @@ function getBuyPercent(currentSet) {
 		label: 'Buy'
 	});
 	for(let i = 0; i < 5; i++) {
+		if(i === 0)
+			continue;
 		let number = filterByBuyCount(currentSet, i).length;
 		cardData.push({
 			type: `+${i} Buy`,
-			percent: number/currentSet.length,
+			percent: (number/currentSet.length)*100,
 			number: number
 		});
 	}
@@ -72,7 +80,7 @@ function getSetPercent(currentSet) {
 		let number = filterBySets(currentSet, [set]).length;
 		cardData.push({
 			type: set,
-			percent: number/currentSet.length,
+			percent: (number/currentSet.length)*100,
 			number: number
 		});
 	});
@@ -89,21 +97,30 @@ function getTypesPercent(currentSet) {
 		let number = filterByTypes(currentSet, [type]).length;
 		cardData.push({
 			type: type,
-			percent: number/currentSet.length,
+			percent: (number/currentSet.length)*100,
 			number: number
 		});
 	});
 	return cardData;
 }
 
+function filterOutSideboard(currentSet) {
+	return currentSet.filter((card) => {
+		return !(card.types.includes('Project')
+			|| card.types.includes('Event')
+			|| card.types.includes('Landmark'));
+	});
+}
+
 function getPercentageData(currentSet) {
 	let cardData = [];
-	cardData = cardData.concat(getActionsPercent(currentSet));
-	cardData = cardData.concat(getCardsPercent(currentSet));
-	cardData = cardData.concat(getBuyPercent(currentSet));
-	cardData = cardData.concat(getTrashPercent(currentSet));
-	cardData = cardData.concat(getSetPercent(currentSet));
-	cardData = cardData.concat(getTypesPercent(currentSet));
+	let measuredSet = filterOutSideboard(currentSet);
+	cardData = cardData.concat(getActionsPercent(measuredSet));
+	cardData = cardData.concat(getCardsPercent(measuredSet));
+	cardData = cardData.concat(getBuyPercent(measuredSet));
+	cardData = cardData.concat(getTrashPercent(measuredSet));
+	cardData = cardData.concat(getSetPercent(measuredSet));
+	cardData = cardData.concat(getTypesPercent(measuredSet));
 	return cardData;
 }
 
@@ -115,32 +132,21 @@ function displayCardPercentages(currentSet) {
 	disposeChildren(cardDataUI);
 	cardData.map((data) => {
 		if(!data.label) {
-			let style = data.percent >= 0.3 ? 'background-color: #a62f00' : '';
+			let className = '';
+			if(data.percent >= 30)
+				className = 'anomalous';
 
-			let number = div(data.number)
-			number.style = style;
-
-			let percent = div(`${round(data.percent, 2)}%`);
-			percent.style = style;
-			
-			let type = div(data.type);
-			type.style = style;
-
+			let number = div(data.number, {className: className});
+			let percent = div(`${round(data.percent, 2)}%`, {className: className});
+			let type = div(data.type, {className: className});
 			cardDataUI.appendChild(number);
 			cardDataUI.appendChild(percent);
 			cardDataUI.appendChild(type);
 		} else {
-			let style = "border-color: white; border-width: 0px; border-bottom-width: 1px; border-style: solid;";
-			
-			let label = div(data.label);
-			label.style = style;
-			
-			let leftDiv = div();
-			leftDiv.style = style;
-
-			let rightDiv = div()
-			rightDiv.style = style;
-			
+			let className = 'header';
+			let label = div(data.label, {className: className});
+			let leftDiv = div('', {className: className});
+			let rightDiv = div('', {className: className});
 			cardDataUI.appendChild(leftDiv);
 			cardDataUI.appendChild(label);
 			cardDataUI.appendChild(rightDiv);

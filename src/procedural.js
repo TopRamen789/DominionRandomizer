@@ -17,7 +17,7 @@ function createBiasedSet(availableSet) {
 		// filter out cost if we manage to bias it.
 		for(let i = 0; i < biasedSet.length; i++) {
 			if(bias(biasedSet[i])) {
-				biasedSet[i] -= 2;
+				biasedSet[i] -= 3;
 				currentlyAvailableSet = filterByCost(currentlyAvailableSet, i+2);
 				biasedSet = setBiasedCost(biasedSet, i);
 				break;
@@ -40,37 +40,31 @@ function createBiasedSet(availableSet) {
 function enforceEngineCards(currentSet, availableCards) {
 	let newAvailableSet = [];
 	let newSet = currentSet.slice();
-	// we might be removing some bias if we do this.
-	let newActionsCard;
+	let actionsCard;
+
+	// if we don't have a card in the current set that has at least 2 actions, add one.
 	if(filterByGreaterThanActionCount(newSet, 2).length === 0) {
 		newSet = shuffle(newSet);
 		newSet.pop();
-		newAvailableSet = filterByGreaterThanActionCount(availableCards, 2);
-		newActionsCard = shuffle(newAvailableSet).pop();
-		newSet.push(newActionsCard);
+		actionsCard = shuffle(filterByGreaterThanActionCount(availableCards, 2)).pop();
+		newSet.push(actionsCard);
 	}
 
-	let otherSafeCounter = 0;
+	// make sure we don't inadverntently undo our previous action or remove a 2 action card
+	if(actionsCard == null)
+		actionsCard = shuffle(filterByGreaterThanActionCount(newSet, 2)).pop();
+	newSet = newSet.filter((card) => {
+		return card.name !== actionsCard.name;
+	});
 
 	// while we don't have a card that lets us draw 2 card, keep doing this.
-	while(filterByCardDraw(newSet, 2).length === 0 && otherSafeCounter !== 10) {
+	while(filterByCardDraw(newSet, 2).length === 0) {
 		newSet = shuffle(newSet);
-
-		// make sure we don't inadverntently undo our previous action
-		if(newActionsCard == null)
-			newActionsCard = shuffle(filterByGreaterThanActionCount(newSet, 2))[0];
-
-		let topCard = newSet.pop();
-		newAvailableSet = filterByCardDraw(availableCards, 2);
-		
-		if(topCard.name === newActionsCard.name)
-			newSet.push(topCard);
-		else {
-			newCard = shuffle(newAvailableSet).pop();
-			newSet.push(newCard);
-		}
-		otherSafeCounter++;
+		newCard = shuffle(filterByCardDraw(availableCards, 2)).pop();
+		newSet.push(newCard);
 	}
+
+	newSet.push(actionsCard);
 	return newSet;
 }
 
@@ -84,9 +78,10 @@ function proceduralGeneration() {
 
 	let currentSet = createBiasedSet(availableSet);
 	currentSet = enforceEngineCards(currentSet, availableSet);
-	// currentSet = eventsOrProjects(availableSet, currentSet);
-
+	
 	currentSet = sortByCost(currentSet);
+	currentSet = currentSet.concat(addSideboardCards(sets));
+
 	displayBiasData(currentSet);
 	buildSelectedCardSet(currentSet);
 }

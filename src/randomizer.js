@@ -1,16 +1,3 @@
-function getCheckedSets() {
-	let inputs = [].slice.call(document.querySelectorAll("input"));
-	let selectedCheckboxes = inputs.filter((input) => {
-		return input.type === "checkbox" && input.checked 
-			&& input.id !== "forceSets" 
-			&& input.id !== "validateTenCards"
-			&& input.id !== "hideControlsCheckbox";
-	}).map((input) => {
-		return [].find.call(input.parentNode.children, child => child.tagName.toLowerCase() === "label").textContent;
-	});
-	return selectedCheckboxes;
-}
-
 function getCardNumberInputs() {
 	let inputs = [].slice.call(document.querySelectorAll("input"));
 	let cardNumbers = inputs.filter((input) => {
@@ -87,12 +74,9 @@ function selectCards(cardNumbers, checkedSets) {
 function addEventCards(checkedSets) {
 	if(checkedSets.includes("Adventures") || checkedSets.includes("Empires")) {
 		let randomCards = [];
-		let eventCardCount = document.querySelector("#eventInput").value;
-		let eventCards = _cards.filter((card) => {
+		randomCards = _cards.filter((card) => {
 			return card.types.includes("Event") && checkedSets.includes(card.set);
 		});
-		for(let i = 0; i < eventCardCount; i++)
-			randomCards.push(shuffle(eventCards).pop());
 		return randomCards;
 	}
 	return [];
@@ -101,15 +85,25 @@ function addEventCards(checkedSets) {
 function addProjectCards(checkedSets) {
 	if(checkedSets.includes("Renaissance")) {
 		let randomCards = [];
-		let projectCardCount = document.querySelector("#projectInput").value;
-		let projectCards = _cards.filter((card) => {
-			return card.types.includes("Project") && card.set.includes("Renaissance");
+		randomCards = _cards.filter((card) => {
+			return card.types.includes("Project") && checkedSets.includes(card.set);
 		});
-		for(let i = 0; i < projectCardCount; i++)
-			randomCards.push(shuffle(projectCards).pop());
 		return randomCards;
 	}
 	return [];
+}
+
+function generateSideboardCards(checkedSets) {
+	let sideboard = [];
+	sideboard = sideboard.concat(addEventCards(checkedSets));
+	sideboard = sideboard.concat(addProjectCards(checkedSets));
+	return sideboard;
+}
+
+function addSideboardCards(checkedSets) {
+	let sideboard = generateSideboardCards(checkedSets);
+	sideboard = shuffle(sideboard);
+	return sideboard.slice(0, 2);
 }
 
 function displaySelectedSets() {
@@ -126,8 +120,9 @@ function randomize() {
 	}, 0);
 	document.querySelector("#total").value = total;
 	let randomCards = selectCards(cardNumbers, checkedSets);
-	const eventCards = addEventCards(checkedSets);
-	const projectCards = addProjectCards(checkedSets);
+	//const eventCards = addEventCards(checkedSets);
+	//const projectCards = addProjectCards(checkedSets);
+	const sideboard = addSideboardCards(checkedSets);
 	if(!validateTenCardsTotal(randomCards)) {
 		return;
 	}
