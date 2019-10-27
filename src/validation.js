@@ -34,7 +34,7 @@ function validateNocturne(cardSet) {
 		"Boon",
 		"Hex"
 	];
- 	return filterByNotType(cardSet, nocturneTypes);
+ 	return filterByNotType(cardSet, nocturneTypes).filter(card => card.name !== "Bat");
 }
 
 function validateAdventures(cardSet) {
@@ -53,7 +53,8 @@ function validateAdventures(cardSet) {
 
 function validateRenaissance(cardSet) {
 	let renaissanceTypes = [
-		"Project"
+		"Project",
+		"Artifact"
 	];
 	return filterByNotType(cardSet, renaissanceTypes);
 }

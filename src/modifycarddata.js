@@ -1,9 +1,16 @@
 function modifyCardsJson(cards) {
-	// cards.forEach((card) => {
-	// 	delete card.costSrc;
-	// });
-	let json = JSON.stringify(cards, null, 4);
-	download(json, "ModifiedJson", ".js")
+	let actionRegex = /([^,]+\+[0-9]+\s(Action)+.*)+/g;
+  let cardRegex = /([^,]+\+[0-9]+\s(Card)+.*)+/g;
+  cards.forEach((card) => {
+    let actions = actionRegex.exec(card.text);
+    let cardDraw = cardRegex.exec(card.text);
+    if(actions)
+      card.actions = actions[0].match(/(\d+)/)[0];
+    if(cardDraw)
+      card.cardDraw = cardDraw[0].match(/(\d+)/)[0];
+	});
+	// let json = JSON.stringify(cards, null, 4);
+	// download(json, "ModifiedJson", ".js")
 }
 
 function readSingleFile(e) {
@@ -13,8 +20,8 @@ function readSingleFile(e) {
   let reader = new FileReader();
   reader.onload = function(e) {
     let contents = e.target.result;
-    console.log(contents.split("var cards = ")[1].slice(0, -1));
-    let json = JSON.parse(contents.split("var cards = ")[1].slice(0, -1));
+    //console.log(contents.split("var _cards = ")[1].slice(0, -1));
+    let json = JSON.parse(contents.split("var _cards = ")[1].slice(0, -1));
     modifyCardsJson(json);
     displayContents(contents);
   };

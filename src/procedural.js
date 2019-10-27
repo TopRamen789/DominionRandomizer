@@ -11,6 +11,10 @@ function createBiasedSet(availableSet) {
 	let biasedSet = [0,0,0,0,0];
 	// biasCostCurve(currentSet, availableSet);
 
+	// I need to mess with this more.
+	let biases = getBiases();
+	biases = shuffle(biases);
+
 	while(currentSet.length != 10) {
 		let currentlyAvailableSet = filterByOtherCardSet(availableSet, currentSet);
 
@@ -24,10 +28,9 @@ function createBiasedSet(availableSet) {
 			}
 		}
 
-		let biases = getBiases();
 		while(biases.length > 0) {
-			let bias = biases.pop();
-			currentlyAvailableSet = bias(currentSet, currentlyAvailableSet);
+			let randomBias = biases.pop();
+			currentlyAvailableSet = randomBias(currentSet, currentlyAvailableSet);
 		}
 
 		let card = currentlyAvailableSet.pop();

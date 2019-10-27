@@ -134,7 +134,9 @@ function displayCardPercentages(currentSet) {
 		if(!data.label) {
 			let className = '';
 			if(data.percent >= 30)
-				className = 'anomalous';
+				className = 'anomalousHigh';
+			if(data.percent <= 5)
+				className = 'anomalousLow'
 
 			let number = div(data.number, {className: className});
 			let percent = div(`${round(data.percent, 2)}%`, {className: className});

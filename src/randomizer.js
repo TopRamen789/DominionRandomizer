@@ -126,8 +126,7 @@ function randomize() {
 	if(!validateTenCardsTotal(randomCards)) {
 		return;
 	}
-	randomCards = randomCards.concat(eventCards);
-	randomCards = randomCards.concat(projectCards);
+	randomCards = randomCards.concat(sideboard);
 	clearBiasData();
 	buildSelectedCardSet(randomCards);
 }

@@ -1,6 +1,6 @@
 // procedural generation of cardsets.
 const _biasPercent = .05;
-const _setOffset = getCheckedSets().length * _biasPercent;
+const _setOffset = (getCheckedSets().length/2) * _biasPercent;
 
 function bias(uses) {
 	let bias = (uses * _biasPercent) + _setOffset;
@@ -62,7 +62,7 @@ function biasNight(currentSet, availableCards) {
 	let filter = filterByTypes(availableCards, ['Night']);
 	let uses = filter.length;
 	if(uses > 0) {
-		if(specialBias(uses, .025))
+		if(bias(uses))
 			biasedSet = filter;
 	}
 	return shuffle(biasedSet);
@@ -225,7 +225,9 @@ function displayBiasData(currentSet) {
 	biasData.map((bias) => {
 		let className = '';
 		if(bias.percent > 20)
-			className = 'anomalous';
+			className = 'anomalousHigh';
+		if(bias.percent <= 5)
+			className = 'anomalousLow';
 		let percent = div(`${round(bias.percent, 2)}%`, {className: className});
 		let type = div(bias.type, {className: className});
 		biasDataUI.appendChild(percent);

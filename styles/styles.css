@@ -55,7 +55,11 @@
 	border-style: solid;
 }
 
-.anomalous {
+.anomalousHigh {
+	background-color: #00940a;
+}
+
+.anomalousLow {
 	background-color: #a62f00;
 }
 
