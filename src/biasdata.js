@@ -1,9 +1,22 @@
 // procedural generation of cardsets.
 const _biasPercent = .05;
 const _setOffset = (getCheckedSets().length/2) * _biasPercent;
+// I should perhaps create another offset that causes biases to win evenly
+
+function normalizeBiases() {
+	/*
+	So in this method, we want to calculate card counts of each bias use that to even the percentages of each one winning
+	*/
+	let biases = getBiases();
+	let biasCount = biases.length;
+	// if(biases.indexOf(biasVillagers) > -1) // coffer/villager should be grouped methinks.
+	// 	biasCount -= 1;
+	// biasCount/cardCountOfType/totalCards = biasOffset?
+	// 119 distinct cards
+}
 
 function bias(uses) {
-	let bias = (uses * _biasPercent) + _setOffset;
+	let bias = uses * _biasPercent;
 	return (Math.random() + bias) > 0.5;
 }
 
@@ -13,92 +26,99 @@ function specialBias(uses, specialBias) {
 }
 
 function biasAttack(currentSet, availableCards) {
-	let biasedSet = availableCards.slice();
+	let biasedSet = shuffle(availableCards.slice());
 	let filter = filterByTypes(availableCards, ['Attack']);
-	let uses = filter.length;
-	if(uses > 0) {
-		if(bias(uses))
-			biasedSet = filter;
-	}
-	return shuffle(biasedSet);
+	// console.log(`Attack: ${filter.length}`);
+	if(filter.length === 0)
+		return biasedSet;
+	let uses = filterByTypes(currentSet, ['Attack']).length;
+	if(bias(uses))
+		biasedSet = filter;
+	return biasedSet;
 }
 
 function biasTrash(currentSet, availableCards) {
-	let biasedSet = availableCards.slice();
-	let filter = filterByTrashCount(availableCards, 0);
-	let uses = filter.length;
-	if(uses > 0) {
-		if(bias(uses))
-			biasedSet = filter;
-	}
-	return shuffle(biasedSet);
+	let biasedSet = shuffle(availableCards.slice());
+	let filter = filterByTrashCount(availableCards, 1);
+	// console.log(`Trash: ${filter.length}`);
+	if(filter.length === 0)
+		return biasedSet;
+	let uses = filterByTrashCount(currentSet, 1).length;
+	if(bias(uses))
+		biasedSet = filter;
+	return biasedSet;
 }
 
 function biasDuration(currentSet, availableCards) {
-	let biasedSet = availableCards.slice();
+	let biasedSet = shuffle(availableCards.slice());
 	let filter = filterByTypes(availableCards, ['Duration']);
-	let uses = filter.length;
-	if(uses > 0) {
-		if(bias(uses))
-			biasedSet = filter;
-	}
-	return shuffle(biasedSet);
+	// console.log(`Duration: ${filter.length}`);
+	if(filter.length === 0)
+		return biasedSet;
+	let uses = filterByTypes(currentSet, ['Duration']).length;
+	if(bias(uses))
+		biasedSet = filter;
+	return biasedSet;
 }
 
 function biasBuys(currentSet, availableCards) {
-	let biasedSet = availableCards.slice();
-	let filter = filterByBuyCount(availableCards, 0);
-	let uses = filter.length;
-	if(uses > 0) {
-		if(bias(uses))
-			biasedSet = filter;
-	}
-	return shuffle(biasedSet);
+	let biasedSet = shuffle(availableCards.slice());
+	let filter = filterByBuyCount(availableCards, 1);
+	// console.log(`Buys: ${filter.length}`);
+	if(filter.length === 0)
+		return biasedSet;
+	let uses = filterByBuyCount(currentSet, 1).length;
+	if(bias(uses))
+		biasedSet = filter;
+	return biasedSet;
 }
 
-/*SPECIAL, because for some reason night cards get more heavily biased than others*/
 function biasNight(currentSet, availableCards) {
-	let biasedSet = availableCards.slice();
+	let biasedSet = shuffle(availableCards.slice());
 	let filter = filterByTypes(availableCards, ['Night']);
-	let uses = filter.length;
-	if(uses > 0) {
-		if(bias(uses))
-			biasedSet = filter;
-	}
-	return shuffle(biasedSet);
+	// console.log(`Night: ${filter.length}`);
+	if(filter.length === 0)
+		return biasedSet;
+	let uses = filterByTypes(currentSet, ['Night']).length;
+	if(bias(uses))
+		biasedSet = filter;
+	return biasedSet;
 }
 
 function biasTavern(currentSet, availableCards) {
-	let biasedSet = availableCards.slice();
+	let biasedSet = shuffle(availableCards.slice());
 	let filter = filterByTavern(availableCards);
-	let uses = filter.length;
-	if(uses > 0) {
-		if(bias(uses))
-			biasedSet = filter;
-	}
-	return shuffle(biasedSet);
+	// console.log(`Tavern: ${filter.length}`);
+	if(filter.length === 0)
+		return biasedSet;
+	let uses = filterByTavern(currentSet).length;
+	if(bias(uses))
+		biasedSet = filter;
+	return biasedSet;
 }
 
 function biasVillagers(currentSet, availableCards) {
-	let biasedSet = availableCards.slice();
+	let biasedSet = shuffle(availableCards.slice());
 	let filter = filterByVillagers(availableCards);
-	let uses = filter.length;
-	if(uses > 0) {
-		if(bias(uses))
-			biasedSet = filter;
-	}
-	return shuffle(biasedSet);
+	// console.log(`Villagers: ${filter.length}`);
+	if(filter.length === 0)
+		return biasedSet;
+	let uses = filterByVillagers(currentSet).length;
+	if(bias(uses))
+		biasedSet = filter;
+	return biasedSet;
 }
 
 function biasCoffers(currentSet, availableCards) {
-	let biasedSet = availableCards.slice();
+	let biasedSet = shuffle(availableCards.slice());
 	let filter = filterByCoffers(availableCards);
-	let uses = filter.length;
-	if(uses > 0) {
-		if(bias(uses))
-			biasedSet = filter;
-	}
-	return shuffle(biasedSet);
+	// console.log(`Coffers: ${filter.length}`);
+	if(filter.length === 0)
+		return biasedSet;
+	let uses = filterByCoffers(currentSet).length;
+	if(bias(uses))
+		biasedSet = filter;
+	return biasedSet;
 }
 
 // still need to modify the data set more for this one.
@@ -122,8 +142,8 @@ function getBiases() {
 	biases.push(biasVillagers);
 	biases.push(biasCoffers);
 	biases.push(biasNight);
+	// biases.push(biaseTokens);
 	biases = shuffle(biases);
-	// biasTokens(currentSet, availableSet); // data isn't great on this one...
 	return biases;
 }
 

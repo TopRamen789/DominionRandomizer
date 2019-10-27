@@ -12,9 +12,6 @@ function createBiasedSet(availableSet) {
 	// biasCostCurve(currentSet, availableSet);
 
 	// I need to mess with this more.
-	let biases = getBiases();
-	biases = shuffle(biases);
-
 	while(currentSet.length != 10) {
 		let currentlyAvailableSet = filterByOtherCardSet(availableSet, currentSet);
 
@@ -27,10 +24,12 @@ function createBiasedSet(availableSet) {
 				break;
 			}
 		}
-
+		
+		let biases = getBiases();
 		while(biases.length > 0) {
 			let randomBias = biases.pop();
 			currentlyAvailableSet = randomBias(currentSet, currentlyAvailableSet);
+			biases = shuffle(biases);
 		}
 
 		let card = currentlyAvailableSet.pop();
@@ -74,10 +73,7 @@ function enforceEngineCards(currentSet, availableCards) {
 function proceduralGeneration() {
 	let sets = getCheckedSets();
 	let availableSet = filterBySets(_cards, sets);
-	availableSet = validateNotBasicSet(availableSet);
-	availableSet = validateNocturne(availableSet);
-	availableSet = validateAdventures(availableSet);
-	availableSet = validateRenaissance(availableSet);
+	availableSet = validateCardSet(availableSet);
 
 	let currentSet = createBiasedSet(availableSet);
 	currentSet = enforceEngineCards(currentSet, availableSet);
@@ -89,6 +85,50 @@ function proceduralGeneration() {
 	buildSelectedCardSet(currentSet);
 }
 
-function testNocturneBias() {
-	//
+// Run bias 500x, see which ones are consistent winners.
+function testBias() {
+	let aggregateData = [];
+	let sets = getCheckedSets();
+	let filteredSets = filterBySets(_cards, sets);
+	filteredSets = validateCardSet(filteredSets);
+
+	const iterations = 1000;
+	
+	for(let i = 0; i < iterations; i++) {
+		let currentSet = createBiasedSet(filteredSets);
+		let biasData = getBiasData(currentSet);
+		aggregateData.push(biasData.reduce((max, current) => current.percent >= max.percent ? current : max));
+	}
+
+	let nocturneBias = aggregateData.filter(set => set.type === 'Night').length;
+	let adventuresBias = aggregateData.filter(set => set.type === 'Tavern').length;
+	let renaissanceBias = aggregateData.filter(set => set.type === 'Villagers/Coffers').length;
+	let attackBias = aggregateData.filter(set => set.type === 'Attack').length;
+	let trashBias = aggregateData.filter(set => set.type === 'Trash').length;
+	let durationBias = aggregateData.filter(set => set.type === 'Duration').length;
+	let buysBias = aggregateData.filter(set => set.type === 'Buys').length;
+
+	console.log(`Night: ${Math.round((nocturneBias/iterations)*100, 2)}%`);
+	console.log(`Tavern: ${Math.round((adventuresBias/iterations)*100, 2)}%`);
+	console.log(`Villagers/Coffers: ${Math.round((renaissanceBias/iterations)*100, 2)}%`);
+	console.log(`Attack: ${Math.round((attackBias/iterations)*100, 2)}%`);
+	console.log(`Trash: ${Math.round((trashBias/iterations)*100, 2)}%`);
+	console.log(`Duration: ${Math.round((durationBias/iterations)*100, 2)}%`);
+	console.log(`Buys: ${Math.round((buysBias/iterations)*100, 2)}%`);
+	console.log(`Expected win rates: ${Math.round(100/7, 2)}%`);
+}
+
+function countCards() {
+	let sets = getCheckedSets();
+	let filteredSets = filterBySets(_cards, sets);
+	filteredSets = validateCardSet(filteredSets);
+
+	console.log(`Night: ${filterByTypes(filteredSets, ['Night']).length}`)
+	console.log(`Tavern: ${filterByTavern(filteredSets).length}`);
+	console.log(`Villagers: ${filterByVillagers(filteredSets).length}`);
+	console.log(`Coffers: ${filterByCoffers(filteredSets).length}`);
+	console.log(`Attack: ${filterByTypes(filteredSets, ['Attack']).length}`);
+	console.log(`Trash: ${filterByTrashCount(filteredSets, 1).length}`);
+	console.log(`Duration: ${filterByTypes(filteredSets, ['Duration']).length}`);
+	console.log(`Buys: ${filterByBuyCount(filteredSets, 1).length}`);
 }

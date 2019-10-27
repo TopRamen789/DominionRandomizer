@@ -90,3 +90,12 @@ function hasTrash(currentSet) {
 function hasBuys(currentSet) {
 	return filterByBuyCount(currentSet, 1).length > 0;	
 }
+
+function validateCardSet(givenSet) {
+	let availableSet = givenSet.slice();
+	availableSet = validateNotBasicSet(availableSet);
+	availableSet = validateNocturne(availableSet);
+	availableSet = validateAdventures(availableSet);
+	availableSet = validateRenaissance(availableSet);
+	return availableSet;
+}
