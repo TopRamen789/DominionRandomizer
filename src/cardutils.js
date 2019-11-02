@@ -2,7 +2,7 @@ function shuffle(array) {
 	var currentIndex = array.length, temporaryValue, randomIndex;
 
 	// While there remain elements to shuffle...
-	while (0 !== currentIndex) {
+	while (currentIndex !== 0) {
 		// Pick a remaining element...
 		randomIndex = Math.floor(Math.random() * currentIndex);
 		currentIndex -= 1;
@@ -12,7 +12,7 @@ function shuffle(array) {
 		array[currentIndex] = array[randomIndex];
 		array[randomIndex] = temporaryValue;
 	}
-	return array;
+	return array.slice();
 }
 
 function filterByTavern(cardSet) {

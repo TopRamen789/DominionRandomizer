@@ -9,29 +9,12 @@ function setBiasedCost(biasedSet, costIdx) {
 function createBiasedSet(availableSet) {
 	let currentSet = [];
 	let biasedSet = [0,0,0,0,0];
-	// biasCostCurve(currentSet, availableSet);
 
-	// I need to mess with this more.
 	while(currentSet.length != 10) {
-		let currentlyAvailableSet = filterByOtherCardSet(availableSet, currentSet);
-
-		// filter out cost if we manage to bias it.
-		for(let i = 0; i < biasedSet.length; i++) {
-			if(bias(biasedSet[i])) {
-				biasedSet[i] -= 3;
-				currentlyAvailableSet = filterByCost(currentlyAvailableSet, i+2);
-				biasedSet = setBiasedCost(biasedSet, i);
-				break;
-			}
-		}
-		
+		let currentlyAvailableSet = filterByOtherCardSet(availableSet, currentSet);		
 		let biases = getBiases();
-		while(biases.length > 0) {
-			let randomBias = biases.pop();
-			currentlyAvailableSet = randomBias(currentSet, currentlyAvailableSet);
-			biases = shuffle(biases);
-		}
-
+		let randomBias = biases.pop();
+		currentlyAvailableSet = randomBias(currentSet, currentlyAvailableSet);
 		let card = currentlyAvailableSet.pop();
 		if(card != null)
 			currentSet.push(card);
@@ -41,32 +24,22 @@ function createBiasedSet(availableSet) {
 
 function enforceEngineCards(currentSet, availableCards) {
 	let newAvailableSet = [];
-	let newSet = currentSet.slice();
-	let actionsCard;
+	let newSet = shuffle(currentSet);
+	let actionsCard, drawCard;
 
-	// if we don't have a card in the current set that has at least 2 actions, add one.
 	if(filterByGreaterThanActionCount(newSet, 2).length === 0) {
-		newSet = shuffle(newSet);
 		newSet.pop();
 		actionsCard = shuffle(filterByGreaterThanActionCount(availableCards, 2)).pop();
+	}
+	if(filterByCardDraw(newSet, 2).length === 0) {
+		newSet.pop();
+		drawCard = shuffle(filterByCardDraw(availableCards, 2)).pop();
+	}
+
+	if(drawCard != null && newSet.length !== 10)
+		newSet.push(drawCard);
+	if(actionsCard != null && newSet.length !== 10)
 		newSet.push(actionsCard);
-	}
-
-	// make sure we don't inadverntently undo our previous action or remove a 2 action card
-	if(actionsCard == null)
-		actionsCard = shuffle(filterByGreaterThanActionCount(newSet, 2)).pop();
-	newSet = newSet.filter((card) => {
-		return card.name !== actionsCard.name;
-	});
-
-	// while we don't have a card that lets us draw 2 card, keep doing this.
-	while(filterByCardDraw(newSet, 2).length === 0) {
-		newSet = shuffle(newSet);
-		newCard = shuffle(filterByCardDraw(availableCards, 2)).pop();
-		newSet.push(newCard);
-	}
-
-	newSet.push(actionsCard);
 	return newSet;
 }
 
@@ -83,6 +56,7 @@ function proceduralGeneration() {
 
 	displayBiasData(currentSet);
 	buildSelectedCardSet(currentSet);
+	console.log(currentSet.length);
 }
 
 // Run bias 500x, see which ones are consistent winners.
@@ -92,7 +66,7 @@ function testBias() {
 	let filteredSets = filterBySets(_cards, sets);
 	filteredSets = validateCardSet(filteredSets);
 
-	const iterations = 1000;
+	const iterations = 100;
 	
 	for(let i = 0; i < iterations; i++) {
 		let currentSet = createBiasedSet(filteredSets);
@@ -109,6 +83,7 @@ function testBias() {
 	let buysBias = aggregateData.filter(set => set.type === 'Buys').length;
 	let everythingElseBias = aggregateData.filter(set => set.type === 'Everything Else').length;
 
+	console.clear();
 	console.log(`Night: ${Math.round((nocturneBias/iterations)*100, 2)}%`);
 	console.log(`Tavern: ${Math.round((adventuresBias/iterations)*100, 2)}%`);
 	console.log(`Villagers/Coffers: ${Math.round((renaissanceBias/iterations)*100, 2)}%`);
@@ -117,7 +92,7 @@ function testBias() {
 	console.log(`Duration: ${Math.round((durationBias/iterations)*100, 2)}%`);
 	console.log(`Buys: ${Math.round((buysBias/iterations)*100, 2)}%`);
 	console.log(`Everything Else: ${Math.round((everythingElseBias/iterations)*100, 2)}%`);
-	console.log(`Expected win rates: ${Math.round(100/7, 2)}%`);
+	console.log(`Expected win rates: ${Math.round(100/8, 2)}%`);
 }
 
 function countCards() {

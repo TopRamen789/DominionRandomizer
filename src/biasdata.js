@@ -29,8 +29,6 @@ function biasAttack(currentSet, availableCards) {
 	let biasedSet = shuffle(availableCards.slice());
 	let filter = filterByTypes(availableCards, ['Attack']);
 	// console.log(`Attack: ${filter.length}`);
-	if(filter.length === 0)
-		return biasedSet;
 	let uses = filterByTypes(currentSet, ['Attack']).length;
 	if(bias(uses))
 		biasedSet = filter;
@@ -41,8 +39,6 @@ function biasTrash(currentSet, availableCards) {
 	let biasedSet = shuffle(availableCards.slice());
 	let filter = filterByTrashCount(availableCards, 1);
 	// console.log(`Trash: ${filter.length}`);
-	if(filter.length === 0)
-		return biasedSet;
 	let uses = filterByTrashCount(currentSet, 1).length;
 	if(bias(uses))
 		biasedSet = filter;
@@ -53,8 +49,6 @@ function biasDuration(currentSet, availableCards) {
 	let biasedSet = shuffle(availableCards.slice());
 	let filter = filterByTypes(availableCards, ['Duration']);
 	// console.log(`Duration: ${filter.length}`);
-	if(filter.length === 0)
-		return biasedSet;
 	let uses = filterByTypes(currentSet, ['Duration']).length;
 	if(bias(uses))
 		biasedSet = filter;
@@ -65,8 +59,6 @@ function biasBuys(currentSet, availableCards) {
 	let biasedSet = shuffle(availableCards.slice());
 	let filter = filterByBuyCount(availableCards, 1);
 	// console.log(`Buys: ${filter.length}`);
-	if(filter.length === 0)
-		return biasedSet;
 	let uses = filterByBuyCount(currentSet, 1).length;
 	if(bias(uses))
 		biasedSet = filter;
@@ -77,8 +69,6 @@ function biasNight(currentSet, availableCards) {
 	let biasedSet = shuffle(availableCards.slice());
 	let filter = filterByTypes(availableCards, ['Night']);
 	// console.log(`Night: ${filter.length}`);
-	if(filter.length === 0)
-		return biasedSet;
 	let uses = filterByTypes(currentSet, ['Night']).length;
 	if(bias(uses))
 		biasedSet = filter;
@@ -89,8 +79,6 @@ function biasTavern(currentSet, availableCards) {
 	let biasedSet = shuffle(availableCards.slice());
 	let filter = filterByTavern(availableCards);
 	// console.log(`Tavern: ${filter.length}`);
-	if(filter.length === 0)
-		return biasedSet;
 	let uses = filterByTavern(currentSet).length;
 	if(bias(uses))
 		biasedSet = filter;
@@ -101,8 +89,6 @@ function biasVillagers(currentSet, availableCards) {
 	let biasedSet = shuffle(availableCards.slice());
 	let filter = filterByVillagers(availableCards);
 	// console.log(`Villagers: ${filter.length}`);
-	if(filter.length === 0)
-		return biasedSet;
 	let uses = filterByVillagers(currentSet).length;
 	if(bias(uses))
 		biasedSet = filter;
@@ -113,8 +99,6 @@ function biasCoffers(currentSet, availableCards) {
 	let biasedSet = shuffle(availableCards.slice());
 	let filter = filterByCoffers(availableCards);
 	// console.log(`Coffers: ${filter.length}`);
-	if(filter.length === 0)
-		return biasedSet;
 	let uses = filterByCoffers(currentSet).length;
 	if(bias(uses))
 		biasedSet = filter;
@@ -139,9 +123,6 @@ function biasEverythingElse(currentSet, availableCards) {
 	let uses = currentSet.filter((card) => {
 		return shortBiases.includes(card);
 	}).length;
-
-	if(filter.length === 0)
-		return biasedSet;
 	if(bias(uses))
 		biasedSet = filter;
 	return biasedSet;

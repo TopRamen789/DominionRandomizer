@@ -33,9 +33,16 @@ function validateNocturne(cardSet) {
 		"Spirit",
 		"Zombie",
 		"Boon",
-		"Hex"
+		"Hex",
+		"State"
 	];
- 	return filterByNotType(cardSet, nocturneTypes).filter(card => card.name !== "Bat");
+	let nocturneCards = [
+		"Bat",
+		"Wish",
+	];
+ 	let nonNocturneCards = filterByNotType(cardSet, nocturneTypes).filter(card => card.name !== "Bat");
+ 	nonNocturneCards = nonNocturneCards.filter(card => !nocturneCards.includes(card.name));
+ 	return nonNocturneCards;
 }
 
 function validateAdventures(cardSet) {
