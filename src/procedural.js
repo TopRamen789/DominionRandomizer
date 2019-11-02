@@ -107,6 +107,7 @@ function testBias() {
 	let trashBias = aggregateData.filter(set => set.type === 'Trash').length;
 	let durationBias = aggregateData.filter(set => set.type === 'Duration').length;
 	let buysBias = aggregateData.filter(set => set.type === 'Buys').length;
+	let everythingElseBias = aggregateData.filter(set => set.type === 'Everything Else').length;
 
 	console.log(`Night: ${Math.round((nocturneBias/iterations)*100, 2)}%`);
 	console.log(`Tavern: ${Math.round((adventuresBias/iterations)*100, 2)}%`);
@@ -115,6 +116,7 @@ function testBias() {
 	console.log(`Trash: ${Math.round((trashBias/iterations)*100, 2)}%`);
 	console.log(`Duration: ${Math.round((durationBias/iterations)*100, 2)}%`);
 	console.log(`Buys: ${Math.round((buysBias/iterations)*100, 2)}%`);
+	console.log(`Everything Else: ${Math.round((everythingElseBias/iterations)*100, 2)}%`);
 	console.log(`Expected win rates: ${Math.round(100/7, 2)}%`);
 }
 
@@ -131,4 +133,5 @@ function countCards() {
 	console.log(`Trash: ${filterByTrashCount(filteredSets, 1).length}`);
 	console.log(`Duration: ${filterByTypes(filteredSets, ['Duration']).length}`);
 	console.log(`Buys: ${filterByBuyCount(filteredSets, 1).length}`);
+	console.log(`Everything Else: ' ${filterSetByEverythingElse(filteredSets).length}`);
 }

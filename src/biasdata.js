@@ -132,6 +132,21 @@ function biasCoffers(currentSet, availableCards) {
 // 	return shuffle(biasedSet);
 // }
 
+function biasEverythingElse(currentSet, availableCards) {
+	let biasedSet = shuffle(availableCards.slice());
+	let filter = filterSetByEverythingElse(availableCards);
+	let shortBiases = filter.map(card => card.name);
+	let uses = currentSet.filter((card) => {
+		return shortBiases.includes(card);
+	}).length;
+
+	if(filter.length === 0)
+		return biasedSet;
+	if(bias(uses))
+		biasedSet = filter;
+	return biasedSet;
+}
+
 function getBiases() {
 	let biases = [];
 	biases.push(biasDuration);
@@ -143,6 +158,7 @@ function getBiases() {
 	biases.push(biasCoffers);
 	biases.push(biasNight);
 	// biases.push(biaseTokens);
+	biases.push(biasEverythingElse);
 	biases = shuffle(biases);
 	return biases;
 }
@@ -218,6 +234,15 @@ function displayBuysBias(currentSet) {
 	return biasData;
 }
 
+function displayEverythingElse(currentSet) {
+	let biasData = [];
+	biasData.push({
+		type: 'Everything Else',
+		percent: (filterSetByEverythingElse(currentSet).length * _biasPercent)*100
+	});
+	return biasData;
+
+}
 
 function clearBiasData() {
 	let biasDataUI = document.querySelector("#biasData");
@@ -233,6 +258,7 @@ function getBiasData(currentSet) {
 	biasData = biasData.concat(displayTrashBias(currentSet));
 	biasData = biasData.concat(displayDurationBias(currentSet));
 	biasData = biasData.concat(displayBuysBias(currentSet));
+	biasData = biasData.concat(displayEverythingElse(currentSet));
 	return biasData;
 }
 

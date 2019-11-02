@@ -20,8 +20,9 @@ function validateNotBasicSet(cardSet) {
 		"Gold",
 		"Estate",
 		"Gardens",
+		"Duchy",
 		"Province",
-		"Duchy"
+		"Curse"
 	];
 	return cardSet.filter(card => !basicSetCards.includes(card.name));
 }

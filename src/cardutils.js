@@ -95,6 +95,43 @@ function filterByBuyCount(cardSet, buyCount) {
 	});	
 }
 
+function filterSetByEverythingElse(currentSet) {
+	let biasedSet = currentSet.slice();
+	let attackTypes = filterByTypes(currentSet, ['Attack']);
+	biasedSet = biasedSet.filter(card => {
+		return !attackTypes.includes(card);
+	});
+	let trashCount = filterByTrashCount(currentSet, 1);
+	biasedSet = biasedSet.filter(card => {
+		return !trashCount.includes(card);
+	});
+	let durationTypes = filterByTypes(currentSet, ['Duration']);
+	biasedSet = biasedSet.filter(card => {
+		return !durationTypes.includes(card);
+	});
+	let buyCount = filterByBuyCount(currentSet, 1);
+	biasedSet = biasedSet.filter(card => {
+		return !buyCount.includes(card);
+	});
+	let nightTypes = filterByTypes(currentSet, ['Night']);
+	biasedSet = biasedSet.filter(card => {
+		return !nightTypes.includes(card);
+	});
+	let tavern = filterByTavern(currentSet);
+	biasedSet = biasedSet.filter(card => {
+		return !tavern.includes(card);
+	});
+	let villagers = filterByVillagers(currentSet);
+	biasedSet = biasedSet.filter(card => {
+		return !villagers.includes(card);
+	});
+	let coffers = filterByCoffers(currentSet);
+	biasedSet = biasedSet.filter(card => {
+		return !coffers.includes(card);
+	});
+	return biasedSet;
+}
+
 function filterBySets(cardSet, sets) {
 	return cardSet.filter((card) => {
 		return sets.includes(card.set);
