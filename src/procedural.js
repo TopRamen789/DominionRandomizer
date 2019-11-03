@@ -11,9 +11,21 @@ function createBiasedSet(availableSet) {
 	let biasedSet = [0,0,0,0,0];
 
 	while(currentSet.length != 10) {
-		let currentlyAvailableSet = filterByOtherCardSet(availableSet, currentSet);		
+		let currentlyAvailableSet = filterByOtherCardSet(availableSet, currentSet);
+		
+		// filter out cost if we manage to bias it.
+		for(let i = 0; i < biasedSet.length; i++) {
+			if(bias(biasedSet[i])) {
+				biasedSet[i] -= 3;
+				currentlyAvailableSet = filterByCost(currentlyAvailableSet, i+2);
+				biasedSet = setBiasedCost(biasedSet, i);
+				break;
+			}
+		}
+
 		let biases = getBiases();
 		let randomBias = biases.pop();
+		// console.log(randomBias);
 		currentlyAvailableSet = randomBias(currentSet, currentlyAvailableSet);
 		let card = currentlyAvailableSet.pop();
 		if(card != null)
@@ -81,18 +93,26 @@ function testBias() {
 	let trashBias = aggregateData.filter(set => set.type === 'Trash').length;
 	let durationBias = aggregateData.filter(set => set.type === 'Duration').length;
 	let buysBias = aggregateData.filter(set => set.type === 'Buys').length;
+	let actionsBias = aggregateData.filter(set => set.type === 'Actions').length;
+	let cardsBias = aggregateData.filter(set => set.type === 'Cards').length;
+	let victoryBias = aggregateData.filter(set => set.type === 'Victory').length;
+	let treasureBias = aggregateData.filter(set => set.type === 'Treasure').length;
 	let everythingElseBias = aggregateData.filter(set => set.type === 'Everything Else').length;
 
 	console.clear();
-	console.log(`Night: ${Math.round((nocturneBias/iterations)*100, 2)}%`);
-	console.log(`Tavern: ${Math.round((adventuresBias/iterations)*100, 2)}%`);
-	console.log(`Villagers/Coffers: ${Math.round((renaissanceBias/iterations)*100, 2)}%`);
-	console.log(`Attack: ${Math.round((attackBias/iterations)*100, 2)}%`);
-	console.log(`Trash: ${Math.round((trashBias/iterations)*100, 2)}%`);
-	console.log(`Duration: ${Math.round((durationBias/iterations)*100, 2)}%`);
-	console.log(`Buys: ${Math.round((buysBias/iterations)*100, 2)}%`);
-	console.log(`Everything Else: ${Math.round((everythingElseBias/iterations)*100, 2)}%`);
-	console.log(`Expected win rates: ${Math.round(100/8, 2)}%`);
+	console.log(`Night: ${Math.round((nocturneBias/iterations)*100, 3)}%`);
+	console.log(`Tavern: ${Math.round((adventuresBias/iterations)*100, 3)}%`);
+	console.log(`Villagers/Coffers: ${Math.round((renaissanceBias/iterations)*100, 3)}%`);
+	console.log(`Attack: ${Math.round((attackBias/iterations)*100, 3)}%`);
+	console.log(`Trash: ${Math.round((trashBias/iterations)*100, 3)}%`);
+	console.log(`Duration: ${Math.round((durationBias/iterations)*100, 3)}%`);
+	console.log(`Buys: ${Math.round((buysBias/iterations)*100, 3)}%`);
+	console.log(`Actions: ${Math.round((actionsBias/iterations)*100, 3)}%`);
+	console.log(`Cards: ${Math.round((cardsBias/iterations)*100, 3)}%`);
+	console.log(`Victory: ${Math.round((victoryBias/iterations)*100, 3)}%`);
+	console.log(`Treasure: ${Math.round((treasureBias/iterations)*100, 3)}%`);
+	console.log(`Everything Else: ${Math.round((everythingElseBias/iterations)*100, 3)}%`);
+	console.log(`Expected win rates: ${Math.round(100/12, 3)}%`);
 }
 
 function countCards() {
@@ -108,5 +128,9 @@ function countCards() {
 	console.log(`Trash: ${filterByTrashCount(filteredSets, 1).length}`);
 	console.log(`Duration: ${filterByTypes(filteredSets, ['Duration']).length}`);
 	console.log(`Buys: ${filterByBuyCount(filteredSets, 1).length}`);
+	console.log(`Cards: ${filterByCardDraw(filteredSets, 1).length}`);
+	console.log(`Actions: ${filterByGreaterThanActionCount(filteredSets, 1).length}`);
+	console.log(`Victory: ${filterByGreaterThanActionCount(filteredSets, 1).length}`);
+	console.log(`Treasure: ${filterByTypes(filteredSets, ['Treasure']).length}`);
 	console.log(`Everything Else: ' ${filterSetByEverythingElse(filteredSets).length}`);
 }

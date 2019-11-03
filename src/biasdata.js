@@ -1,19 +1,6 @@
 // procedural generation of cardsets.
 const _biasPercent = .05;
 const _setOffset = (getCheckedSets().length/2) * _biasPercent;
-// I should perhaps create another offset that causes biases to win evenly
-
-function normalizeBiases() {
-	/*
-	So in this method, we want to calculate card counts of each bias use that to even the percentages of each one winning
-	*/
-	let biases = getBiases();
-	let biasCount = biases.length;
-	// if(biases.indexOf(biasVillagers) > -1) // coffer/villager should be grouped methinks.
-	// 	biasCount -= 1;
-	// biasCount/cardCountOfType/totalCards = biasOffset?
-	// 119 distinct cards
-}
 
 function bias(uses) {
 	let bias = uses * _biasPercent;
@@ -25,11 +12,49 @@ function specialBias(uses, specialBias) {
 	return (Math.random() + bias) > 0.5;	
 }
 
+function biasActionCount(currentSet, availableCards) {
+	let biasedSet = shuffle(availableCards.slice());
+	let filter = filterByGreaterThanActionCount(availableCards, 1);
+	let uses = filterByGreaterThanActionCount(currentSet, 1);
+	if(bias(uses))
+		biasedSet = filter;
+	return biasedSet;
+}
+
+function biasCardDraw(currentSet, availableCards) {
+	let biasedSet = shuffle(availableCards.slice());
+	let filter = filterByCardDraw(availableCards, 1);
+	let uses = filterByCardDraw(currentSet, 1);
+	if(bias(uses))
+		biasedSet = filter;
+	return biasedSet;
+}
+
 function biasAttack(currentSet, availableCards) {
 	let biasedSet = shuffle(availableCards.slice());
 	let filter = filterByTypes(availableCards, ['Attack']);
 	// console.log(`Attack: ${filter.length}`);
 	let uses = filterByTypes(currentSet, ['Attack']).length;
+	if(bias(uses))
+		biasedSet = filter;
+	return biasedSet;
+}
+
+function biasTreasure(currentSet, availableCards) {
+	let biasedSet = shuffle(availableCards.slice());
+	let filter = filterByTypes(availableCards, ['Treasure']);
+	// console.log(`Treasure: ${filter.length}`);
+	let uses = filterByTypes(currentSet, ['Treasure']).length;
+	if(bias(uses))
+		biasedSet = filter;
+	return biasedSet;
+}
+
+function biasVictory(currentSet, availableCards) {
+	let biasedSet = shuffle(availableCards.slice());
+	let filter = filterByTypes(availableCards, ['Victory']);
+	// console.log(`Victory: ${filter.length}`);
+	let uses = filterByTypes(currentSet, ['Victory']).length;
 	if(bias(uses))
 		biasedSet = filter;
 	return biasedSet;
@@ -105,17 +130,6 @@ function biasCoffers(currentSet, availableCards) {
 	return biasedSet;
 }
 
-// still need to modify the data set more for this one.
-// function biasTokens(currentSet, availableCards) {
-// 	let biasedSet = availableCards.slice();
-// 	if(filterByTokens(availableCards).length > 0) {
-// 		let uses = filterByTokens(currentSet);
-// 		if(bias(uses))
-// 			biasedSet = filterByTokens(availableCards);
-// 	}
-// 	return shuffle(biasedSet);
-// }
-
 function biasEverythingElse(currentSet, availableCards) {
 	let biasedSet = shuffle(availableCards.slice());
 	let filter = filterSetByEverythingElse(availableCards);
@@ -130,6 +144,10 @@ function biasEverythingElse(currentSet, availableCards) {
 
 function getBiases() {
 	let biases = [];
+	biases.push(biasActionCount);
+	biases.push(biasVictory);
+	biases.push(biasTreasure);
+	biases.push(biasCardDraw);
 	biases.push(biasDuration);
 	biases.push(biasBuys);
 	biases.push(biasAttack);
@@ -138,7 +156,6 @@ function getBiases() {
 	biases.push(biasVillagers);
 	biases.push(biasCoffers);
 	biases.push(biasNight);
-	// biases.push(biaseTokens);
 	biases.push(biasEverythingElse);
 	biases = shuffle(biases);
 	return biases;
@@ -177,41 +194,73 @@ function displayRenaissanceBias(currentSet) {
 
 function displayAttackBias(currentSet) {
 	let biasData = [];
-	if(hasAttack(currentSet))
-		biasData.push({
-			type: 'Attack',
-			percent: (filterByTypes(currentSet, ['Attack']).length * _biasPercent)*100
-		});
+	biasData.push({
+		type: 'Attack',
+		percent: (filterByTypes(currentSet, ['Attack']).length * _biasPercent)*100
+	});
 	return biasData;
 }
 
 function displayTrashBias(currentSet) {
 	let biasData = [];
-	if(hasTrash(currentSet))
-		biasData.push({
-			type: 'Trash',
-			percent: (filterByTrashCount(currentSet, 1).length * _biasPercent)*100
-		});
+	biasData.push({
+		type: 'Trash',
+		percent: (filterByTrashCount(currentSet, 1).length * _biasPercent)*100
+	});
 	return biasData;
 }
 
 function displayDurationBias(currentSet) {
 	let biasData = [];
-	if(hasDuration(currentSet))
-		biasData.push({
-			type: 'Duration',
-			percent: (filterByTypes(currentSet, ['Duration']).length * _biasPercent)*100
-		});
+	biasData.push({
+		type: 'Duration',
+		percent: (filterByTypes(currentSet, ['Duration']).length * _biasPercent)*100
+	});
 	return biasData;
 }
 
 function displayBuysBias(currentSet) {
 	let biasData = [];
-	if(hasBuys(currentSet))
-		biasData.push({
-			type: 'Buys',
-			percent: (filterByBuyCount(currentSet, 1).length * _biasPercent)*100
-		});
+	biasData.push({
+		type: 'Buys',
+		percent: (filterByBuyCount(currentSet, 1).length * _biasPercent)*100
+	});
+	return biasData;
+}
+
+function displayActionsCountBias(currentSet) {
+	let biasData = [];
+	biasData.push({
+		type: 'Actions',
+		percent: (filterByGreaterThanActionCount(currentSet, 1).length * _biasPercent)*100
+	});
+	return biasData;
+}
+
+function displayCardDrawCountBias(currentSet) {
+	let biasData = [];
+	biasData.push({
+		type: 'Cards',
+		percent: (filterByCardDraw(currentSet, 1).length * _biasPercent)*100
+	});
+	return biasData;
+}
+
+function displayTreasureBias(currentSet) {
+	let biasData = [];
+	biasData.push({
+		type: 'Treasure',
+		percent: (filterByTypes(currentSet, ['Treasure']).length * _biasPercent)*100
+	});
+	return biasData;
+}
+
+function displayVictoryBias(currentSet) {
+	let biasData = [];
+	biasData.push({
+		type: 'Victory',
+		percent: (filterByTypes(currentSet, ['Victory']).length * _biasPercent)*100
+	});
 	return biasData;
 }
 
@@ -240,6 +289,8 @@ function getBiasData(currentSet) {
 	biasData = biasData.concat(displayDurationBias(currentSet));
 	biasData = biasData.concat(displayBuysBias(currentSet));
 	biasData = biasData.concat(displayEverythingElse(currentSet));
+	biasData = biasData.concat(displayActionsCountBias(currentSet));
+	biasData = biasData.concat(displayCardDrawCountBias(currentSet));
 	return biasData;
 }
 

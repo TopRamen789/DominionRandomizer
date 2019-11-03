@@ -129,6 +129,14 @@ function filterSetByEverythingElse(currentSet) {
 	biasedSet = biasedSet.filter(card => {
 		return !coffers.includes(card);
 	});
+	let actionCount = filterByActionCount(currentSet, 1);
+	biasedSet = biasedSet.filter(card => {
+		return !actionCount.includes(card);
+	});
+	let cardCount = filterByCardDraw(currentSet, 1);
+	biasedSet = biasedSet.filter(card => {
+		return !biasedSet.includes(card);
+	});
 	return biasedSet;
 }
 
