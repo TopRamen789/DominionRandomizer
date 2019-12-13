@@ -1,4 +1,4 @@
-function validateTenCardsTotal(cardSet) {
+let validateTenCardsTotal = (cardSet) => {
 	let inputIsChecked = document.querySelector("#validateTenCards").checked;
 	if(!inputIsChecked)
 		return true;
@@ -13,7 +13,7 @@ function validateTenCardsTotal(cardSet) {
 	return isExactlyTen;
 }
 
-function validateNotBasicSet(cardSet) {
+let validateNotBasicSet = (cardSet) => {
 	let basicSetCards = [
 		"Copper",
 		"Silver",
@@ -26,7 +26,7 @@ function validateNotBasicSet(cardSet) {
 	return cardSet.filter(card => !basicSetCards.includes(card.name));
 }
 
-function validateNocturne(cardSet) {
+let validateNocturne = (cardSet) => {
 	let nocturneTypes = [
 		"Heirloom",
 		"Spirit",
@@ -37,7 +37,7 @@ function validateNocturne(cardSet) {
  	return filterByNotType(cardSet, nocturneTypes);
 }
 
-function validateAdventures(cardSet) {
+let validateAdventures = (cardSet) => {
 	let adventuresUpgradeCards = [
 		"Soldier",
 		"Fugitive",
@@ -51,41 +51,41 @@ function validateAdventures(cardSet) {
 	return cardSet.filter(card => !adventuresUpgradeCards.includes(card.name) && !card.types.includes("Event"));
 }
 
-function validateRenaissance(cardSet) {
+let validateRenaissance = (cardSet) => {
 	let renaissanceTypes = [
 		"Project"
 	];
 	return filterByNotType(cardSet, renaissanceTypes);
 }
 
-function getSetPossibilities(currentSet) {
+let getSetPossibilities = (currentSet) => {
 	return getDistinctArrayValues(currentSet.map(card => card.set));
 }
 
-function hasAdventures(currentSet) {
+let hasAdventures = (currentSet) => {
 	return getSetPossibilities(currentSet).includes("Adventures");
 }
 
-function hasNocturne(currentSet) {
+let hasNocturne = (currentSet) => {
 	return getSetPossibilities(currentSet).includes("Nocturne");
 }
 
-function hasRenaissance(currentSet) {
+let hasRenaissance = (currentSet) => {
 	return getSetPossibilities(currentSet).includes("Renaissance");
 }
 
-function hasAttack(currentSet) {
+let hasAttack = (currentSet) => {
 	return getDistinctCardTypes(currentSet).includes('Attack');
 }
 
-function hasDuration(currentSet) {
+let hasDuration = (currentSet) => {
 	return getDistinctCardTypes(currentSet).includes('Duration');
 }
 
-function hasTrash(currentSet) {
+let hasTrash = (currentSet) => {
 	return filterByTrashCount(currentSet, 1).length > 0;
 }
 
-function hasBuys(currentSet) {
+let hasBuys = (currentSet) => {
 	return filterByBuyCount(currentSet, 1).length > 0;	
 }

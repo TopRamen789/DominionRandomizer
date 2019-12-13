@@ -1,4 +1,4 @@
-function shuffle(array) {
+let shuffle = (array) => {
 	var currentIndex = array.length, temporaryValue, randomIndex;
 
 	// While there remain elements to shuffle...
@@ -15,92 +15,92 @@ function shuffle(array) {
 	return array;
 }
 
-function filterByTavern(cardSet) {
+let filterByTavern = (cardSet) => {
 	return cardSet.filter((card) => {
 		return card.useTavern;
 	});
 }
 
-function filterByVillagers(cardSet) {
+let filterByVillagers = (cardSet) => {
 	return cardSet.filter((card) => {
 		return card.useVillagers;
 	});
 }
 
-function filterByCoffers(cardSet) {
+let filterByCoffers = (cardSet) => {
 	return cardSet.filter((card) => {
 		return card.useCoffers;
 	})
 }
 
-function filterByCardDraw(cardSet, cardDraw) {
+let filterByCardDraw = (cardSet, cardDraw) => {
 	return cardSet.filter((card) => {
 		return card.cards >= cardDraw;
 	});
 }
 
-function filterByCardDrawCount(cardSet, cardCount) {
+let filterByCardDrawCount = (cardSet, cardCount) => {
 	return cardSet.filter((card) => {
 		return card.cards == cardCount;
 	});
 }
 
-function filterByGreaterThanActionCount(cardSet, actionCount) {
+let filterByGreaterThanActionCount = (cardSet, actionCount) => {
 	return cardSet.filter((card) => {
 		return card.actions >= actionCount;
 	});
 }
 
-function filterByActionCount(cardSet, actionCount) {
+let filterByActionCount = (cardSet, actionCount) => {
 	return cardSet.filter((card) => {
 		return card.actions == actionCount;
 	});
 }
 
-function filterByTypes(cardSet, filterTypes) {
+let filterByTypes = (cardSet, filterTypes) => {
 	return cardSet.filter((card) => {
 		let types = card.types.split(" - ");
 		return types.filter(type => filterTypes.includes(type)).length > 0;
 	});
 }
 
-function filterByNotType(cardSet, filterTypes) {
+let filterByNotType = (cardSet, filterTypes) => {
 	return cardSet.filter((card) => {
 		let types = card.types.split(" - ");
 		return !types.filter(type => filterTypes.includes(type)).length > 0;
 	});
 }
 
-function filterByCost(cardSet, cost) {
+let filterByCost = (cardSet, cost) => {
 	return cardSet.filter((card) => {
 		return card.cost === cost;
 	});
 }
 
-function filterByTrashCount(cardSet, trashCount) {
+let filterByTrashCount = (cardSet, trashCount) => {
 	return cardSet.filter((card) => {
 		return card.trash >= trashCount;
 	});
 }
 
-function filterByBuyCount(cardSet, buyCount) {
+let filterByBuyCount = (cardSet, buyCount) => {
 	return cardSet.filter((card) => {
 		return card.buys >= buyCount;
 	});	
 }
 
-function filterBySets(cardSet, sets) {
+let filterBySets = (cardSet, sets) => {
 	return cardSet.filter((card) => {
 		return sets.includes(card.set);
 	});
 }
 
-function filterByOtherCardSet(cardSet, otherSet) {
+let filterByOtherCardSet = (cardSet, otherSet) => {
 	let names = otherSet.map(card => card.name);
 	return cardSet.filter(card => !names.includes(card.name));
 }
 
-function sortByCost(cardSet) {
+let sortByCost = (cardSet) => {
 	return cardSet.sort((a,b) => {
 		if(a.cost < b.cost)
 			return -1;
@@ -110,13 +110,13 @@ function sortByCost(cardSet) {
 	});
 }
 
-function getDistinctArrayValues(array) {
+let getDistinctArrayValues = (array) => {
 	return array.filter((value, index, self) => {
 		return self.indexOf(value) === index;
 	});
 }
 
-function getDistinctCardTypes(cardSet) {
+let getDistinctCardTypes = (cardSet) => {
 	let types = cardSet.map(card => card.types.split(" - "));
 	types = types.reduce((acc, value) => {
 		return acc.concat(value);
@@ -124,19 +124,19 @@ function getDistinctCardTypes(cardSet) {
 	return getDistinctArrayValues(types);
 }
 
-function getCardsWithCostInSets(sets, cost) {
+let getCardsWithCostInSets = (sets, cost) => {
 	return _cards.filter(card => card.cost).filter((card) => {
 		return card.cost === cost && sets.includes(card.set);
 	});
 }
 
-function getSelectedCards(selectedCards) {
+let getSelectedCards = (selectedCards) => {
 	return _cards.filter((card) => {
 		return selectedCards.includes(card.name);
 	});
 }
 
-function buildHeader(cardsDiv) {
+let buildHeader = (cardsDiv) => {
 	let cost = span("Cost");
 	let set = span("Set");
 	let name = span("Name");
@@ -148,7 +148,7 @@ function buildHeader(cardsDiv) {
 	cardsDiv.appendChild(type);
 }
 
-function buildCardSetUI(cardSet, cardsDiv) {
+let buildCardSetUI = (cardSet, cardsDiv) => {
 	let header = buildHeader(cardsDiv);
 	cardSet.forEach((card) => {
 		if(card == null)
@@ -167,17 +167,17 @@ function buildCardSetUI(cardSet, cardsDiv) {
 	});
 }
 
-function buildRandomizedCardSetUI(cardSet) {
+let buildRandomizedCardSetUI = (cardSet) => {
 	let cardsDiv = document.querySelector("#randomizedCards");
 	buildCardSetUI(cardSet, cardsDiv);
 }
 
-function clearCardData() {
+let clearCardData = () => {
 	let cardsDiv = document.querySelector("#randomizedCards");
 	disposeChildren(cardsDiv);
 }
 
-function buildSelectedCardSet(cardSet) {
+let buildSelectedCardSet = (cardSet) => {
 	clearCardData();
 	displayCardPercentages(cardSet);
 	buildRandomizedCardSetUI(cardSet);

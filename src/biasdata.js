@@ -1,17 +1,17 @@
 // procedural generation of cardsets.
 var _biasPercent = .05;
 
-function bias(uses) {
+let bias = (uses) => {
 	let bias = uses * _biasPercent;
 	return (Math.random() + bias) > 0.5;
 }
 
-function specialBias(uses, specialBias) {
+let specialBias = (uses, specialBias) => {
 	let bias = uses * specialBias;
 	return (Math.random() + bias) > 0.5;	
 }
 
-function biasAttack(currentSet, availableCards) {
+let biasAttack = (currentSet, availableCards) => {
 	let biasedSet = availableCards.slice();
 	let filter = filterByTypes(availableCards, ['Attack']);
 	let uses = filter.length;
@@ -22,7 +22,7 @@ function biasAttack(currentSet, availableCards) {
 	return shuffle(biasedSet);
 }
 
-function biasTrash(currentSet, availableCards) {
+let biasTrash = (currentSet, availableCards) => {
 	let biasedSet = availableCards.slice();
 	let filter = filterByTrashCount(availableCards, 0);
 	let uses = filter.length;
@@ -33,7 +33,7 @@ function biasTrash(currentSet, availableCards) {
 	return shuffle(biasedSet);
 }
 
-function biasDuration(currentSet, availableCards) {
+let biasDuration = (currentSet, availableCards) => {
 	let biasedSet = availableCards.slice();
 	let filter = filterByTypes(availableCards, ['Duration']);
 	let uses = filter.length;
@@ -44,7 +44,7 @@ function biasDuration(currentSet, availableCards) {
 	return shuffle(biasedSet);
 }
 
-function biasBuys(currentSet, availableCards) {
+let biasBuys = (currentSet, availableCards) => {
 	let biasedSet = availableCards.slice();
 	let filter = filterByBuyCount(availableCards, 0);
 	let uses = filter.length;
@@ -56,7 +56,7 @@ function biasBuys(currentSet, availableCards) {
 }
 
 /*SPECIAL, because for some reason night cards get more heavily biased than others*/
-function biasNight(currentSet, availableCards) {
+let biasNight = (currentSet, availableCards) => {
 	let biasedSet = availableCards.slice();
 	let filter = filterByTypes(availableCards, ['Night']);
 	let uses = filter.length;
@@ -67,7 +67,7 @@ function biasNight(currentSet, availableCards) {
 	return shuffle(biasedSet);
 }
 
-function biasTavern(currentSet, availableCards) {
+let biasTavern = (currentSet, availableCards) => {
 	let biasedSet = availableCards.slice();
 	let filter = filterByTavern(availableCards);
 	let uses = filter.length;
@@ -78,7 +78,7 @@ function biasTavern(currentSet, availableCards) {
 	return shuffle(biasedSet);
 }
 
-function biasVillagers(currentSet, availableCards) {
+let biasVillagers = (currentSet, availableCards) => {
 	let biasedSet = availableCards.slice();
 	let filter = filterByVillagers(availableCards);
 	let uses = filter.length;
@@ -89,7 +89,7 @@ function biasVillagers(currentSet, availableCards) {
 	return shuffle(biasedSet);
 }
 
-function biasCoffers(currentSet, availableCards) {
+let biasCoffers = (currentSet, availableCards) => {
 	let biasedSet = availableCards.slice();
 	let filter = filterByCoffers(availableCards);
 	let uses = filter.length;
@@ -101,7 +101,7 @@ function biasCoffers(currentSet, availableCards) {
 }
 
 // still need to modify the data set more for this one.
-// function biasTokens(currentSet, availableCards) {
+// let biasTokens = (currentSet, availableCards) => {
 // 	let biasedSet = availableCards.slice();
 // 	if(filterByTokens(availableCards).length > 0) {
 // 		let uses = filterByTokens(currentSet);
@@ -111,18 +111,18 @@ function biasCoffers(currentSet, availableCards) {
 // 	return shuffle(biasedSet);
 // }
 
-// function useEvents(currentSet) {
+// let useEvents = (currentSet) => {
 // 	// we could do a math.random here or set it based on the currentSet.
 // 	// let uses = filterByTavern(currentSet);
 // 	// if(bias(uses))
 // 	// bias the events?
 // }
 
-// function useProjects() {
+// let useProjects = () => {
 // 	//
 // }
 
-function getBiases() {
+let getBiases = () => {
 	let biases = [];
 	biases.push(biasDuration);
 	biases.push(biasBuys);
@@ -137,7 +137,7 @@ function getBiases() {
 	return biases;
 }
 
-function displayNocturneBias(currentSet) {
+let displayNocturneBias = (currentSet) => {
 	let biasData = [];
 	if(hasNocturne(currentSet))
 		biasData.push({
@@ -147,7 +147,7 @@ function displayNocturneBias(currentSet) {
 	return biasData;
 }
 
-function displayAdventuresBias(currentSet) {
+let displayAdventuresBias = (currentSet) => {
 	let biasData = [];
 	if(hasAdventures(currentSet))
 		biasData.push({
@@ -157,7 +157,7 @@ function displayAdventuresBias(currentSet) {
 	return biasData;
 }
 
-function displayRenaissanceBias(currentSet) {
+let displayRenaissanceBias = (currentSet) => {
 	let biasData = [];
 	if(hasRenaissance(currentSet)) {
 		biasData.push({
@@ -173,7 +173,7 @@ function displayRenaissanceBias(currentSet) {
 	return biasData;
 }
 
-function displayAttackBias(currentSet) {
+let displayAttackBias = (currentSet) => {
 	let biasData = [];
 	if(hasAttack(currentSet))
 		biasData.push({
@@ -183,7 +183,7 @@ function displayAttackBias(currentSet) {
 	return biasData;
 }
 
-function displayTrashBias(currentSet) {
+let displayTrashBias = (currentSet) => {
 	let biasData = [];
 	if(hasTrash(currentSet))
 		biasData.push({
@@ -193,7 +193,7 @@ function displayTrashBias(currentSet) {
 	return biasData;
 }
 
-function displayDurationBias(currentSet) {
+let displayDurationBias = (currentSet) => {
 	let biasData = [];
 	if(hasDuration(currentSet))
 		biasData.push({
@@ -203,7 +203,7 @@ function displayDurationBias(currentSet) {
 	return biasData;
 }
 
-function displayBuysBias(currentSet) {
+let displayBuysBias = (currentSet) => {
 	let biasData = [];
 	if(hasBuys(currentSet))
 		biasData.push({
@@ -214,12 +214,12 @@ function displayBuysBias(currentSet) {
 }
 
 
-function clearBiasData() {
+let clearBiasData = () => {
 	let biasDataUI = document.querySelector("#biasData");
 	disposeChildren(biasDataUI);
 }
 
-function getBiasData(currentSet) {
+let getBiasData = (currentSet) => {
 	let biasData = [];
 	biasData = biasData.concat(displayNocturneBias(currentSet));
 	biasData = biasData.concat(displayAdventuresBias(currentSet));
@@ -231,7 +231,7 @@ function getBiasData(currentSet) {
 	return biasData;
 }
 
-function displayBiasData(currentSet) {
+let displayBiasData = (currentSet) => {
 	clearBiasData();
 
 	let biasData = getBiasData(currentSet);

@@ -1,4 +1,4 @@
-function getCheckedSets() {
+let getCheckedSets = () => {
 	let inputs = [].slice.call(document.querySelectorAll("input"));
 	let selectedCheckboxes = inputs.filter((input) => {
 		return input.type === "checkbox" && input.checked 
@@ -11,7 +11,7 @@ function getCheckedSets() {
 	return selectedCheckboxes;
 }
 
-function getCardNumberInputs() {
+let getCardNumberInputs = () => {
 	let inputs = [].slice.call(document.querySelectorAll("input"));
 	let cardNumbers = inputs.filter((input) => {
 		return !isNaN(parseInt(input.attributes["id"].value[0], 10)) && input.attributes["id"].value.includes("cost");
@@ -25,7 +25,7 @@ function getCardNumberInputs() {
 	return cardNumbers;
 }
 
-function buildRandomSetFromInputs(cardNumbers, checkedSets) {
+let buildRandomSetFromInputs = (cardNumbers, checkedSets) => {
 	let randomizedCardSet = [];
 	cardNumbers.forEach((cardNumber, idx) => {
 		for(let i = 0; i < cardNumber.number; i++) {
@@ -38,7 +38,7 @@ function buildRandomSetFromInputs(cardNumbers, checkedSets) {
 	return randomizedCardSet;
 }
 
-function getAvailableCards(currentCards, sets, cost) {
+let getAvailableCards = (currentCards, sets, cost) => {
 	let alreadyPickedCards = currentCards.filter(card => card.cost === cost);
 	let validatedCards = getCardsWithCostInSets(sets, cost);
 	validatedCards = filterByOtherCardSet(validatedCards, alreadyPickedCards);
@@ -49,7 +49,7 @@ function getAvailableCards(currentCards, sets, cost) {
 	return validatedCards;
 }
 
-function enforceOneFromEachSet(checkedSets, currentSelection) {
+let enforceOneFromEachSet = (checkedSets, currentSelection) => {
 	let randomizedCardSet = currentSelection.slice();
 	let forceSets = document.querySelector("#forceSets").checked;
 	if(forceSets) {
@@ -77,14 +77,14 @@ function enforceOneFromEachSet(checkedSets, currentSelection) {
 	return randomizedCardSet;
 }
 
-function selectCards(cardNumbers, checkedSets) {
+let selectCards = (cardNumbers, checkedSets) => {
 	let randomizedCardSet = buildRandomSetFromInputs(cardNumbers, checkedSets);
 	randomizedCardSet = enforceOneFromEachSet(checkedSets, randomizedCardSet);
 	randomizedCardSet = sortByCost(randomizedCardSet);
 	return randomizedCardSet;
 }
 
-function addEventCards(checkedSets) {
+let addEventCards = (checkedSets) => {
 	if(checkedSets.includes("Adventures") || checkedSets.includes("Empires")) {
 		let randomCards = [];
 		let eventCardCount = document.querySelector("#eventInput").value;
@@ -98,7 +98,7 @@ function addEventCards(checkedSets) {
 	return [];
 }
 
-function addProjectCards(checkedSets) {
+let addProjectCards = (checkedSets) => {
 	if(checkedSets.includes("Renaissance")) {
 		let randomCards = [];
 		let projectCardCount = document.querySelector("#projectInput").value;
@@ -112,13 +112,13 @@ function addProjectCards(checkedSets) {
 	return [];
 }
 
-function displaySelectedSets() {
+let displaySelectedSets = () => {
 	let checkedSets = getCheckedSets();
 	let sets = filterBySets(cards, checkedSets);
 	buildCardSetUI(sets, document.querySelector("#displaySets"));
 }
 
-function randomize() {
+let randomize = () => {
 	let checkedSets = getCheckedSets();
 	let cardNumbers = getCardNumberInputs();
 	let total = cardNumbers.reduce((acc, val) => {

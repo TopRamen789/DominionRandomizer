@@ -1,4 +1,4 @@
-function setBiasedCost(biasedSet, costIdx) {
+let setBiasedCost = (biasedSet, costIdx) => {
 	biasedSet.forEach((cost, idx) => {
 		if(idx != costIdx)
 			cost += 2;
@@ -6,7 +6,7 @@ function setBiasedCost(biasedSet, costIdx) {
 	return biasedSet;
 }
 
-function createBiasedSet(availableSet) {
+let createBiasedSet = (availableSet) => {
 	let currentSet = [];
 	let biasedSet = [0,0,0,0,0];
 	// biasCostCurve(currentSet, availableSet);
@@ -37,7 +37,7 @@ function createBiasedSet(availableSet) {
 	return currentSet;
 }
 
-function enforceEngineCards(currentSet, availableCards) {
+let enforceEngineCards = (currentSet, availableCards) => {
 	let newAvailableSet = [];
 	let newSet = currentSet.slice();
 	// we might be removing some bias if we do this.
@@ -74,7 +74,7 @@ function enforceEngineCards(currentSet, availableCards) {
 	return newSet;
 }
 
-function proceduralGeneration() {
+let proceduralGeneration = () => {
 	let sets = getCheckedSets();
 	let availableSet = filterBySets(_cards, sets);
 	availableSet = validateNotBasicSet(availableSet);
@@ -91,6 +91,13 @@ function proceduralGeneration() {
 	buildSelectedCardSet(currentSet);
 }
 
-function testNocturneBias() {
+let testNocturneBias = () => {
 	//
 }
+
+/*
+Dominion Wiki suggests there are 5 different kinds of strategies: Big Money - Combo - Rush - Slog - Engine
+And perhaps I should bias on those, pick 1-2 maybe 3 cards from the biased set, and add them.
+Anything that increases the amount of replayability the set has, the better.
+If possible, multiple variations of said strategies would be pretty awesome.
+*/

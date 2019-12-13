@@ -1,4 +1,4 @@
-function getActionsPercent(currentSet) {
+let getActionsPercent = (currentSet) => {
 	let cardData = [];
 	cardData.push({
 		label: 'Actions'
@@ -14,7 +14,7 @@ function getActionsPercent(currentSet) {
 	return cardData;
 }
 
-function getCardsPercent(currentSet) {
+let getCardsPercent = (currentSet) => {
 	let cardData = [];
 	cardData.push({
 		label: 'Cards'
@@ -30,7 +30,7 @@ function getCardsPercent(currentSet) {
 	return cardData;
 }
 
-function getTrashPercent(currentSet) {
+let getTrashPercent = (currentSet) => {
 	let cardData = [];
 	cardData.push({
 		label: 'Trash'
@@ -46,7 +46,7 @@ function getTrashPercent(currentSet) {
 	return cardData;
 }
 
-function getBuyPercent(currentSet) {
+let getBuyPercent = (currentSet) => {
 	let cardData = [];
 	cardData.push({
 		label: 'Buy'
@@ -62,7 +62,7 @@ function getBuyPercent(currentSet) {
 	return cardData;
 }
 
-function getSetPercent(currentSet) {
+let getSetPercent = (currentSet) => {
 	let cardData = [];
 	cardData.push({
 		label: 'Set'
@@ -79,7 +79,7 @@ function getSetPercent(currentSet) {
 	return cardData;
 }
 
-function getTypesPercent(currentSet) {
+let getTypesPercent = (currentSet) => {
 	let cardData = [];
 	cardData.push({
 		label: 'Types'
@@ -96,7 +96,7 @@ function getTypesPercent(currentSet) {
 	return cardData;
 }
 
-function getPercentageData(currentSet) {
+let getPercentageData = (currentSet) => {
 	let cardData = [];
 	cardData = cardData.concat(getActionsPercent(currentSet));
 	cardData = cardData.concat(getCardsPercent(currentSet));
@@ -107,7 +107,7 @@ function getPercentageData(currentSet) {
 	return cardData;
 }
 
-function displayCardPercentages(currentSet) {
+let displayCardPercentages = (currentSet) => {
 	let cardData = getPercentageData(currentSet);
 	
 	// build elements

@@ -1,4 +1,4 @@
-function download(data, filename, type) {
+let download = (data, filename, type) => {
     var file = new Blob([data], {type: type});
     if (window.navigator.msSaveOrOpenBlob) // IE10+
         window.navigator.msSaveOrOpenBlob(file, filename);
@@ -16,7 +16,7 @@ function download(data, filename, type) {
     }
 }
 
-function saveCardSet() {
+let saveCardSet = () => {
 	let savedSet = Array.prototype.slice.call(document.querySelector('#randomizedCards').childNodes);
 	let counter = 0;
 	savedSet = savedSet.reduce((acc, val, idx) => {
@@ -31,7 +31,7 @@ function saveCardSet() {
 	download(savedSet.map(card => card.textContent), 'newset', '.json');
 }
 
-function loadCardSet(data) {
+let loadCardSet = (data) => {
 	let file = document.querySelector("#loadFile").files[0];
 	let reader = new FileReader();
 	reader.readAsText(file, "UTF-8");
@@ -42,7 +42,7 @@ function loadCardSet(data) {
 	};
 }
 
-function hideControls() {
+let hideControls = () => {
 	let cbox = document.querySelector('#hideControlsCheckbox');
 	let controls = document.querySelector('#controls');
 	if(cbox.checked)
@@ -51,11 +51,11 @@ function hideControls() {
 		controls.style = "display: flex";
 }
 
-function round(value, decimals) {
+let round = (value, decimals) => {
 	return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
 }
 
-function disposeChildren(element) {
+let disposeChildren = (element) => {
 	while(element.firstChild)
 		element.removeChild(element.firstChild);
 }
