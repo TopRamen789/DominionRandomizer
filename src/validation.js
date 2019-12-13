@@ -20,8 +20,9 @@ let validateNotBasicSet = (cardSet) => {
 		"Gold",
 		"Estate",
 		"Gardens",
+		"Duchy",
 		"Province",
-		"Duchy"
+		"Curse"
 	];
 	return cardSet.filter(card => !basicSetCards.includes(card.name));
 }
@@ -34,7 +35,7 @@ let validateNocturne = (cardSet) => {
 		"Boon",
 		"Hex"
 	];
- 	return filterByNotType(cardSet, nocturneTypes);
+ 	return filterByNotType(cardSet, nocturneTypes).filter(card => card.name !== "Bat");
 }
 
 let validateAdventures = (cardSet) => {
@@ -53,7 +54,8 @@ let validateAdventures = (cardSet) => {
 
 let validateRenaissance = (cardSet) => {
 	let renaissanceTypes = [
-		"Project"
+		"Project",
+		"Artifact"
 	];
 	return filterByNotType(cardSet, renaissanceTypes);
 }
@@ -88,4 +90,13 @@ let hasTrash = (currentSet) => {
 
 let hasBuys = (currentSet) => {
 	return filterByBuyCount(currentSet, 1).length > 0;	
+}
+
+function validateCardSet(givenSet) {
+	let availableSet = givenSet.slice();
+	availableSet = validateNotBasicSet(availableSet);
+	availableSet = validateNocturne(availableSet);
+	availableSet = validateAdventures(availableSet);
+	availableSet = validateRenaissance(availableSet);
+	return availableSet;
 }

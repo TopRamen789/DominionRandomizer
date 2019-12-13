@@ -14,7 +14,7 @@
 <body>
 	Insert set configuration:
 	<div class="flex">
-		<div>
+		<div style="width: 120px;">
 			<div id="sets"></div>
 			<!--
 			<button type="button" onClick="displaySelectedSets();">Show me cards from these sets</button>
@@ -25,18 +25,23 @@
 		<div id="displaySets" class="cardList displaySets"></div>
 		-also dislabed, related to above-
 		-->
-		<div style="margin-left: 20px; width: 480px;">
+		<div style="margin-left: 20px; width: 350px;">
 			<div style="display: flex; justify-content: end;">
 				<span><input id="hideControlsCheckbox" type="checkbox" onClick="hideControls();" checked />Hide Controls</span>
 				<span><button type="button" onClick="proceduralGeneration();">Procedural Generation</button></span>
+				<span><button type="button" onClick="testBias();">Test Procedural Generation</button></span>
+				<span><button type="button" onClick="countCards();">Count Cards</button></span>
 			</div>
 			<div style="display: flex; margin-top: 4px; margin-bottom: 4px; justify-content: end;">
 				<button type="button" onClick="saveCardSet();">Save Set</button>
 				<input id="loadFile" class="load-set" style="margin-left: 6px;" type="file" onchange="loadCardSet();" />
 			</div>
 			<form id="controls" class="inputs" style="display: none;">
+ 				<!-- 
  				<div id="displayEvents"><span>(Adventures/Empires) Number of event cards:<input id="eventInput" type="text"/></span></div>
-				<div id="displayProjects"><span>(Renaissance) Number of project cards:<input id="projectInput" type="text"/></span></div>
+				<div id="displayProjects"><span>(Renaissance) Number of project cards:<input id="projectInput" type="text"/></span></div> 
+				-disabling, Dominion recommends at most 2 of any of thes 'sideboard' cards.
+				-->
 				<div>(Max number of cards is 10.)</div>
 				<div><span>Number of 2 cost cards:<input id="2cost" type="text"/></span></div>
 				<div><span>Number of 3 cost cards:<input id="3cost" type="text"/></span></div>
@@ -60,7 +65,7 @@
 			<div id="cardData" class="dataList"></div>
 		</div>
 	</div>
-	<div style="display: none;">
+	<div>
 		<input type="file" id="file-input" />
 		<h3>Contents of the file:</h3>
 		<pre id="file-content"></pre>

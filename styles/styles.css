@@ -48,6 +48,21 @@
 	color: red;
 }
 
+.header {
+	border-color: white;
+	border-width: 0px;
+	border-bottom-width: 1px;
+	border-style: solid;
+}
+
+.anomalousHigh {
+	background-color: #00940a;
+}
+
+.anomalousLow {
+	background-color: #a62f00;
+}
+
 /*dark mode*/
 body {
 	background-color: black;
