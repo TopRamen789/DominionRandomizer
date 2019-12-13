@@ -1,4 +1,4 @@
-function buildSetChecklist() {
+let buildSetChecklist = () => {
 	let setsList = [
 		"Base, 1E",
 		"Base, 2E",
@@ -28,6 +28,7 @@ function buildSetChecklist() {
 		"Intrigue",
 		"Nocturne",
 		"Adventures",
+		"Empires",
 		"Renaissance",
 	];
 
