@@ -1,18 +1,36 @@
 let shuffle = (array) => {
 	var currentIndex = array.length, temporaryValue, randomIndex;
-
 	// While there remain elements to shuffle...
 	while (0 !== currentIndex) {
 		// Pick a remaining element...
 		randomIndex = Math.floor(Math.random() * currentIndex);
 		currentIndex -= 1;
-
 		// And swap it with the current element.
 		temporaryValue = array[currentIndex];
 		array[currentIndex] = array[randomIndex];
 		array[randomIndex] = temporaryValue;
 	}
 	return array;
+}
+
+let pickRandomCardsFromCardSet = (cardSet, numberOfCards) => {
+	let randomCards = [];
+	while(randomCards.length < numberOfCards) {
+		cardSet = shuffle(cardSet);
+		randomCards.push(cardSet.pop());
+	}
+	return randomCards;
+}
+
+let filterByNotNames = (cardSet, names) => {
+	return cardSet.filter((card) => {
+		return !names.includes(card.name);
+	});
+}
+
+let filterBySet = (cardSet, set) => {
+	let setNames = set.map(card => card.name);
+	return filterByNotNames(cardSet, setNames);
 }
 
 let filterByTavern = (cardSet) => {
@@ -132,7 +150,7 @@ let filterSetByEverythingElse = (currentSet) => {
 	return biasedSet;
 }
 
-let filterBySets = (cardSet, sets) => {
+let filterByExpansions = (cardSet, sets) => {
 	return cardSet.filter((card) => {
 		return sets.includes(card.set);
 	});
@@ -198,11 +216,9 @@ let buildCardSetUI = (cardSet, cardsDiv) => {
 			return;
 		let image = img();
 		image.src = `gold/${card.cost}.png`;
-
 		let name = span(card.name);
 		let set = span(card.set);
 		let type = span(card.types);
-
 		cardsDiv.appendChild(image);
 		cardsDiv.appendChild(set);
 		cardsDiv.appendChild(name);
@@ -224,4 +240,12 @@ let buildSelectedCardSet = (cardSet) => {
 	clearCardData();
 	displayCardPercentages(cardSet);
 	buildRandomizedCardSetUI(cardSet);
+}
+
+let buildSelectedSideboard = (sideboard) => {
+	let sideboardDiv = document.querySelector("#sideboard");
+	disposeChildren(sideboardDiv);
+	sideboard.forEach((card) => {
+		sideboardDiv.appendChild(span(card.name));
+	});
 }

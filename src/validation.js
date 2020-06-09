@@ -2,13 +2,11 @@ let validateTenCardsTotal = (cardSet) => {
 	let inputIsChecked = document.querySelector("#validateTenCards").checked;
 	if(!inputIsChecked)
 		return true;
-	
 	let total = cardSet.length;
 	let isExactlyTen = total === 10;
 	let text = "";
 	if(!isExactlyTen)
 		text = `10 cards in the supply require!\r\n You have ${total}!`;
-
 	document.querySelector("#error").textContent = text;
 	return isExactlyTen;
 }
@@ -18,13 +16,15 @@ let validateNotBasicSet = (cardSet) => {
 		"Copper",
 		"Silver",
 		"Gold",
+		"Platinum",
 		"Estate",
 		"Gardens",
 		"Duchy",
 		"Province",
+		"Colony",
 		"Curse"
 	];
-	return cardSet.filter(card => !basicSetCards.includes(card.name));
+	return filterByNotNames(cardSet, basicSetCards);
 }
 
 let validateNocturne = (cardSet) => {
@@ -35,7 +35,8 @@ let validateNocturne = (cardSet) => {
 		"Boon",
 		"Hex"
 	];
- 	return filterByNotType(cardSet, nocturneTypes).filter(card => card.name !== "Bat");
+	 let nocturneCards = filterByNotType(cardSet, nocturneTypes);
+	 return filterByNotNames(nocturneCards, ["Bat"]);
 }
 
 let validateAdventures = (cardSet) => {
@@ -49,7 +50,8 @@ let validateAdventures = (cardSet) => {
 		"Hero",
 		"Champion"
 	];
-	return cardSet.filter(card => !adventuresUpgradeCards.includes(card.name) && !card.types.includes("Event"));
+	let adventuresCards = filterByNotNames(cardSet, adventuresUpgradeCards);
+	return filterByNotType(adventuresCards, ["Event"]);
 }
 
 let validateRenaissance = (cardSet) => {
@@ -58,6 +60,29 @@ let validateRenaissance = (cardSet) => {
 		"Artifact"
 	];
 	return filterByNotType(cardSet, renaissanceTypes);
+}
+
+let validateEmpires = (cardSet) => {
+	let empiresTypes = [
+		"Event"
+	];
+	return filterByNotType(cardSet, empiresTypes);
+}
+
+let validateCornucopia = (cardSet) => {
+	let cornucopiaType = [
+		"Prize"
+	];
+	return filterByNotType(cardSet, cornucopiaType);
+}
+
+let validateDarkAges = (cardSet) => {
+	let darkAgesTypes = [
+		"Shelter",
+		"Ruins"
+	];
+	let darkAgesSet = filterByNotType(cardSet, darkAgesTypes);
+	return filterByNotNames(darkAgesSet, ["Spoils"]);
 }
 
 let getSetPossibilities = (currentSet) => {
@@ -98,5 +123,8 @@ function validateCardSet(givenSet) {
 	availableSet = validateNocturne(availableSet);
 	availableSet = validateAdventures(availableSet);
 	availableSet = validateRenaissance(availableSet);
+	availableSet = validateEmpires(availableSet);
+	availableSet = validateCornucopia(availableSet);
+	availableSet = validateDarkAges(availableSet);
 	return availableSet;
 }

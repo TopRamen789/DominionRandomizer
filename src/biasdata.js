@@ -1,6 +1,6 @@
 // procedural generation of cardsets.
 const _biasPercent = .05;
-const _setOffset = (getCheckedSets().length/2) * _biasPercent;
+const _setOffset = (getCheckedExpansions().length/2) * _biasPercent;
 // I should perhaps create another offset that causes biases to win evenly
 
 function normalizeBiases() {
@@ -151,7 +151,6 @@ let biasEverythingElse = (currentSet, availableCards) => {
 	let uses = currentSet.filter((card) => {
 		return shortBiases.includes(card);
 	}).length;
-
 	if(filter.length === 0)
 		return biasedSet;
 	if(bias(uses))
@@ -276,9 +275,7 @@ let getBiasData = (currentSet) => {
 
 let displayBiasData = (currentSet) => {
 	clearBiasData();
-
 	let biasData = getBiasData(currentSet);
-
 	let biasDataUI = document.querySelector("#biasData");
 	biasData.map((bias) => {
 		let className = '';

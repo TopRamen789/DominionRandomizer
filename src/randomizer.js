@@ -71,7 +71,7 @@ let selectCards = (cardNumbers, checkedSets) => {
 	return randomizedCardSet;
 }
 
-let addEventCards = (checkedSets) => {
+let getEventCards = (checkedSets) => {
 	if(checkedSets.includes("Adventures") || checkedSets.includes("Empires")) {
 		let randomCards = [];
 		randomCards = _cards.filter((card) => {
@@ -82,7 +82,7 @@ let addEventCards = (checkedSets) => {
 	return [];
 }
 
-let addProjectCards = (checkedSets) => {
+let getProjectCards = (checkedSets) => {
 	if(checkedSets.includes("Renaissance")) {
 		let randomCards = [];
 		randomCards = _cards.filter((card) => {
@@ -93,22 +93,35 @@ let addProjectCards = (checkedSets) => {
 	return [];
 }
 
+let getLandmarkCards = (checkedSets) => {
+	if(checkedSets.includes("Empires")) {
+		let randomCards = [];
+		randomCards = _cards.filter((card) => {
+			return card.types.includes("Landmark") && checkedSets.includes(card.set);
+		});
+		return randomCards;
+	}
+	return [];
+}
+
 let generateSideboardCards = (checkedSets) => {
 	let sideboard = [];
-	sideboard = sideboard.concat(addEventCards(checkedSets));
-	sideboard = sideboard.concat(addProjectCards(checkedSets));
+	eventCards = getEventCards(checkedSets);
+	projectCards = getProjectCards(checkedSets);
+	landmarkCards = getLandmarkCards(checkedSets);
+	sideboard = sideboard.concat(pickRandomCardsFromCardSet(eventCards, randomInRange(4,8)));
+	sideboard = sideboard.concat(pickRandomCardsFromCardSet(projectCards, 4));
+	sideboard = sideboard.concat(pickRandomCardsFromCardSet(landmarkCards, 2)); 
 	return sideboard;
 }
 
 let addSideboardCards = (checkedSets) => {
-	let sideboard = generateSideboardCards(checkedSets);
-	sideboard = shuffle(sideboard);
-	return sideboard.slice(0, 2);
+	return generateSideboardCards(checkedSets);
 }
 
 let displaySelectedSets = () => {
 	let checkedSets = getCheckedSets();
-	let sets = filterBySets(cards, checkedSets);
+	let sets = filterByExpansions(cards, checkedSets);
 	buildCardSetUI(sets, document.querySelector("#displaySets"));
 }
 

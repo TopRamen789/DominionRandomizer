@@ -26,10 +26,17 @@ let buildSetChecklist = () => {
 		"Base",
 		"Intrigue, 2E",
 		"Intrigue",
-		"Nocturne",
+		"Seaside",
+		"Alchemy",
+		"Prosperity",
+		"Cornucopia",
+		"Hinterlands",
+		"Dark Ages",
+		"Guilds",
 		"Adventures",
 		"Empires",
-		"Renaissance",
+		"Nocturne",
+		"Renaissance"
 	];
 
 	let setElements = document.querySelector("#sets");

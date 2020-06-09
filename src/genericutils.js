@@ -43,7 +43,7 @@ let loadCardSet = (data) => {
 	};
 }
 
-let getCheckedSets = () => {
+let getCheckedExpansions = () => {
 	let inputs = [].slice.call(document.querySelectorAll("input"));
 	let selectedCheckboxes = inputs.filter((input) => {
 		return input.type === "checkbox" && input.checked 
@@ -67,6 +67,10 @@ let hideControls = () => {
 
 let round = (value, decimals) => {
 	return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
+}
+
+let randomInRange = (min, max) => {
+	return Math.random() * (max - min) + min;
 }
 
 let disposeChildren = (element) => {

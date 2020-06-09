@@ -36,6 +36,11 @@
 				<button type="button" onClick="saveCardSet();">Save Set</button>
 				<input id="loadFile" class="load-set" style="margin-left: 6px;" type="file" onchange="loadCardSet();" />
 			</div>
+			<div>
+				<div>
+					<span><button type="button" onClick="generateSideboard();">Generate Sideboard</button></span>
+				</div>
+			</div>
 			<form id="controls" class="inputs" style="display: none;">
  				<!-- 
  				<div id="displayEvents"><span>(Adventures/Empires) Number of event cards:<input id="eventInput" type="text"/></span></div>
@@ -60,6 +65,7 @@
 			<span class="border">Bias Data</span>
 			<div id="biasData" class="biasList"></div>
 		</div>
+		<div id="sideboard"></div>
 		<div class="flex" style="flex-direction: column; margin-left: 20px; height: 600px;">
 			<span class="border">Card Distribution Data</span>
 			<div id="cardData" class="dataList"></div>

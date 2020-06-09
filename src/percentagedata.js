@@ -75,9 +75,9 @@ let getSetPercent = (currentSet) => {
 	cardData.push({
 		label: 'Set'
 	});
-	let sets = getCheckedSets();
-	sets.forEach((set) => {
-		let number = filterBySets(currentSet, [set]).length;
+	let expansions = getCheckedExpansions();
+	expansions.forEach((set) => {
+		let number = filterByExpansions(currentSet, [set]).length;
 		cardData.push({
 			type: set,
 			percent: (number/currentSet.length)*100,
