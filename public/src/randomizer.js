@@ -25,49 +25,35 @@ let buildRandomSetFromInputs = (cardNumbers, checkedSets) => {
 	return randomizedCardSet;
 }
 
+let buildRandomCostDistributionFromSets = (checkedSets) => {
+	let availableCards = filterByExpansions(_cards, checkedSets);
+	// let validatedCards = validateCardSet(availableCards);
+	let costs = availableCards.filter(c => c.cost != "" && c.cost != null).map(c => c.cost);
+	let standardDeviation = findStandardDeviation(costs);
+	console.log(costs, standardDeviation);
+	
+	// let minCost = Math.min(...costs);
+	// let maxCost = Math.max(...costs);
+	// so our standardDeviation has been found.
+	// now we can build a standarddistribution with it.
+	// randomInRange(minCost,maxCost);
+}
+
+let buildCostCurve = (checkedSets) => {
+	let availableCards = filterByExpansions(_cards, checkedSets);
+	let firstGame = [2,2,3,3,3,4,4,4,5,5];
+}
+
 let getAvailableCards = (currentCards, sets, cost) => {
 	let alreadyPickedCards = currentCards.filter(card => card.cost === cost);
 	let validatedCards = getCardsWithCostInSets(sets, cost);
 	validatedCards = filterByOtherCardSet(validatedCards, alreadyPickedCards);
-	validatedCards = validateNotBasicSet(validatedCards);
-	validatedCards = validateNocturne(validatedCards);
-	validatedCards = validateAdventures(validatedCards);
-	validatedCards = validateRenaissance(validatedCards);
+	validatedCards = validateCardSet(validatedCards);
 	return validatedCards;
-}
-
-let enforceOneFromEachSet = (checkedSets, currentSelection) => {
-	let randomizedCardSet = currentSelection.slice();
-	let forceSets = document.querySelector("#forceSets").checked;
-	if(forceSets) {
-		let allSetsPicked = checkedSets.filter(input => randomizedCardSet.map(card => card.set).includes(input));
-		let randomCard = null;
-		while(allSetsPicked.length > 0) {
-			// filter for set that aren't in the randomized set
-			allSetsPicked = checkedSets.filter(input => randomizedCardSet.map(card => card.set).includes(input));
-			
-			// pick a card
-			randomizedCardSet = shuffle(randomizedCardSet);
-			randomCard = randomizedCardSet.pop();
-			
-			// we also have to ensure that there are more available cards based on cost and set.
-			let availableCardsFromSets = getAvailableCards(randomizedCardSet, allSetsPicked, randomCard.cost);
-			availableCardsFromSets = shuffle(availableCardsFromSets);
-
-			// if there's no card, we'll put it back into the list and try again
-			if(availableCardsFromSets.length > 0)
-				randomizedCardSet.push(availableCardsFromSets.pop());
-			else
-				randomizedCardSet.push(randomCard);
-		}
-	}
-	return randomizedCardSet;
 }
 
 let selectCards = (cardNumbers, checkedSets) => {
 	let randomizedCardSet = buildRandomSetFromInputs(cardNumbers, checkedSets);
-	randomizedCardSet = enforceOneFromEachSet(checkedSets, randomizedCardSet);
-	randomizedCardSet = sortByCost(randomizedCardSet);
 	return randomizedCardSet;
 }
 
@@ -126,20 +112,16 @@ let displaySelectedSets = () => {
 }
 
 let randomize = () => {
-	let checkedSets = getCheckedSets();
-	let cardNumbers = getCardNumberInputs();
-	let total = cardNumbers.reduce((acc, val) => {
-		return acc += val.number;
-	}, 0);
-	document.querySelector("#total").value = total;
+	let checkedSets = getCheckedExpansions();
+	// let cardNumbers = buildRandomCostDistributionFromSets(checkedSets);
+	let cardNumbers = buildCostCurve(checkedSets);
 	let randomCards = selectCards(cardNumbers, checkedSets);
-	//const eventCards = addEventCards(checkedSets);
-	//const projectCards = addProjectCards(checkedSets);
+	buildCardSetUI(randomCards);
 	const sideboard = addSideboardCards(checkedSets);
+	buildSelectedSideboard(sideboard);
 	if(!validateTenCardsTotal(randomCards)) {
 		return;
 	}
-	randomCards = randomCards.concat(sideboard);
 	clearBiasData();
 	buildSelectedCardSet(randomCards);
 }

@@ -58,4 +58,4 @@ let buildSetChecklist = () => {
 	});
 }
 
-buildSetChecklist();
+document.onload = buildSetChecklist();

@@ -2,7 +2,8 @@
 <head>
 <meta charset="utf-8"/>
 <link rel="stylesheet" href="styles/styles.css" />
-<script type="text/javascript" src="src/genericutils.js"></script>
+<script type="module" src="src/predefinedsets.js"></script>
+<script type="text/javascript" src="src/utilities.js"></script>
 <script type="text/javascript" src="src/cards.js"></script>
 <script type="text/javascript" src="src/cardutils.js"></script>
 <script type="text/javascript" src="src/validation.js"></script>
@@ -29,6 +30,7 @@
 			<div style="display: flex; justify-content: end;">
 				<span><input id="hideControlsCheckbox" type="checkbox" onClick="hideControls();" checked />Hide Controls</span>
 				<span><button type="button" onClick="proceduralGeneration();">Procedural Generation</button></span>
+				<span><button type="button" onClick="randomize();">Random Generation</button></span>
 				<span><button type="button" onClick="testBias();">Test Procedural Generation</button></span>
 				<span><button type="button" onClick="countCards();">Count Cards</button></span>
 			</div>
@@ -60,12 +62,14 @@
 				<div><span id="error" class="error" /></div>
 			</form>
 		</div>
-		<div class="cardListWrapper"><div id="randomizedCards" class="cardList"></div></div>
-		<div class="flex" style="flex-direction: column; margin-left: 20px; height: 600px;">
+		<div class="cardListWrapper" style="display: flex; flex-direction: column">
+			<div id="randomizedCards" class="cardList"></div>
+			<div id="sideboard" style="display: grid; grid-template-columns: 320px 320px 320px"></div>
+		</div>
+		<div class="flex" style="flex-direction: column; margin-left: 80px; height: 600px;">
 			<span class="border">Bias Data</span>
 			<div id="biasData" class="biasList"></div>
 		</div>
-		<div id="sideboard"></div>
 		<div class="flex" style="flex-direction: column; margin-left: 20px; height: 600px;">
 			<span class="border">Card Distribution Data</span>
 			<div id="cardData" class="dataList"></div>
@@ -75,6 +79,12 @@
 		<input type="file" id="file-input" />
 		<h3>Contents of the file:</h3>
 		<pre id="file-content"></pre>
+	</div>
+	<div>
+		<input type="file" id="image-input" />
+	</div>
+	<div>
+		<input type="file" id="predefined-input" />
 	</div>
 </body>
 <script type="text/javascript" src="src/checklistAndDefaults.js"></script>

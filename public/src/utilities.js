@@ -1,4 +1,4 @@
-let downloadJson = (data, filename, type) => {
+let download = (data, filename, type) => {
     var file = new Blob([data], {type: type});
     if (window.navigator.msSaveOrOpenBlob) // IE10+
         window.navigator.msSaveOrOpenBlob(file, filename);
@@ -71,6 +71,27 @@ let round = (value, decimals) => {
 
 let randomInRange = (min, max) => {
 	return Math.random() * (max - min) + min;
+}
+
+let findAverage = (array) => {
+	return array.reduce((a,b) => (a + b)) / array.length;
+}
+
+let findStandardDeviation = (array) => {
+	let average = findAverage(array);
+	let newAverage = array.reduce((a,b) => a + ((b - average) * (b - average)))/array.length;
+	return Math.sqrt(newAverage);
+}
+
+let coinFlip = (coinFlipBias) => {
+	let bias = coinFlipBias ?? 0.5;
+	return Math.random() > bias;
+}
+
+let distinctValues = (array) => {
+	return array.filter((value, index, self) => {
+		return self.indexOf(value) === index;
+	});
 }
 
 let disposeChildren = (element) => {

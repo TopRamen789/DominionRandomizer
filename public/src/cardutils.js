@@ -209,20 +209,15 @@ let buildHeader = (cardsDiv) => {
 	cardsDiv.appendChild(type);
 }
 
+let wikiPath = "http://wiki.dominionstrategy.com/";
+
 let buildCardSetUI = (cardSet, cardsDiv) => {
-	let header = buildHeader(cardsDiv);
 	cardSet.forEach((card) => {
-		if(card == null)
+		if(card == null || card.image == null)
 			return;
 		let image = img();
-		image.src = `gold/${card.cost}.png`;
-		let name = span(card.name);
-		let set = span(card.set);
-		let type = span(card.types);
+		image.src = card.image;
 		cardsDiv.appendChild(image);
-		cardsDiv.appendChild(set);
-		cardsDiv.appendChild(name);
-		cardsDiv.appendChild(type);
 	});
 }
 
@@ -246,6 +241,8 @@ let buildSelectedSideboard = (sideboard) => {
 	let sideboardDiv = document.querySelector("#sideboard");
 	disposeChildren(sideboardDiv);
 	sideboard.forEach((card) => {
-		sideboardDiv.appendChild(span(card.name));
+		let sideboardCard = img();
+		sideboardCard.src = card.image;
+		sideboardDiv.appendChild(sideboardCard);
 	});
 }

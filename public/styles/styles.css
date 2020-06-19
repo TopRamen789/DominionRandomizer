@@ -16,7 +16,7 @@
 .cardList {
 	margin-left: 20px;
 	display: grid;
-	grid-template-columns: 52px 120px 140px auto;
+	grid-template-columns: 200px 200px 200px;
 	justify-items: start;
 }
 

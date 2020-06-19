@@ -1,6 +1,6 @@
 <html>
 <head>
-<script type="text/javascript" src="src/genericutils.js"></script>
+<script type="text/javascript" src="src/utilities.js"></script>
 <script type="text/javascript">
 // http://wiki.dominionstrategy.com/index.php/List_of_cards
 
@@ -33,14 +33,72 @@ function getCards() {
 			card.points = cells[12] != null ? cells[12].textContent.trim() : "";
 			cards.push(card);
 		});
-		let json = JSON.stringify(cards, null, "/t");
+		let json = JSON.stringify(cards, null, "\t");
 		download(json, "DominionCards", ".json");
 		document.querySelector("#data").textContent = json;
 	};
 	getCardsXhr.send();
 }
 
-getCards();
+function getCardImages() {
+	let getCardsImagesXhr = new XMLHttpRequest();
+	getCardsImagesXhr.open("GET", "https://cors-anywhere.herokuapp.com/http://wiki.dominionstrategy.com/index.php/List_of_cards");
+	getCardsImagesXhr.responseType = "document";
+	getCardsImagesXhr.onload = (document) => {
+		let rows = document.srcElement.response.body.querySelectorAll("tr");
+		let cardImages = [];
+		rows.forEach((r,w) => {
+			if(r.querySelector(".noprint [src]") != null) {
+				let card = {};
+				card.name = r.children[0] != null ? r.children[0].textContent.trim() : "";
+				card.image = r.querySelector("[src]").src.replace('https://cors-anywhere.herokuapp.com/', 'http://wiki.dominionstrategy.com/');
+				cardImages.push(card);
+			}
+		});
+		let json = JSON.stringify(cardImages, null, "\t");
+		download(json, "cardImages", ".json");
+	}
+	getCardsImagesXhr.send();
+}
+
+function getExpansionHrefs() {
+	let getURLs = new XMLHttpRequest();
+	getURLs.open("GET", "https://cors-anywhere.herokuapp.com/http://wiki.dominionstrategy.com/index.php/Recommended_Kingdoms");
+	getURLs.responseType = "document";
+	getURLs.onload = (document) => {
+		let rows = document.srcElement.response.body.querySelector('#mw-content-text').children[2].children;
+		let hrefs = [];
+		Array.prototype.slice.call(rows).forEach((r) => {
+			hrefs.push(`http://wiki.dominionstrategy.com/${r.children[0].href.replace('https://cors-anywhere.herokuapp.com/', '')}`);
+		});
+		buildRecommendedPredefinedSets(hrefs);
+	}
+	getURLs.send();
+}
+
+function buildRecommendedPredefinedSets(hrefs) {
+	hrefs.forEach((href) => {
+		let getRecommendedSets = new XMLHttpRequest();
+		getRecommendedSets.open("GET", `https://cors-anywhere.herokuapp.com/${href}`);
+		getRecommendedSets.responseType = "document";
+		getRecommendedSets.onload = (document) => {
+			let rows = document.srcElement.response.body.querySelector('#content').querySelector('#bodyContent').querySelector('#mw-content-text').querySelectorAll('.wikitable');
+			let predefinedSetData = [];
+			rows = Array.prototype.slice.call(rows);
+			rows.forEach((card) => {
+				let cardText = card.textContent;
+				if(cardText != null && cardText != "")
+					predefinedSetData.push(cardText);
+			});
+			let json = JSON.stringify(predefinedSetData, null, "\t");
+			download(json, `${href}_sets_of_10`, ".json");
+		}
+		getRecommendedSets.send();
+	});
+}
+
+//getCardImages();
+getExpansionHrefs();
 </script>
 </head>
 <body>
