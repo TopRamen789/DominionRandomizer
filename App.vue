@@ -49,7 +49,7 @@ export default {
         randomizer.setAttribute('src', 'src/randomizer.js');
         randomizer.async = true;
         document.head.appendChild(randomizer);
-        createScript('src/procedural.js', 'text/javascript');
+        createScript('src/procedural.js');
         var checklistAndDefaults = document.createElement('script');
         checklistAndDefaults.setAttribute('src', 'src/checklistAndDefaults.js');
         checklistAndDefaults.async = true;
@@ -75,7 +75,10 @@ export default {
         createScript('src/predefined sets/Renaissance_sets.js', 'text/javascript');
         createScript('src/predefined sets/Seaside_sets.js', 'text/javascript');
         createScript('src/sets_testing.js', 'text/javascript');
+        createScript('src/htmlbinder.js');
     },
+    // Ok, first order of business is to turn ALL of these into modules
+    // and then create another module dedicated to binding onClicks to elements.
     data: function() {
         return {
             DominionRandomizer: `
@@ -95,38 +98,20 @@ export default {
                 <div style="margin-left: 20px; width: 350px;">
                     <div style="display: flex; justify-content: end;">
                         <span><input id="hideControlsCheckbox" type="checkbox" onClick="hideControls();" checked />Hide Controls</span>
-                        <span><button type="button" onClick="proceduralGeneration();">Procedural Generation</button></span>
-                        <span><button type="button" onClick="randomize();">Random Generation</button></span>
-                        <span><button type="button" onClick="testBias();">Test Procedural Generation</button></span>
-                        <span><button type="button" onClick="countCards();">Count Cards</button></span>
+                        <span><button id="proceduralButton" type="button" onClick="proceduralGeneration();">Procedural Generation</button></span>
+                        <span><button id="randomButton" type="button" onClick="randomize();">Random Generation</button></span>
+                        <span><button id="testBiasButton" type="button" onClick="testBias();">Test Procedural Generation</button></span>
+                        <span><button id="countCardsButton" type="button" onClick="countCards();">Count Cards</button></span>
                     </div>
                     <div style="display: flex; margin-top: 4px; margin-bottom: 4px; justify-content: end;">
-                        <button type="button" onClick="saveCardSet();">Save Set</button>
+                        <button type="button" id="saveSetButton" onClick="saveCardSet();">Save Set</button>
                         <input id="loadFile" class="load-set" style="margin-left: 6px;" type="file" onchange="loadCardSet();" />
                     </div>
                     <div>
                         <div>
-                            <span><button type="button" onClick="generateSideboard();">Generate Sideboard</button></span>
+                            <span><button id="generatedSideboardButton" type="button" onClick="generateSideboard();">Generate Sideboard</button></span>
                         </div>
                     </div>
-                    <form id="controls" class="inputs" style="display: none;">
-                        <!-- 
-                        <div id="displayEvents"><span>(Adventures/Empires) Number of event cards:<input id="eventInput" type="text"/></span></div>
-                        <div id="displayProjects"><span>(Renaissance) Number of project cards:<input id="projectInput" type="text"/></span></div> 
-                        -disabling, Dominion recommends at most 2 of any of thes 'sideboard' cards.
-                        -->
-                        <div>(Max number of cards is 10.)</div>
-                        <div><span>Number of 2 cost cards:<input id="2cost" type="text"/></span></div>
-                        <div><span>Number of 3 cost cards:<input id="3cost" type="text"/></span></div>
-                        <div><span>Number of 4 cost cards:<input id="4cost" type="text"/></span></div>
-                        <div><span>Number of 5 cost cards:<input id="5cost" type="text"/></span></div>
-                        <div><span>Number of 6 cost cards:<input id="6cost" type="text"/></span></div>
-                        <div><span>Total:<input style="margin-left: 20px;" id="total" type="text" disabled="true" value="0"/></span></div>
-                        <div><span><button type="button" onClick="randomize();">Randomize</button></span></div>
-                        <div><span><input id="forceSets" type="checkbox"/><label htmlFor="forceSets">Enforce at least one card from each checked set </label></div>
-                        <div><span><input id="validateTenCards" type="checkbox"/><label htmlFor="validateTenCards">Enforce 10 cards</label></div>
-                        <div><span id="error" class="error" /></div>
-                    </form>
                 </div>
                 <div class="cardListWrapper" style="display: flex; flex-direction: column">
                     <h1 id="cardSetHeader" style="align-self: center;"></h1>

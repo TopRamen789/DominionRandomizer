@@ -159,3 +159,5 @@ let countCards = () => {
 	console.log(`Buys: ${filterByBuyCount(filteredSets, 1).length}`);
 	console.log(`Everything Else: ' ${filterSetByEverythingElse(filteredSets).length}`);
 }
+
+export default {proceduralGeneration};
