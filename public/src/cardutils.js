@@ -13,6 +13,12 @@ let shuffle = (array) => {
 	return array;
 }
 
+let getDistinctCardCosts = (cardSet) => {
+	return cardSet.filter(c => c.cost != null && c.cost != "").map(c => c.cost).filter((val, index, self) => {
+		return self.indexOf(val);
+	});
+}
+
 let pickRandomCardsFromCardSet = (cardSet, numberOfCards) => {
 	let randomCards = [];
 	while(randomCards.length < numberOfCards) {
@@ -20,6 +26,11 @@ let pickRandomCardsFromCardSet = (cardSet, numberOfCards) => {
 		randomCards.push(cardSet.pop());
 	}
 	return randomCards;
+}
+let filterByNames = (cardSet, names) => {
+	return cardSet.filter((card) => {
+		return names.includes(card.name);
+	});
 }
 
 let filterByNotNames = (cardSet, names) => {

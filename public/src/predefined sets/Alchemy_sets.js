@@ -1,4 +1,4 @@
-[
+var alchemySets = [
     [
         "Forbidden Arts [images]",
         "Apprentice",
@@ -371,4 +371,4 @@
         "Delay",
         "Way of the Owl"
     ]
-]
+];

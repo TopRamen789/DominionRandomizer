@@ -1,4 +1,4 @@
-[
+var cornucopiaSets = [
     [
         "Bounty of the Hunt [images]",
         "Cellar",
@@ -388,4 +388,4 @@
         "Pursue",
         "Way of the Rat"
     ]
-]
+];

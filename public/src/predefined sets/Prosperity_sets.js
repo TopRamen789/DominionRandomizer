@@ -1,4 +1,4 @@
-[
+var prosperitySets = [
     [
         "Beginners [images]",
         "Bank",
@@ -482,4 +482,4 @@
         "Way of the Otter",
         "320px"
     ]
-]
+];

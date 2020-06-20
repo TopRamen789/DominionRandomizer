@@ -1,4 +1,4 @@
-[
+var darkAgesSets = [
     [
         "Grim Parade [images]",
         "Armory",
@@ -467,4 +467,4 @@
         "Bargain",
         "Way of the Butterfly"
     ]
-]
+];

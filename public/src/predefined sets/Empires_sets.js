@@ -1,4 +1,4 @@
-[
+var empiresSets = [
     [
         "Basic Intro [images]",
         "Castles",
@@ -425,4 +425,4 @@
         "transport",
         "Triumphal Arch"
     ]
-]
+];

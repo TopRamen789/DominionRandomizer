@@ -1,4 +1,4 @@
-[
+var guildsSets = [
     [
         "Arts and Crafts [images]",
         "Laboratory",
@@ -415,4 +415,4 @@
         "Pursue",
         "Way of the Rat"
     ]
-]
+];

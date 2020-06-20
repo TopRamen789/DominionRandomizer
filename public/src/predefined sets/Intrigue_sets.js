@@ -1,4 +1,4 @@
-[
+var intrigueSets = [
     [
         "Victory Dance [images]",
         "Baron",
@@ -509,4 +509,4 @@
         "Populate",
         "Way of the Squirrel"
     ]
-]
+];

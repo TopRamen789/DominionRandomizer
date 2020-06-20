@@ -13,10 +13,13 @@ let getCardNumberInputs = () => {
 }
 
 let buildRandomSetFromInputs = (cardNumbers, checkedSets) => {
+	let validatedCards = validateCardSet(_cards);
 	let randomizedCardSet = [];
 	cardNumbers.forEach((cardNumber, idx) => {
 		for(let i = 0; i < cardNumber.number; i++) {
-			let cardSet = getAvailableCards(randomizedCardSet, checkedSets, cardNumber.cost);
+			validatedSet = filterByOtherCardSet(validatedCards, randomizedCardSet);
+			let cost = parseInt(cardNumber.cost);
+			let cardSet = filterByCost(validatedCards, cost);
 			cardSet = shuffle(cardSet);
 			let card = cardSet.pop();
 			randomizedCardSet.push(card);
@@ -40,21 +43,52 @@ let buildRandomCostDistributionFromSets = (checkedSets) => {
 }
 
 let buildCostCurve = (checkedSets) => {
-	let availableCards = filterByExpansions(_cards, checkedSets);
-	let firstGame = [2,2,3,3,3,4,4,4,5,5];
-}
-
-let getAvailableCards = (currentCards, sets, cost) => {
-	let alreadyPickedCards = currentCards.filter(card => card.cost === cost);
-	let validatedCards = getCardsWithCostInSets(sets, cost);
-	validatedCards = filterByOtherCardSet(validatedCards, alreadyPickedCards);
-	validatedCards = validateCardSet(validatedCards);
-	return validatedCards;
-}
-
-let selectCards = (cardNumbers, checkedSets) => {
-	let randomizedCardSet = buildRandomSetFromInputs(cardNumbers, checkedSets);
-	return randomizedCardSet;
+	let availableCards = validateCardSet(filterByExpansions(_cards, checkedSets));
+	let sets = [];
+	if(checkedSets.indexOf('Alchemy') > -1)
+		sets = sets.concat(alchemySets);
+	if(checkedSets.indexOf('Cornucopia') > -1)
+		sets = sets.concat(cornucopiaSets);
+	if(checkedSets.indexOf('Dark Ages') > -1)
+		sets = sets.concat(darkAgesSets);
+	if(checkedSets.indexOf('Base, 1E') > -1)
+		sets = sets.concat(dominionBaseSets);
+	if(checkedSets.indexOf('Empires') > -1)
+		sets = sets.concat(empiresSets);
+	if(checkedSets.indexOf('Guilds') > -1)
+		sets = sets.concat(guildsSets);
+	if(checkedSets.indexOf('Hinterlands') > -1)
+		sets = sets.concat(hinterlandsSets);
+	if(checkedSets.indexOf('Intrigue 2E') > -1)
+		sets = sets.concat(intrigueSets);
+	if(checkedSets.indexOf('Menagerie') > -1)
+		sets = sets.concat(menagerieSets);
+	if(checkedSets.indexOf('Nocturne') > -1)
+		sets = sets.concat(nocturneSets);
+	if(checkedSets.indexOf('Prosperity') > -1)
+		sets = sets.concat(prosperitySets);
+	if(checkedSets.indexOf('Renaissance') > -1)
+		sets = sets.concat(renaissanceSets);
+	if(checkedSets.indexOf('Seaside') > -1)
+		sets = sets.concat(seasideSets);
+	console.log(sets);
+	let chosenSet = shuffle(sets).pop();
+	// let chosenSet = shuffle(chosenExpansion).pop();
+	// console.log(chosenExpansion);
+	let filteredSet = filterByNames(availableCards, chosenSet);
+	// console.log(chosenSet);
+	console.log(chosenSet, filteredSet);
+	let distinctCosts = getDistinctCardCosts(filteredSet);
+	console.log(distinctCosts);
+	let costAggregates = [];
+	for(let distinctCost in distinctCosts) {
+		let number = filteredSet.filter(f => f.cost == distinctCost).length;
+		costAggregates.push({
+			cost: distinctCost,
+			number: number
+		});
+	}
+	return costAggregates;
 }
 
 let getEventCards = (checkedSets) => {
@@ -106,7 +140,7 @@ let addSideboardCards = (checkedSets) => {
 }
 
 let displaySelectedSets = () => {
-	let checkedSets = getCheckedSets();
+	let checkedSets = getCheckedExpansions();
 	let sets = filterByExpansions(cards, checkedSets);
 	buildCardSetUI(sets, document.querySelector("#displaySets"));
 }
@@ -115,13 +149,13 @@ let randomize = () => {
 	let checkedSets = getCheckedExpansions();
 	// let cardNumbers = buildRandomCostDistributionFromSets(checkedSets);
 	let cardNumbers = buildCostCurve(checkedSets);
-	let randomCards = selectCards(cardNumbers, checkedSets);
-	buildCardSetUI(randomCards);
+	let randomCards = buildRandomSetFromInputs(cardNumbers, checkedSets);
+	console.log(randomCards);
+	buildSelectedCardSet(randomCards);
 	const sideboard = addSideboardCards(checkedSets);
 	buildSelectedSideboard(sideboard);
 	if(!validateTenCardsTotal(randomCards)) {
 		return;
 	}
 	clearBiasData();
-	buildSelectedCardSet(randomCards);
 }

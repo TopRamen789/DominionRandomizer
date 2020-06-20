@@ -1,4 +1,4 @@
-[
+var menagerieSets = [
     [
         "Intro to Horses [images]",
         "Animal Fair",
@@ -414,4 +414,4 @@
         "Demand",
         "Academy"
     ]
-]
+];

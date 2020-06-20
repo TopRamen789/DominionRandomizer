@@ -1,4 +1,4 @@
-[
+var renaissanceSets = [
     [
         "Overture [images]",
         "Acting Troupe",
@@ -393,4 +393,4 @@
         "Demand",
         "Academy"
     ]
-]
+];

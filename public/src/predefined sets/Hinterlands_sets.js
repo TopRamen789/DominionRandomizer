@@ -1,4 +1,4 @@
-[
+var hinterlandsSets = [
     [
         "Introduction [images]",
         "Cache",
@@ -444,4 +444,4 @@
         "Gamble",
         "Way of the Mouse"
     ]
-]
+];

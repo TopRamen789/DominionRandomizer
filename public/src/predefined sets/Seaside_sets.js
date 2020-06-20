@@ -1,4 +1,4 @@
-[
+var seasideSets = [
     [
         "High Seas [images]",
         "Bazaar",
@@ -453,4 +453,4 @@
         "Way of the Monkey",
         "320px"
     ]
-]
+];

@@ -3,12 +3,12 @@ let validateTenCardsTotal = (cardSet) => {
 	if(!inputIsChecked)
 		return true;
 	let total = cardSet.length;
-	let isExactlyTen = total === 10;
+	let isGreaterThanOrEqualToTen = total >= 10;
 	let text = "";
-	if(!isExactlyTen)
+	if(!isGreaterThanOrEqualToTen)
 		text = `10 cards in the supply require!\r\n You have ${total}!`;
 	document.querySelector("#error").textContent = text;
-	return isExactlyTen;
+	return isGreaterThanOrEqualToTen;
 }
 
 let validateNotBasicSet = (cardSet) => {

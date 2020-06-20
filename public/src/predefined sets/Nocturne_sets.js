@@ -1,4 +1,4 @@
-[
+var nocturneSets = [
     [
         "Dusk [images]",
         "Blessed Village",
@@ -414,4 +414,4 @@
         "Enhance",
         "Way of the Chameleon"
     ]
-]
+];

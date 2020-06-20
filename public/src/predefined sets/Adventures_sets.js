@@ -1,4 +1,4 @@
-let adventuresSets = [
+var adventuresSets = [
     [
         "Gentle Intro [images]",
         "Amulet",
@@ -455,4 +455,4 @@ let adventuresSets = [
     ]
 ];
 
-export {adventuresSets};
+export default adventuresSets;

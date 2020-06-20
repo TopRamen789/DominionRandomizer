@@ -1,4 +1,4 @@
-[
+var dominionBaseSets = [
     [
         "First Game [images]",
         "Cellar",
@@ -556,4 +556,4 @@
         "Toil",
         "Way of the Mole"
     ]
-]
+];
