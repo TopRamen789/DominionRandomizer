@@ -22,7 +22,7 @@ let validateNotBasicSet = (cardSet) => {
 		"Gold",
 		"Platinum",
 		"Estate",
-		// "Gardens", // this is doing some weird stuff for the regular randomizer..
+		"Gardens", // this is doing some weird stuff for the regular randomizer..
 		"Duchy",
 		"Province",
 		"Colony",
@@ -94,7 +94,7 @@ let validateDarkAges = (cardSet) => {
 	let darkAgesTypes = [
 		"Shelter",
 		"Ruins",
-		"Knights"
+		"Knight"
 	];
 	let darkAgesSet = filterByNotType(cardSet, darkAgesTypes);
     let knights = {
