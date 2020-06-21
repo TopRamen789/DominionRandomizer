@@ -102,7 +102,7 @@ let validateDarkAges = (cardSet) => {
 		"set": "Dark Ages", 
 		"types": "Action - Attack - Knight",
 		"cost": 5,
-		"image": "http://wiki.dominionstrategy.com/images/thumb/9/9a/Knights.jpg/150px-Knights.jpg"
+		"image": "http://wiki.dominionstrategy.com/images/thumb/9/9a/Knights.jpg/200px-Knights.jpg"
 	};
 	darkAgesSet.push(fillCardProperties(knights));
 	return filterByNotNames(darkAgesSet, ["Spoils"]);
