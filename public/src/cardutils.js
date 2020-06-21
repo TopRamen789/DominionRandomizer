@@ -14,8 +14,8 @@ let shuffle = (array) => {
 }
 
 let getDistinctCardCosts = (cardSet) => {
-	return cardSet.filter(c => c.cost != null && c.cost != "").map(c => c.cost).filter((val, index, self) => {
-		return self.indexOf(val);
+	return cardSet.filter(c => c.cost != null || c.debt != null).map(c => c.cost != null ? c.cost : c.debt).filter((val, index, self) => {
+		return self.indexOf(val) === index;
 	});
 }
 
@@ -108,7 +108,7 @@ let filterByNotType = (cardSet, filterTypes) => {
 
 let filterByCost = (cardSet, cost) => {
 	return cardSet.filter((card) => {
-		return card.cost === cost;
+		return card.cost != null ? card.cost === cost : card.debt === cost;
 	});
 }
 
@@ -255,5 +255,34 @@ let buildSelectedSideboard = (sideboard) => {
 		let sideboardCard = img();
 		sideboardCard.src = card.image;
 		sideboardDiv.appendChild(sideboardCard);
+	});
+}
+
+let fillCardProperties = (card) => {
+	let filledCard = {};
+	filledCard.name = card.name || "";
+	filledCard.set = card.set || "";
+	filledCard.types = card.types || "";
+	filledCard.cost = card.cost || null;
+	filledCard.text = card.text || "";
+	filledCard.actions = card.actions || null;
+	filledCard.cards = card.cards || null;
+	filledCard.buys = card.buys || null;
+	filledCard.coins = card.coins || "  ";
+	filledCard.trash = card.trash || null;
+	filledCard.junk = card.junk || "  ";
+	filledCard.gain = card.gain || null;
+	filledCard.points = card.points || null;
+	filledCard.useTavern = card.useTavern || null;
+	filledCard.useVillagers = card.useVillagers || null;
+	filledCard.image = card.image || null;
+	return filledCard;
+}
+
+let filterOutSideboard = (currentSet) => {
+	return currentSet.filter((card) => {
+		return !(card.types.includes('Project')
+			|| card.types.includes('Event')
+			|| card.types.includes('Landmark'));
 	});
 }

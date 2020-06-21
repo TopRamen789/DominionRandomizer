@@ -13,13 +13,12 @@ let getCardNumberInputs = () => {
 }
 
 let buildRandomSetFromInputs = (cardNumbers, checkedSets) => {
-	let validatedCards = validateCardSet(_cards);
+	let validatedCards = validateCardSet(filterByExpansions(_cards, checkedSets));
 	let randomizedCardSet = [];
 	cardNumbers.forEach((cardNumber, idx) => {
 		for(let i = 0; i < cardNumber.number; i++) {
-			validatedSet = filterByOtherCardSet(validatedCards, randomizedCardSet);
-			let cost = parseInt(cardNumber.cost);
-			let cardSet = filterByCost(validatedCards, cost);
+			validatedCards = filterByOtherCardSet(validatedCards, randomizedCardSet);
+			let cardSet = filterByCost(validatedCards, cardNumber.cost);
 			cardSet = shuffle(cardSet);
 			let card = cardSet.pop();
 			randomizedCardSet.push(card);
@@ -33,7 +32,6 @@ let buildRandomCostDistributionFromSets = (checkedSets) => {
 	// let validatedCards = validateCardSet(availableCards);
 	let costs = availableCards.filter(c => c.cost != "" && c.cost != null).map(c => c.cost);
 	let standardDeviation = findStandardDeviation(costs);
-	console.log(costs, standardDeviation);
 	
 	// let minCost = Math.min(...costs);
 	// let maxCost = Math.max(...costs);
@@ -43,8 +41,21 @@ let buildRandomCostDistributionFromSets = (checkedSets) => {
 }
 
 let buildCostCurve = (checkedSets) => {
-	let availableCards = validateCardSet(filterByExpansions(_cards, checkedSets));
+	// argh, this method is dedicated to building a card cost set,
+	// so we don't really care about the contents of the set, UNLESS
+	// I don't have cards from the set in my cards.js
+	console.log(checkedSets);
+	// filterByExpansions is required based on expansions the user owns.
+	// validateCardSet is so we don't inadvertently get landmarks or projects or events
+	// from our cards.js supply.
+	let availableCards = validateCardSet(_cards);
 	let sets = [];
+	// this sorting logic has to be a little more sophisticated..
+	// because sometimes we're getting cards from expansions we don't have access to
+	// and that is happening because one of the other expansions that has a mix with that expansion
+	// so, that means that I need to learn how to filter the sets further down.
+
+	// Extra set checking because the sets don't have a primary key to the expansion they came from.
 	if(checkedSets.indexOf('Alchemy') > -1)
 		sets = sets.concat(alchemySets);
 	if(checkedSets.indexOf('Cornucopia') > -1)
@@ -71,23 +82,39 @@ let buildCostCurve = (checkedSets) => {
 		sets = sets.concat(renaissanceSets);
 	if(checkedSets.indexOf('Seaside') > -1)
 		sets = sets.concat(seasideSets);
-	console.log(sets);
-	let chosenSet = shuffle(sets).pop();
+
+	// this removes any set that has a name equivalent to one of the menagerie sets.
+	// this way, we can add all of the expansions predefined sets, but effectively remove menagerie.
+	sets = sets.filter(set => !menagerieSets.map(m => m[0]).some(m => m === set[0]));
+	// sets = sets.filter(set => filterBySet(base1ECards, set).length > 0)
+	// 	.filter(set => filterBySet(base2ECards, set).length > 0)
+	// 	.filter(set => filterBySet(intrigue2ECards, set).length > 0);
+	let chosenSet = shuffle(sets).pop().map(card => card.replace(/^\w/, c => c.toUpperCase()));
+	chosenSet = chosenSet.filter(c => c != "Potion");
+	chosenSet = chosenSet.map(c => {
+		if(c == "Jack of all Trades") {
+			return "Jack of All Trades";
+		}
+		return c;
+	});
 	// let chosenSet = shuffle(chosenExpansion).pop();
-	// console.log(chosenExpansion);
-	let filteredSet = filterByNames(availableCards, chosenSet);
 	// console.log(chosenSet);
-	console.log(chosenSet, filteredSet);
+	let filteredSet = filterByNames(availableCards, chosenSet);
+	// why do I need to filter by names?
+	//ah, so this filters the cards I filtered at the top to just the chosen set.
+	// the chosen set keeps getting filtered until I can get distinct costs of each of the cards.
 	let distinctCosts = getDistinctCardCosts(filteredSet);
-	console.log(distinctCosts);
+	console.log('chosenSet', chosenSet);
+	console.log('filteredSet', filteredSet);
 	let costAggregates = [];
-	for(let distinctCost in distinctCosts) {
-		let number = filteredSet.filter(f => f.cost == distinctCost).length;
+	for(let i = 0; i < distinctCosts.length; i++) {
+		let number = filteredSet.filter(f => f.cost == distinctCosts[i]).length;
 		costAggregates.push({
-			cost: distinctCost,
+			cost: distinctCosts[i],
 			number: number
 		});
 	}
+	console.log(costAggregates);
 	return costAggregates;
 }
 
@@ -126,9 +153,9 @@ let getLandmarkCards = (checkedSets) => {
 
 let generateSideboardCards = (checkedSets) => {
 	let sideboard = [];
-	eventCards = getEventCards(checkedSets);
-	projectCards = getProjectCards(checkedSets);
-	landmarkCards = getLandmarkCards(checkedSets);
+	let eventCards = getEventCards(checkedSets);
+	let projectCards = getProjectCards(checkedSets);
+	let landmarkCards = getLandmarkCards(checkedSets);
 	sideboard = sideboard.concat(pickRandomCardsFromCardSet(eventCards, randomInRange(4,8)));
 	sideboard = sideboard.concat(pickRandomCardsFromCardSet(projectCards, 4));
 	sideboard = sideboard.concat(pickRandomCardsFromCardSet(landmarkCards, 2)); 
@@ -150,7 +177,6 @@ let randomize = () => {
 	// let cardNumbers = buildRandomCostDistributionFromSets(checkedSets);
 	let cardNumbers = buildCostCurve(checkedSets);
 	let randomCards = buildRandomSetFromInputs(cardNumbers, checkedSets);
-	console.log(randomCards);
 	buildSelectedCardSet(randomCards);
 	const sideboard = addSideboardCards(checkedSets);
 	buildSelectedSideboard(sideboard);
@@ -159,3 +185,5 @@ let randomize = () => {
 	}
 	clearBiasData();
 }
+
+export default {randomize};

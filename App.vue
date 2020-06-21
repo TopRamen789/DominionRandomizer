@@ -45,10 +45,7 @@ export default {
         biasdata.setAttribute('src', 'src/biasdata.js');
         biasdata.async = true;
         document.head.appendChild(biasdata);
-        var randomizer = document.createElement('script');
-        randomizer.setAttribute('src', 'src/randomizer.js');
-        randomizer.async = true;
-        document.head.appendChild(randomizer);
+        createScript('src/randomizer.js');
         createScript('src/procedural.js');
         var checklistAndDefaults = document.createElement('script');
         checklistAndDefaults.setAttribute('src', 'src/checklistAndDefaults.js');

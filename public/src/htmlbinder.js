@@ -1,10 +1,11 @@
 import procedural from './procedural.js';
+import randomize from './randomizer.js';
 
 // document.querySelector('#sets').addEventListener('click');
 // document.querySelector('#displaySets').addEventListener('click');
 // document.querySelector('#hideControlsCheckbox').addEventListener('click');
 document.querySelector('#proceduralButton').addEventListener('click', procedural.proceduralGeneration);
-// document.querySelector('#randomButton').addEventListener('click');
+document.querySelector('#randomButton').addEventListener('click', randomize.randomize);
 // document.querySelector('#testBiasButton').addEventListener('click');
 // document.querySelector('#countCardsButton').addEventListener('click');
 // document.querySelector('#saveSetButton').addEventListener('click');

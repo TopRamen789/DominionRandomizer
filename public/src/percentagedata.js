@@ -104,14 +104,6 @@ let getTypesPercent = (currentSet) => {
 	return cardData;
 }
 
-let filterOutSideboard = (currentSet) => {
-	return currentSet.filter((card) => {
-		return !(card.types.includes('Project')
-			|| card.types.includes('Event')
-			|| card.types.includes('Landmark'));
-	});
-}
-
 let getPercentageData = (currentSet) => {
 	let cardData = [];
 	let measuredSet = filterOutSideboard(currentSet);
