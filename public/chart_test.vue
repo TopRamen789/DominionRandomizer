@@ -45,11 +45,18 @@ let buildPieChart = (id, title, data, colors) => {
     return new Chart(`#${id}`, {
         title: title,
         data: data,
-        type: 'pie',
+        type: 'bar',
         height: 250,
         colors: colors
     });
 };
+
+let createGradient = (chosenColor) => {
+    //chosenColor in our case will be a color.
+    let hexValues = chosenColor.split(/..?/g);
+    hexValues = hexValues.map(val => String.fromCharCode(val, 16));
+    console.log(hexValues);
+}
 
 export default {
     name: "Chart",
@@ -65,16 +72,18 @@ export default {
         let cardBuys = cards.map(c => c.buys == null ? 0 : c.buys);
         let cardDraws = cards.map(c => c.cards == null ? 0 : c.cards);
 
-        const costData = buildDataSet(cardCosts, "Treasure");
+        const costData = buildDataSet(cardCosts, "Cost");
         const actionData = buildDataSet(cardActions, "Actions");
         const buyData = buildDataSet(cardBuys, "Buys");
         //     values: cardBuys
         //     values: cardDraws
 
         // eslint-disable-next-line
-        const costChart = buildPieChart('costs-chart', 'Costs', costData, ['#82630e', '#967311', '#b08612', '#c79610', '#edb313']);
+        const costChart = buildPieChart('costs-chart', 'Cards', costData, ['#82630e', '#967311', '#b08612', '#c79610', '#edb313']);
         const actionsChart = buildPieChart('actions-chart', '+Actions', actionData, ['#003f7a','#0058ab','#0887ff']);
         const buysChart = buildPieChart('buys-chart', '+Buys', buyData, []);
+
+        createGradient('#82630e');
     }
 }
 </script>
