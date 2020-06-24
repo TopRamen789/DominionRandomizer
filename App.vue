@@ -56,7 +56,6 @@ export default {
         modifyCardData.async = true;
         document.head.appendChild(modifyCardData);
         
-
         createScript('src/predefined sets/Adventures_sets.js', 'text/javascript');
         createScript('src/predefined sets/Alchemy_sets.js', 'text/javascript');
         createScript('src/predefined sets/Cornucopia_sets.js', 'text/javascript');
@@ -95,7 +94,7 @@ export default {
                 <div style="margin-left: 20px; width: 350px;">
                     <div style="display: flex; justify-content: end;">
                         <span><input id="hideControlsCheckbox" type="checkbox" onClick="hideControls();" checked />Hide Controls</span>
-                        <span><button id="proceduralButton" type="button" onClick="proceduralGeneration();">Procedural Generation</button></span>
+                        <span><button id="proceduralButton" type="button">Procedural Generation</button></span>
                         <span><button id="randomButton" type="button" onClick="randomize();">Random Generation</button></span>
                         <span><button id="testBiasButton" type="button" onClick="testBias();">Test Procedural Generation</button></span>
                         <span><button id="countCardsButton" type="button" onClick="countCards();">Count Cards</button></span>
