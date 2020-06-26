@@ -12,27 +12,6 @@ import _Cards from './src/cards_module.js';
 import CardUtils from './src/CardUtilities.js';
 import Plotly from 'plotly.js-dist'
 
-let aggregate = (set) => {
-    let newSet = {};
-    set.filter((value,index,self) => {
-        return self.indexOf(value) == index;
-    }).forEach((s) => {
-        let setCount = set.filter(t => t == s).length;
-        newSet[s] = setCount;
-    });
-    return newSet;
-};
-
-let buildLabels = (array,label) => {
-    return Object.keys(array).map(k => `${k} ${label}`);
-};
-
-let createGradient = (chosenColor) => {
-    let hexValues = chosenColor.split(/..?/g);
-    hexValues = hexValues.map(val => String.fromCharCode(val, 16));
-    console.log(hexValues);
-}
-
 export default {
     name: "Chart",
     data: function() {
