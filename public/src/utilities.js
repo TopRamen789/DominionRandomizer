@@ -28,7 +28,7 @@ let saveCardSet = () => {
 			counter = 0;
 		return acc;
 	}, []);
-	downloadJson(savedSet.map(card => card.textContent), 'newset', '.json');
+	downloadJs(savedSet.map(card => card.textContent), 'newset', '.json');
 }
 
 let loadCardSet = (data) => {

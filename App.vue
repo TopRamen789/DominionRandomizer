@@ -1,7 +1,10 @@
 <template>
     <div>
+        <div style="display: flex; flex-direction: column;">
+            <RandomizerMenu />
+            <Chart />
+        </div>
         <div id="app" v-html="DominionRandomizer"></div>
-        <Chart />
     </div>
 </template>
 
@@ -82,18 +85,9 @@ export default {
             <div class="flex">
                 <div style="width: 120px;">
                     <div id="sets"></div>
-                    <!--
-                    <button type="button" onClick="displaySelectedSets();">Show me cards from these sets</button>
-                    -disabled for now-
-                    -->
                 </div>
-                <!--
-                <div id="displaySets" class="cardList displaySets"></div>
-                -also dislabed, related to above-
-                -->
                 <div style="margin-left: 20px; width: 350px;">
                     <div style="display: flex; justify-content: end;">
-                        <span><input id="hideControlsCheckbox" type="checkbox" onClick="hideControls();" checked />Hide Controls</span>
                         <span><button id="proceduralButton" type="button">Procedural Generation</button></span>
                         <span><button id="randomButton" type="button" onClick="randomize();">Random Generation</button></span>
                         <span><button id="testBiasButton" type="button" onClick="testBias();">Test Procedural Generation</button></span>
