@@ -234,7 +234,6 @@ class CardUtilities {
 			image.className = "card-thumbnail";
 			image.onclick = () => {
 				// in here, pick a new random with same cost
-				console.log(_cards);
 				let availableCards = validation.validateCardSet(_cards);
 				availableCards = this.filterByOtherCardSet(availableCards, cardSet);
 				availableCards = this.filterByCost(availableCards, card.cost);
@@ -269,6 +268,15 @@ class CardUtilities {
 			sideboardCard.src = card.image;
 			sideboardCard.height = 125;
 			sideboardCard.className = "sideboard-thumbnail";
+			sideboardCard.onclick = () => {
+				// filter by expansions, then pick new card.
+				let availableCards = this.filterByExpansions(_cards, card.set);
+				availableCards = this.filterByTypes(availableCards, card.types);
+				availableCards = this.filterByOtherCardSet(availableCards, sideboard);
+				availableCards = this.shuffle(availableCards);
+				let newCard = availableCards.pop();
+				sideboardCard.src = newCard.image;
+			};
 			sideboardDiv.appendChild(sideboardCard);
 		});
 	}
@@ -298,6 +306,18 @@ class CardUtilities {
 		return cardSet.filter(c => c.cost != null || c.debt != null).map(c => c.cost != null ? c.cost : c.debt).filter((val, index, self) => {
 			return self.indexOf(val) === index;
 		});
+	}
+
+	static getEventCards = () => {
+		return this.filterByTypes(_cards, ["Event"]);
+	}
+
+	static getProjectCards = () => {
+		return this.filterByTypes(_cards, ["Project"]);
+	}
+
+	static getLandmarkCards = () => {
+		return this.filterByTypes(_cards, ["Landmark"]);
 	}
 }
 

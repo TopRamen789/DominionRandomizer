@@ -125,7 +125,7 @@ let hasBuys = (currentSet) => {
 	return CardUtilities.filterByBuyCount(currentSet, 1).length > 0;	
 }
 
-function validateCardSet(givenSet) {
+let validateCardSet = (givenSet) => {
 	let availableSet = givenSet.slice();
 	availableSet = validateNotBasicSet(availableSet);
 	availableSet = validateNocturne(availableSet);

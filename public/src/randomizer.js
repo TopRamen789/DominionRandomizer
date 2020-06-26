@@ -92,47 +92,26 @@ let buildCostCurve = (checkedSets) => {
 	return costAggregates;
 }
 
-let getEventCards = (checkedSets) => {
-	if(checkedSets.includes("Adventures") || checkedSets.includes("Empires")) {
-		let randomCards = [];
-		randomCards = _cards.filter((card) => {
-			return card.types.includes("Event") && checkedSets.includes(card.set);
-		});
-		return randomCards;
-	}
-	return [];
-}
-
-let getProjectCards = (checkedSets) => {
-	if(checkedSets.includes("Renaissance")) {
-		let randomCards = [];
-		randomCards = _cards.filter((card) => {
-			return card.types.includes("Project") && checkedSets.includes(card.set);
-		});
-		return randomCards;
-	}
-	return [];
-}
-
-let getLandmarkCards = (checkedSets) => {
-	if(checkedSets.includes("Empires")) {
-		let randomCards = [];
-		randomCards = _cards.filter((card) => {
-			return card.types.includes("Landmark") && checkedSets.includes(card.set);
-		});
-		return randomCards;
-	}
-	return [];
-}
-
 let generateSideboardCards = (checkedSets) => {
 	let sideboard = [];
-	let eventCards = getEventCards(checkedSets);
-	let projectCards = getProjectCards(checkedSets);
-	let landmarkCards = getLandmarkCards(checkedSets);
-	sideboard = sideboard.concat(CardUtilities.pickRandomCardsFromCardSet(eventCards, utilities.randomInRange(4,8)));
-	sideboard = sideboard.concat(CardUtilities.pickRandomCardsFromCardSet(projectCards, 4));
-	sideboard = sideboard.concat(CardUtilities.pickRandomCardsFromCardSet(landmarkCards, 2)); 
+
+	if(checkedSets.includes("Adventures") || checkedSets.includes("Empires")) {
+		let eventCards = CardUtilities.getEventCards();
+		eventCards = CardUtilities.filterByExpansions(eventCards, checkedSets);
+		sideboard = sideboard.concat(CardUtilities.pickRandomCardsFromCardSet(eventCards, utilities.randomInRange(4,8)));
+	}
+
+	if(checkedSets.includes("Renaissance")) {
+		let projectCards = CardUtilities.getProjectCards();
+		projectCards = CardUtilities.filterByExpansions(projectCards, checkedSets);
+		sideboard = sideboard.concat(CardUtilities.pickRandomCardsFromCardSet(projectCards, 4));
+	}
+
+	if(checkedSets.includes("Empires")) {
+		let landmarkCards = CardUtilities.getLandmarkCards();
+		landmarkCards = CardUtilities.filterByExpansions(landmarkCards, checkedSets);
+		sideboard = sideboard.concat(CardUtilities.pickRandomCardsFromCardSet(landmarkCards, 2)); 
+	}
 	return sideboard;
 }
 
