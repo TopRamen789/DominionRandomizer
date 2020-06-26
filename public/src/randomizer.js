@@ -1,3 +1,5 @@
+import _cards from '../src/data/cards_module';
+
 let getCardNumberInputs = () => {
 	let inputs = [].slice.call(document.querySelectorAll("input"));
 	let cardNumbers = inputs.filter((input) => {
@@ -29,31 +31,13 @@ let buildRandomSetFromInputs = (cardNumbers, checkedSets) => {
 
 let buildRandomCostDistributionFromSets = (checkedSets) => {
 	let availableCards = filterByExpansions(_cards, checkedSets);
-	// let validatedCards = validateCardSet(availableCards);
 	let costs = availableCards.filter(c => c.cost != "" && c.cost != null).map(c => c.cost);
 	let standardDeviation = findStandardDeviation(costs);
-	
-	// let minCost = Math.min(...costs);
-	// let maxCost = Math.max(...costs);
-	// so our standardDeviation has been found.
-	// now we can build a standarddistribution with it.
-	// randomInRange(minCost,maxCost);
 }
 
 let buildCostCurve = (checkedSets) => {
-	// argh, this method is dedicated to building a card cost set,
-	// so we don't really care about the contents of the set, UNLESS
-	// I don't have cards from the set in my cards.js
-	// console.log(checkedSets);
-	// filterByExpansions is required based on expansions the user owns.
-	// validateCardSet is so we don't inadvertently get landmarks or projects or events
-	// from our cards.js supply.
 	let availableCards = validateCardSet(_cards);
 	let sets = [];
-	// this sorting logic has to be a little more sophisticated..
-	// because sometimes we're getting cards from expansions we don't have access to
-	// and that is happening because one of the other expansions that has a mix with that expansion
-	// so, that means that I need to learn how to filter the sets further down.
 
 	// Extra set checking because the sets don't have a primary key to the expansion they came from.
 	if(checkedSets.indexOf('Alchemy') > -1)
@@ -83,12 +67,7 @@ let buildCostCurve = (checkedSets) => {
 	if(checkedSets.indexOf('Seaside') > -1)
 		sets = sets.concat(seasideSets);
 
-	// this removes any set that has a name equivalent to one of the menagerie sets.
-	// this way, we can add all of the expansions predefined sets, but effectively remove menagerie.
 	sets = sets.filter(set => !menagerieSets.map(m => m[0]).some(m => m === set[0]));
-	// sets = sets.filter(set => filterBySet(base1ECards, set).length > 0)
-	// 	.filter(set => filterBySet(base2ECards, set).length > 0)
-	// 	.filter(set => filterBySet(intrigue2ECards, set).length > 0);
 	let chosenSet = shuffle(sets).pop().map(card => card.replace(/^\w/, c => c.toUpperCase()));
 	chosenSet = chosenSet.filter(c => c != "Potion");
 	chosenSet = chosenSet.map(c => {
@@ -97,15 +76,8 @@ let buildCostCurve = (checkedSets) => {
 		}
 		return c;
 	});
-	// let chosenSet = shuffle(chosenExpansion).pop();
-	// console.log(chosenSet);
 	let filteredSet = filterByNames(availableCards, chosenSet);
-	// why do I need to filter by names?
-	//ah, so this filters the cards I filtered at the top to just the chosen set.
-	// the chosen set keeps getting filtered until I can get distinct costs of each of the cards.
 	let distinctCosts = getDistinctCardCosts(filteredSet);
-	// console.log('chosenSet', chosenSet);
-	// console.log('filteredSet', filteredSet);
 	let costAggregates = [];
 	for(let i = 0; i < distinctCosts.length; i++) {
 		let number = filteredSet.filter(f => f.cost == distinctCosts[i]).length;
@@ -114,7 +86,6 @@ let buildCostCurve = (checkedSets) => {
 			number: number
 		});
 	}
-	// console.log(costAggregates);
 	return costAggregates;
 }
 
@@ -174,7 +145,6 @@ let displaySelectedSets = () => {
 
 let randomize = () => {
 	let checkedSets = getCheckedExpansions();
-	// let cardNumbers = buildRandomCostDistributionFromSets(checkedSets);
 	let cardNumbers = buildCostCurve(checkedSets);
 	let randomCards = buildRandomSetFromInputs(cardNumbers, checkedSets);
 	buildSelectedCardSet(randomCards);
@@ -183,7 +153,6 @@ let randomize = () => {
 	if(!validateTenCardsTotal(randomCards)) {
 		return;
 	}
-	// clearBiasData();
 	return randomCards;
 }
 

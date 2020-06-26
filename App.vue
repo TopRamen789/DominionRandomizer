@@ -12,7 +12,7 @@
     </div>
 </template>
 
-G<script>
+<script>
 import Chart from './public/chart';
 import RandomizerMenu from './public/src/components/therandomizermenu';
 
@@ -29,7 +29,6 @@ export default {
     },
     methods: {
         setCardSet: function(set) {
-            console.log('app', set);
             this.cardSet = set;
         }
     },
