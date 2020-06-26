@@ -1,6 +1,6 @@
 <template>
-    <div>
-        <div id="costs-chart" />
+    <div width="250" height="250">
+        <div id="costs-chart" style="max-width: 500px; margin: 0 auto;" height="250px" />
         <div id="actions-chart" />
         <div id="buys-chart" />
     </div>
@@ -10,9 +10,8 @@
 import adventures from './src/predefined sets/Adventures_sets.js';
 import _Cards from './src/cards_module.js';
 import CardUtils from './src/CardUtilities.js';
-import { Chart } from 'frappe-charts/dist/frappe-charts.esm.js';
-// import css
-import 'frappe-charts/dist/frappe-charts.min.css';
+import Plotly from 'plotly.js-dist'
+
 let aggregate = (set) => {
     let newSet = {};
     set.filter((value,index,self) => {
@@ -28,31 +27,7 @@ let buildLabels = (array,label) => {
     return Object.keys(array).map(k => `${k} ${label}`);
 };
 
-let buildDataSet = (array,label) => {
-    let aggregateSet = aggregate(array);
-    let data = {
-        labels: buildLabels(aggregateSet,label),
-        datasets: [
-            {
-                values: Object.keys(aggregateSet).map(k => aggregateSet[k])
-            }
-        ]
-    };
-    return data;
-};
-
-let buildPieChart = (id, title, data, colors) => {
-    return new Chart(`#${id}`, {
-        title: title,
-        data: data,
-        type: 'bar',
-        height: 250,
-        colors: colors
-    });
-};
-
 let createGradient = (chosenColor) => {
-    //chosenColor in our case will be a color.
     let hexValues = chosenColor.split(/..?/g);
     hexValues = hexValues.map(val => String.fromCharCode(val, 16));
     console.log(hexValues);
@@ -71,19 +46,21 @@ export default {
         let cardActions = cards.map(c => c.actions == null ? 0 : c.actions);
         let cardBuys = cards.map(c => c.buys == null ? 0 : c.buys);
         let cardDraws = cards.map(c => c.cards == null ? 0 : c.cards);
-
-        const costData = buildDataSet(cardCosts, "Cost");
-        const actionData = buildDataSet(cardActions, "Actions");
-        const buyData = buildDataSet(cardBuys, "Buys");
-        //     values: cardBuys
-        //     values: cardDraws
-
-        // eslint-disable-next-line
-        const costChart = buildPieChart('costs-chart', 'Cards', costData, ['#82630e', '#967311', '#b08612', '#c79610', '#edb313']);
-        const actionsChart = buildPieChart('actions-chart', '+Actions', actionData, ['#003f7a','#0058ab','#0887ff']);
-        const buysChart = buildPieChart('buys-chart', '+Buys', buyData, []);
-
-        createGradient('#82630e');
+        
+        let trace = {
+            x: cardCosts,
+            type: 'histogram',
+            marker: {
+                color: 'gold'
+            }
+        };
+        var data = [trace];
+        var layout = {
+            title: 'Card Costs',
+            paper_bgcolor: '#000000',
+            plot_bgcolor: '#000000'
+        };
+        Plotly.newPlot('costs-chart', data, layout);
     }
 }
 </script>
