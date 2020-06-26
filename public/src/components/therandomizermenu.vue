@@ -15,7 +15,8 @@ export default {
     name: "RandomizerMenu",
     methods: {
         randomize: function() {
-            randomizer.randomize();
+            let randomCards = randomizer.randomize();
+            this.$emit('cardSet', randomCards);
         },
         saveCardSet: function() {
             //

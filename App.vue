@@ -1,6 +1,6 @@
 <template>
     <div style="display: flex; flex-direction: row; width: 100%;">
-        <RandomizerMenu />
+        <RandomizerMenu v-on:cardSet="setCardSet" />
         <div id="app" class="flex">
             <div class="cardListWrapper" style="display: flex; flex-direction: column">
                 <h1 id="cardSetHeader" style="align-self: center;"></h1>
@@ -8,12 +8,12 @@
                 <div id="sideboard" style="display: grid; grid-template-columns: 204px 204px 204px 204px 204px 204px 204px; margin: 0 -240px"></div>
             </div>
         </div>
-        <Chart />
+        <Chart :card-set="this.cardSet" />
     </div>
 </template>
 
 G<script>
-import Chart from './public/chart_test';
+import Chart from './public/chart';
 import RandomizerMenu from './public/src/components/therandomizermenu';
 
 export default {
@@ -21,6 +21,17 @@ export default {
     components: {
         Chart,
         RandomizerMenu
+    },
+    data: function() {
+        return {
+            cardSet: []
+        }
+    },
+    methods: {
+        setCardSet: function(set) {
+            console.log('app', set);
+            this.cardSet = set;
+        }
     },
     mounted() {
         let createScript = (src, type = 'module', async) => {

@@ -44,7 +44,7 @@ let buildCostCurve = (checkedSets) => {
 	// argh, this method is dedicated to building a card cost set,
 	// so we don't really care about the contents of the set, UNLESS
 	// I don't have cards from the set in my cards.js
-	console.log(checkedSets);
+	// console.log(checkedSets);
 	// filterByExpansions is required based on expansions the user owns.
 	// validateCardSet is so we don't inadvertently get landmarks or projects or events
 	// from our cards.js supply.
@@ -104,8 +104,8 @@ let buildCostCurve = (checkedSets) => {
 	//ah, so this filters the cards I filtered at the top to just the chosen set.
 	// the chosen set keeps getting filtered until I can get distinct costs of each of the cards.
 	let distinctCosts = getDistinctCardCosts(filteredSet);
-	console.log('chosenSet', chosenSet);
-	console.log('filteredSet', filteredSet);
+	// console.log('chosenSet', chosenSet);
+	// console.log('filteredSet', filteredSet);
 	let costAggregates = [];
 	for(let i = 0; i < distinctCosts.length; i++) {
 		let number = filteredSet.filter(f => f.cost == distinctCosts[i]).length;
@@ -114,7 +114,7 @@ let buildCostCurve = (checkedSets) => {
 			number: number
 		});
 	}
-	console.log(costAggregates);
+	// console.log(costAggregates);
 	return costAggregates;
 }
 
@@ -183,7 +183,8 @@ let randomize = () => {
 	if(!validateTenCardsTotal(randomCards)) {
 		return;
 	}
-	clearBiasData();
+	// clearBiasData();
+	return randomCards;
 }
 
 export default {randomize};
