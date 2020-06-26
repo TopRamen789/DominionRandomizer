@@ -228,6 +228,8 @@ let buildCardSetUI = (cardSet, cardsDiv) => {
 			return;
 		let image = img();
 		image.src = card.image;
+		image.height = 200;
+		image.className = "card-thumbnail";
 		cardsDiv.appendChild(image);
 	});
 }
@@ -244,7 +246,6 @@ let clearCardData = () => {
 
 let buildSelectedCardSet = (cardSet) => {
 	clearCardData();
-	displayCardPercentages(cardSet);
 	buildRandomizedCardSetUI(cardSet);
 }
 
@@ -254,6 +255,8 @@ let buildSelectedSideboard = (sideboard) => {
 	sideboard.forEach((card) => {
 		let sideboardCard = img();
 		sideboardCard.src = card.image;
+		sideboardCard.height = 125;
+		sideboardCard.className = "sideboard-thumbnail";
 		sideboardDiv.appendChild(sideboardCard);
 	});
 }

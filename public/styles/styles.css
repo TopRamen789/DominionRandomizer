@@ -16,7 +16,7 @@
 .cardList {
 	margin-left: 20px;
 	display: grid;
-	grid-template-columns: 200px 200px 200px;
+	grid-template-columns: 124px 124px 124px 124px 124px;
 	justify-items: start;
 }
 
@@ -81,4 +81,24 @@ input {
 
 div {	
 	color: #C0C0C0;
+}
+
+.card-thumbnail:hover {
+    position:relative;
+    top:-25px;
+    left:-35px;
+    width:250px;
+    height:auto;
+    display:block;
+    z-index:999;
+}
+
+.sideboard-thumbnail:hover {
+    position:relative;
+    top:-25px;
+    left:-35px;
+    width:400px;
+    height:auto;
+    display:block;
+    z-index:999;
 }

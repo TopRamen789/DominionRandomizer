@@ -1,4 +1,4 @@
-import _cards from './cards';
+import _cards from './data/cards';
 
 class CardUtils {
 	constructor() { }

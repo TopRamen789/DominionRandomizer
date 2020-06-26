@@ -1,20 +1,26 @@
 <template>
-    <div>
-        <div style="display: flex; flex-direction: column;">
-            <RandomizerMenu />
-            <Chart />
+    <div style="display: flex; flex-direction: row; width: 100%;">
+        <RandomizerMenu />
+        <div id="app" class="flex">
+            <div class="cardListWrapper" style="display: flex; flex-direction: column">
+                <h1 id="cardSetHeader" style="align-self: center;"></h1>
+                <div id="randomizedCards" class="cardList"></div>
+                <div id="sideboard" style="display: grid; grid-template-columns: 204px 204px 204px 204px 204px 204px 204px; margin: 0 -240px"></div>
+            </div>
         </div>
-        <div id="app" v-html="DominionRandomizer"></div>
+        <Chart />
     </div>
 </template>
 
-<script>
+G<script>
 import Chart from './public/chart_test';
+import RandomizerMenu from './public/src/components/therandomizermenu';
 
 export default {
     name: "App",
     components: {
-        Chart
+        Chart,
+        RandomizerMenu
     },
     mounted() {
         let createScript = (src, type = 'module', async) => {
@@ -75,61 +81,6 @@ export default {
         createScript('src/predefined sets/Seaside_sets.js', 'text/javascript');
         createScript('src/sets_testing.js', 'text/javascript');
         createScript('src/htmlbinder.js');
-    },
-    // Ok, first order of business is to turn ALL of these into modules
-    // and then create another module dedicated to binding onClicks to elements.
-    data: function() {
-        return {
-            DominionRandomizer: `
-            Insert set configuration:
-            <div class="flex">
-                <div style="width: 120px;">
-                    <div id="sets"></div>
-                </div>
-                <div style="margin-left: 20px; width: 350px;">
-                    <div style="display: flex; justify-content: end;">
-                        <span><button id="proceduralButton" type="button">Procedural Generation</button></span>
-                        <span><button id="randomButton" type="button" onClick="randomize();">Random Generation</button></span>
-                        <span><button id="testBiasButton" type="button" onClick="testBias();">Test Procedural Generation</button></span>
-                        <span><button id="countCardsButton" type="button" onClick="countCards();">Count Cards</button></span>
-                    </div>
-                    <div style="display: flex; margin-top: 4px; margin-bottom: 4px; justify-content: end;">
-                        <button type="button" id="saveSetButton" onClick="saveCardSet();">Save Set</button>
-                        <input id="loadFile" class="load-set" style="margin-left: 6px;" type="file" onchange="loadCardSet();" />
-                    </div>
-                    <div>
-                        <div>
-                            <span><button id="generatedSideboardButton" type="button" onClick="generateSideboard();">Generate Sideboard</button></span>
-                        </div>
-                    </div>
-                </div>
-                <div class="cardListWrapper" style="display: flex; flex-direction: column">
-                    <h1 id="cardSetHeader" style="align-self: center;"></h1>
-                    <div id="randomizedCards" class="cardList"></div>
-                    <div id="sideboard" style="display: grid; grid-template-columns: 320px 320px 320px"></div>
-                </div>
-                <div class="flex" style="flex-direction: column; margin-left: 80px; height: 600px;">
-                    <span class="border">Bias Data</span>
-                    <div id="biasData" class="biasList"></div>
-                </div>
-                <div class="flex" style="flex-direction: column; margin-left: 20px; height: 600px;">
-                    <span class="border">Card Distribution Data</span>
-                    <div id="cardData" class="dataList"></div>
-                </div>
-            </div>
-            <div>
-                <input type="file" id="file-input" />
-                <h3>Contents of the file:</h3>
-                <pre id="file-content"></pre>
-            </div>
-            <div>
-                <input type="file" id="image-input" />
-            </div>
-            <div>
-                <input type="file" id="predefined-input" />
-            </div>
-            `
-        }
     }
 };
 

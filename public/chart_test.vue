@@ -1,5 +1,5 @@
 <template>
-    <div width="250" height="250">
+    <div style="margin: 0 0 auto auto;">
         <div id="costs-chart" style="max-width: 500px; margin: 0 auto;" height="250px" />
         <div id="actions-chart" />
         <div id="buys-chart" />
@@ -8,7 +8,7 @@
 
 <script>
 import adventures from './src/predefined sets/Adventures_sets.js';
-import _Cards from './src/cards_module.js';
+import _Cards from './src/data/cards_module.js';
 import CardUtils from './src/CardUtilities.js';
 import Plotly from 'plotly.js-dist';
 
@@ -27,11 +27,12 @@ export default {
         let cardDraws = cards.map(c => c.cards == null ? 0 : c.cards);
         
         let trace = {
-            x: cardCosts,
-            type: 'histogram',
+            y: cardCosts,
+            type: 'bar',
             marker: {
                 color: 'gold'
-            }
+            },
+            spacing: 0.1
         };
         var data = [trace];
         var layout = {
@@ -39,7 +40,7 @@ export default {
             paper_bgcolor: '#000000',
             plot_bgcolor: '#000000'
         };
-        Plotly.newPlot('costs-chart', data, layout);
+        Plotly.newPlot('costs-chart', data, layout, {staticPlot: true});
     }
 }
 </script>
