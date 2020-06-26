@@ -1,5 +1,6 @@
-import _cards from './data/cards';
+import _cards from './data/cards_module';
 import Utilities from './utilities';
+import validation from './validation';
 
 class CardUtilities {
 	constructor() { }
@@ -231,6 +232,16 @@ class CardUtilities {
 			image.src = card.image;
 			image.height = 200;
 			image.className = "card-thumbnail";
+			image.onclick = () => {
+				// in here, pick a new random with same cost
+				console.log(_cards);
+				let availableCards = validation.validateCardSet(_cards);
+				availableCards = this.filterByOtherCardSet(availableCards, cardSet);
+				availableCards = this.filterByCost(availableCards, card.cost);
+				availableCards = this.shuffle(availableCards);
+				let newCard = availableCards.pop();
+				image.src = newCard.image;
+			};
 			cardsDiv.appendChild(image);
 		});
 	}
