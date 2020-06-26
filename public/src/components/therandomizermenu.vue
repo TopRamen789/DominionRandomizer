@@ -9,7 +9,6 @@
 
 <script>
 import randomizer from '../randomizer';
-import utilities from '../utilities';
 
 export default {
     name: "RandomizerMenu",

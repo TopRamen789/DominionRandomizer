@@ -33,7 +33,7 @@ export default {
         }
     },
     mounted() {
-        let createScript = (src, type = 'module', async) => {
+        let createScript = (src, type = 'module', async = true) => {
             let script = document.createElement('script');
             script.setAttribute('src', src);
             script.setAttribute('type', type);
@@ -45,36 +45,7 @@ export default {
         styles.setAttribute('rel', 'stylesheet');
         styles.setAttribute('href', 'styles/styles.css');
         document.head.appendChild(styles);
-        var utilities = document.createElement('script');
-        utilities.setAttribute('src', 'src/utilities.js');
-        utilities.async = true;
-        document.head.appendChild(utilities);
-        createScript('src/cards.js', 'text/javascript');
-        createScript('src/cardutils.js', 'text/javascript');
-        
-        var validation = document.createElement('script');
-        validation.setAttribute('src', 'src/validation.js');
-        validation.async = true;
-        document.head.appendChild(validation);
-        var percentagedata = document.createElement('script');
-        percentagedata.setAttribute('src', 'src/percentagedata.js');
-        percentagedata.async = true;
-        document.head.appendChild(percentagedata);
-        var biasdata = document.createElement('script');
-        biasdata.setAttribute('src', 'src/biasdata.js');
-        biasdata.async = true;
-        document.head.appendChild(biasdata);
-        createScript('src/randomizer.js');
-        createScript('src/procedural.js');
-        var checklistAndDefaults = document.createElement('script');
-        checklistAndDefaults.setAttribute('src', 'src/checklistAndDefaults.js');
-        checklistAndDefaults.async = true;
-        document.head.appendChild(checklistAndDefaults);
-        var modifyCardData = document.createElement('script');
-        modifyCardData.setAttribute('src', 'src/modifycarddata.js');
-        modifyCardData.async = true;
-        document.head.appendChild(modifyCardData);
-        
+        createScript('src/checklistAndDefaults.js');
         createScript('src/predefined sets/Adventures_sets.js', 'text/javascript');
         createScript('src/predefined sets/Alchemy_sets.js', 'text/javascript');
         createScript('src/predefined sets/Cornucopia_sets.js', 'text/javascript');
@@ -89,8 +60,6 @@ export default {
         createScript('src/predefined sets/Prosperity_sets.js', 'text/javascript');
         createScript('src/predefined sets/Renaissance_sets.js', 'text/javascript');
         createScript('src/predefined sets/Seaside_sets.js', 'text/javascript');
-        createScript('src/sets_testing.js', 'text/javascript');
-        createScript('src/htmlbinder.js');
     }
 };
 

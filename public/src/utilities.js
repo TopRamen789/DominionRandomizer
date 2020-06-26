@@ -115,3 +115,5 @@ let img = () => {};
 span = buildElement.bind(span);
 div = buildElement.bind(div);
 img = buildElement.bind(img);
+
+export default {getCheckedExpansions, span, div, img, randomInRange, disposeChildren};

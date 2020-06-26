@@ -1,4 +1,7 @@
-import _cards from '../src/data/cards_module';
+import _cards from './data/cards_module';
+import utilities from './utilities';
+import validation from './validation';
+import CardUtilities from './CardUtilities';
 
 let getCardNumberInputs = () => {
 	let inputs = [].slice.call(document.querySelectorAll("input"));
@@ -15,13 +18,13 @@ let getCardNumberInputs = () => {
 }
 
 let buildRandomSetFromInputs = (cardNumbers, checkedSets) => {
-	let validatedCards = validateCardSet(filterByExpansions(_cards, checkedSets));
+	let validatedCards = validation.validateCardSet(CardUtilities.filterByExpansions(_cards, checkedSets));
 	let randomizedCardSet = [];
 	cardNumbers.forEach((cardNumber, idx) => {
 		for(let i = 0; i < cardNumber.number; i++) {
-			validatedCards = filterByOtherCardSet(validatedCards, randomizedCardSet);
-			let cardSet = filterByCost(validatedCards, cardNumber.cost);
-			cardSet = shuffle(cardSet);
+			validatedCards = CardUtilities.filterByOtherCardSet(validatedCards, randomizedCardSet);
+			let cardSet = CardUtilities.filterByCost(validatedCards, cardNumber.cost);
+			cardSet = CardUtilities.shuffle(cardSet);
 			let card = cardSet.pop();
 			randomizedCardSet.push(card);
 		}
@@ -30,13 +33,13 @@ let buildRandomSetFromInputs = (cardNumbers, checkedSets) => {
 }
 
 let buildRandomCostDistributionFromSets = (checkedSets) => {
-	let availableCards = filterByExpansions(_cards, checkedSets);
+	let availableCards = CardUtilities.filterByExpansions(_cards, checkedSets);
 	let costs = availableCards.filter(c => c.cost != "" && c.cost != null).map(c => c.cost);
 	let standardDeviation = findStandardDeviation(costs);
 }
 
 let buildCostCurve = (checkedSets) => {
-	let availableCards = validateCardSet(_cards);
+	let availableCards = validation.validateCardSet(_cards);
 	let sets = [];
 
 	// Extra set checking because the sets don't have a primary key to the expansion they came from.
@@ -68,7 +71,7 @@ let buildCostCurve = (checkedSets) => {
 		sets = sets.concat(seasideSets);
 
 	sets = sets.filter(set => !menagerieSets.map(m => m[0]).some(m => m === set[0]));
-	let chosenSet = shuffle(sets).pop().map(card => card.replace(/^\w/, c => c.toUpperCase()));
+	let chosenSet = CardUtilities.shuffle(sets).pop().map(card => card.replace(/^\w/, c => c.toUpperCase()));
 	chosenSet = chosenSet.filter(c => c != "Potion");
 	chosenSet = chosenSet.map(c => {
 		if(c == "Jack of all Trades") {
@@ -76,8 +79,8 @@ let buildCostCurve = (checkedSets) => {
 		}
 		return c;
 	});
-	let filteredSet = filterByNames(availableCards, chosenSet);
-	let distinctCosts = getDistinctCardCosts(filteredSet);
+	let filteredSet = CardUtilities.filterByNames(availableCards, chosenSet);
+	let distinctCosts = CardUtilities.getDistinctCardCosts(filteredSet);
 	let costAggregates = [];
 	for(let i = 0; i < distinctCosts.length; i++) {
 		let number = filteredSet.filter(f => f.cost == distinctCosts[i]).length;
@@ -127,9 +130,9 @@ let generateSideboardCards = (checkedSets) => {
 	let eventCards = getEventCards(checkedSets);
 	let projectCards = getProjectCards(checkedSets);
 	let landmarkCards = getLandmarkCards(checkedSets);
-	sideboard = sideboard.concat(pickRandomCardsFromCardSet(eventCards, randomInRange(4,8)));
-	sideboard = sideboard.concat(pickRandomCardsFromCardSet(projectCards, 4));
-	sideboard = sideboard.concat(pickRandomCardsFromCardSet(landmarkCards, 2)); 
+	sideboard = sideboard.concat(CardUtilities.pickRandomCardsFromCardSet(eventCards, utilities.randomInRange(4,8)));
+	sideboard = sideboard.concat(CardUtilities.pickRandomCardsFromCardSet(projectCards, 4));
+	sideboard = sideboard.concat(CardUtilities.pickRandomCardsFromCardSet(landmarkCards, 2)); 
 	return sideboard;
 }
 
@@ -138,20 +141,20 @@ let addSideboardCards = (checkedSets) => {
 }
 
 let displaySelectedSets = () => {
-	let checkedSets = getCheckedExpansions();
+	let checkedSets = utilities.getCheckedExpansions();
 	let sets = filterByExpansions(cards, checkedSets);
 	buildCardSetUI(sets, document.querySelector("#displaySets"));
 }
 
 let randomize = () => {
-	let checkedSets = getCheckedExpansions();
+	let checkedSets = utilities.getCheckedExpansions();
 	let cardNumbers = buildCostCurve(checkedSets);
 	let randomCards = buildRandomSetFromInputs(cardNumbers, checkedSets);
-	buildSelectedCardSet(randomCards);
+	CardUtilities.buildSelectedCardSet(randomCards);
 	const sideboard = addSideboardCards(checkedSets);
-	buildSelectedSideboard(sideboard);
-	if(!validateTenCardsTotal(randomCards)) {
-		return;
+	CardUtilities.buildSelectedSideboard(sideboard);
+	while(!randomCards.length == 10) {
+		randomize();
 	}
 	return randomCards;
 }

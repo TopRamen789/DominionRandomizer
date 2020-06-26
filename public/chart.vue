@@ -7,9 +7,6 @@
 </template>
 
 <script>
-import adventures from './src/predefined sets/Adventures_sets.js';
-import _Cards from './src/data/cards_module.js';
-import CardUtils from './src/CardUtilities.js';
 import Plotly from 'plotly.js-dist';
 
 export default {

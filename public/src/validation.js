@@ -1,19 +1,4 @@
-// let validateTenCardsTotal = (cardSet) => {
-// 	let inputIsChecked = document.querySelector("#validateTenCards").checked;
-// 	if(!inputIsChecked)
-// 		return true;
-// 	let total = cardSet.length;
-// 	let isGreaterThanOrEqualToTen = total >= 10;
-// 	let text = "";
-// 	if(!isGreaterThanOrEqualToTen)
-// 		text = `10 cards in the supply require!\r\n You have ${total}!`;
-// 	document.querySelector("#error").textContent = text;
-// 	return isGreaterThanOrEqualToTen;
-// }
-
-let validateTenCardsTotal = (cardSet) => {
-	return cardSet.length === 10;
-}
+import CardUtilities from './CardUtilities';
 
 let validateNotBasicSet = (cardSet) => {
 	let basicSetCards = [
@@ -28,7 +13,7 @@ let validateNotBasicSet = (cardSet) => {
 		"Colony",
 		"Curse"
 	];
-	return filterByNotNames(cardSet, basicSetCards);
+	return CardUtilities.filterByNotNames(cardSet, basicSetCards);
 }
 
 let validateNocturne = (cardSet) => {
@@ -39,8 +24,8 @@ let validateNocturne = (cardSet) => {
 		"Boon",
 		"Hex"
 	];
-	 let nocturneCards = filterByNotType(cardSet, nocturneTypes);
-	 return filterByNotNames(nocturneCards, ["Bat"]);
+	 let nocturneCards = CardUtilities.filterByNotType(cardSet, nocturneTypes);
+	 return CardUtilities.filterByNotNames(nocturneCards, ["Bat"]);
 }
 
 let validateAdventures = (cardSet) => {
@@ -54,8 +39,8 @@ let validateAdventures = (cardSet) => {
 		"Hero",
 		"Champion"
 	];
-	let adventuresCards = filterByNotNames(cardSet, adventuresUpgradeCards);
-	return filterByNotType(adventuresCards, ["Event"]);
+	let adventuresCards = CardUtilities.filterByNotNames(cardSet, adventuresUpgradeCards);
+	return CardUtilities.filterByNotType(adventuresCards, ["Event"]);
 }
 
 let validateRenaissance = (cardSet) => {
@@ -63,7 +48,7 @@ let validateRenaissance = (cardSet) => {
 		"Project",
 		"Artifact"
 	];
-	return filterByNotType(cardSet, renaissanceTypes);
+	return CardUtilities.filterByNotType(cardSet, renaissanceTypes);
 }
 
 let validateEmpires = (cardSet) => {
@@ -78,8 +63,8 @@ let validateEmpires = (cardSet) => {
 		"cost": 3,
 		"image": "http://wiki.dominionstrategy.com/images/thumb/d/df/Castles.jpg/200px-Castles.jpg",
 	}
-	let empiresSet = filterByNotType(cardSet, empiresTypes)
-	empiresSet.push(fillCardProperties(castles));
+	let empiresSet = CardUtilities.filterByNotType(cardSet, empiresTypes)
+	empiresSet.push(CardUtilities.fillCardProperties(castles));
 	return empiresSet;
 }
 
@@ -87,7 +72,7 @@ let validateCornucopia = (cardSet) => {
 	let cornucopiaType = [
 		"Prize"
 	];
-	return filterByNotType(cardSet, cornucopiaType);
+	return CardUtilities.filterByNotType(cardSet, cornucopiaType);
 }
 
 let validateDarkAges = (cardSet) => {
@@ -96,7 +81,7 @@ let validateDarkAges = (cardSet) => {
 		"Ruins",
 		"Knight"
 	];
-	let darkAgesSet = filterByNotType(cardSet, darkAgesTypes);
+	let darkAgesSet = CardUtilities.filterByNotType(cardSet, darkAgesTypes);
     let knights = {
 		"name": "Knights", 
 		"set": "Dark Ages", 
@@ -104,8 +89,8 @@ let validateDarkAges = (cardSet) => {
 		"cost": 5,
 		"image": "http://wiki.dominionstrategy.com/images/thumb/9/9a/Knights.jpg/200px-Knights.jpg"
 	};
-	darkAgesSet.push(fillCardProperties(knights));
-	return filterByNotNames(darkAgesSet, ["Spoils"]);
+	darkAgesSet.push(CardUtilities.fillCardProperties(knights));
+	return CardUtilities.filterByNotNames(darkAgesSet, ["Spoils"]);
 }
 
 let getSetPossibilities = (currentSet) => {
@@ -133,11 +118,11 @@ let hasDuration = (currentSet) => {
 }
 
 let hasTrash = (currentSet) => {
-	return filterByTrashCount(currentSet, 1).length > 0;
+	return CardUtilities.filterByTrashCount(currentSet, 1).length > 0;
 }
 
 let hasBuys = (currentSet) => {
-	return filterByBuyCount(currentSet, 1).length > 0;	
+	return CardUtilities.filterByBuyCount(currentSet, 1).length > 0;	
 }
 
 function validateCardSet(givenSet) {
@@ -151,3 +136,5 @@ function validateCardSet(givenSet) {
 	availableSet = validateDarkAges(availableSet);
 	return availableSet;
 }
+
+export default {validateCardSet};

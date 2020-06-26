@@ -1,9 +1,10 @@
 import _cards from './data/cards';
+import Utilities from './utilities';
 
-class CardUtils {
+class CardUtilities {
 	constructor() { }
 	
-	shuffle(array) {
+	static shuffle(array) {
 		var currentIndex = array.length, temporaryValue, randomIndex;
 		// While there remain elements to shuffle...
 		while (0 !== currentIndex) {
@@ -18,7 +19,7 @@ class CardUtils {
 		return array;
 	}
 
-	pickRandomCardsFromCardSet(cardSet, numberOfCards) {
+	static pickRandomCardsFromCardSet(cardSet, numberOfCards) {
 		let randomCards = [];
 		while(randomCards.length < numberOfCards) {
 			cardSet = this.shuffle(cardSet);
@@ -27,104 +28,104 @@ class CardUtils {
 		return randomCards;
 	}
 
-	filterByNames(cardSet, names) {
+	static filterByNames(cardSet, names) {
 		return cardSet.filter((card) => {
 			return names.includes(card.name);
 		});
 	}
 
-	filterByNotNames(cardSet, names) {
+	static filterByNotNames(cardSet, names) {
 		return cardSet.filter((card) => {
 			return !names.includes(card.name);
 		});
 	}
 
-	filterBySet(cardSet, set) {
+	static filterBySet(cardSet, set) {
 		let setNames = set.map(card => card.name);
 		return this.filterByNotNames(cardSet, setNames);
 	}
 
-	filterByTavern(cardSet) {
+	static filterByTavern(cardSet) {
 		return cardSet.filter((card) => {
 			return card.useTavern;
 		});
 	}
 
-	filterByVillagersAndCoffers(cardSet) {
+	static filterByVillagersAndCoffers(cardSet) {
 		return cardSet.filter((card) => {
 			return card.useVillagers || card.useCoffers;
 		});
 	}
 
-	filterByVillagers(cardSet) {
+	static filterByVillagers(cardSet) {
 		return cardSet.filter((card) => {
 			return card.useVillagers;
 		});
 	}
 
-	filterByCoffers(cardSet) {
+	static filterByCoffers(cardSet) {
 		return cardSet.filter((card) => {
 			return card.useCoffers;
 		})
 	}
 
-	filterByCardDraw(cardSet, cardDraw) {
+	static filterByCardDraw(cardSet, cardDraw) {
 		return cardSet.filter((card) => {
 			return card.cards >= cardDraw;
 		});
 	}
 
-	filterByCardDrawCount(cardSet, cardCount) {
+	static filterByCardDrawCount(cardSet, cardCount) {
 		return cardSet.filter((card) => {
 			return card.cards == cardCount;
 		});
 	}
 
-	filterByGreaterThanActionCount(cardSet, actionCount) {
+	static filterByGreaterThanActionCount(cardSet, actionCount) {
 		return cardSet.filter((card) => {
 			return card.actions >= actionCount;
 		});
 	}
 
-	filterByActionCount(cardSet, actionCount) {
+	static filterByActionCount(cardSet, actionCount) {
 		return cardSet.filter((card) => {
 			return card.actions == actionCount;
 		});
 	}
 
-	filterByTypes(cardSet, filterTypes) {
+	static filterByTypes(cardSet, filterTypes) {
 		return cardSet.filter((card) => {
 			let types = card.types.split(" - ");
 			return types.filter(type => filterTypes.includes(type)).length > 0;
 		});
 	}
 
-	filterByNotType(cardSet, filterTypes) {
+	static filterByNotType(cardSet, filterTypes) {
 		return cardSet.filter((card) => {
 			let types = card.types.split(" - ");
 			return !types.filter(type => filterTypes.includes(type)).length > 0;
 		});
 	}
 
-	filterByCost(cardSet, cost) {
+	static filterByCost(cardSet, cost) {
 		return cardSet.filter((card) => {
 			return card.cost === cost;
 		});
 	}
 
-	filterByTrashCount(cardSet, trashCount) {
+	static filterByTrashCount(cardSet, trashCount) {
 		return cardSet.filter((card) => {
 			return card.trash >= trashCount;
 		});
 	}
 
-	filterByBuyCount(cardSet, buyCount) {
+	static filterByBuyCount(cardSet, buyCount) {
 		return cardSet.filter((card) => {
 			return card.buys >= buyCount;
 		});	
 	}
 
-	filterSetByEverythingElse(currentSet) {
+	static filterSetByEverythingElse(currentSet) {
 		let biasedSet = currentSet.slice();
 		let attackTypes = this.filterByTypes(currentSet, ['Attack']);
 		biasedSet = biasedSet.filter(card => {
@@ -161,18 +162,18 @@ class CardUtils {
 		return biasedSet;
 	}
 
-	filterByExpansions(cardSet, sets) {
+	static filterByExpansions(cardSet, sets) {
 		return cardSet.filter((card) => {
 			return sets.includes(card.set);
 		});
 	}
 
-	filterByOtherCardSet(cardSet, otherSet) {
+	static filterByOtherCardSet(cardSet, otherSet) {
 		let names = otherSet.map(card => card.name);
 		return cardSet.filter(card => !names.includes(card.name));
 	}
 
-	sortByCost(cardSet) {
+	static sortByCost(cardSet) {
 		return cardSet.sort((a,b) => {
 			if(a.cost < b.cost)
 				return -1;
@@ -182,13 +183,13 @@ class CardUtils {
 		});
 	}
 
-	getDistinctArrayValues(array) {
+	static getDistinctArrayValues(array) {
 		return array.filter((value, index, self) => {
 			return self.indexOf(value) === index;
 		});
 	}
 
-	getDistinctCardTypes(cardSet) {
+	static getDistinctCardTypes(cardSet) {
 		let types = cardSet.map(card => card.types.split(" - "));
 		types = types.reduce((acc, value) => {
 			return acc.concat(value);
@@ -196,19 +197,19 @@ class CardUtils {
 		return this.getDistinctArrayValues(types);
 	}
 
-	getCardsWithCostInSets(sets, cost) {
+	static getCardsWithCostInSets(sets, cost) {
 		return _cards.filter(card => card.cost).filter((card) => {
 			return card.cost === cost && sets.includes(card.set);
 		});
 	}
 
-	getSelectedCards(selectedCards) {
+	static getSelectedCards(selectedCards) {
 		return _cards.filter((card) => {
 			return selectedCards.includes(card.name);
 		});
 	}
 
-	buildHeader(cardsDiv) {
+	static buildHeader(cardsDiv) {
 		let cost = this.span("Cost");
 		let set = this.span("Set");
 		let name = this.span("Name");
@@ -222,41 +223,71 @@ class CardUtils {
 
 	wikiPath = "http://wiki.dominionstrategy.com/";
 
-	buildCardSetUI(cardSet, cardsDiv) {
+	static buildCardSetUI(cardSet, cardsDiv) {
 		cardSet.forEach((card) => {
 			if(card == null || card.image == null)
 				return;
-			let image = this.img();
+			let image = Utilities.img();
 			image.src = card.image;
+			image.height = 200;
+			image.className = "card-thumbnail";
 			cardsDiv.appendChild(image);
 		});
 	}
 
-	buildRandomizedCardSetUI(cardSet) {
+	static buildRandomizedCardSetUI(cardSet) {
 		let cardsDiv = document.querySelector("#randomizedCards");
 		this.buildCardSetUI(cardSet, cardsDiv);
 	}
 
-	clearCardData() {
+	static clearCardData() {
 		let cardsDiv = document.querySelector("#randomizedCards");
-		this.disposeChildren(cardsDiv);
+		Utilities.disposeChildren(cardsDiv);
 	}
 
-	buildSelectedCardSet(cardSet) {
+	static buildSelectedCardSet(cardSet) {
 		this.clearCardData();
-		this.displayCardPercentages(cardSet);
 		this.buildRandomizedCardSetUI(cardSet);
 	}
 
-	buildSelectedSideboard(sideboard) {
+	static buildSelectedSideboard(sideboard) {
 		let sideboardDiv = document.querySelector("#sideboard");
-		this.disposeChildren(sideboardDiv);
+		Utilities.disposeChildren(sideboardDiv);
 		sideboard.forEach((card) => {
-			let sideboardCard = this.img();
+			let sideboardCard = Utilities.img();
 			sideboardCard.src = card.image;
+			sideboardCard.height = 125;
+			sideboardCard.className = "sideboard-thumbnail";
 			sideboardDiv.appendChild(sideboardCard);
+		});
+	}
+
+	static fillCardProperties = (card) => {
+		let filledCard = {};
+		filledCard.name = card.name || "";
+		filledCard.set = card.set || "";
+		filledCard.types = card.types || "";
+		filledCard.cost = card.cost || null;
+		filledCard.text = card.text || "";
+		filledCard.actions = card.actions || null;
+		filledCard.cards = card.cards || null;
+		filledCard.buys = card.buys || null;
+		filledCard.coins = card.coins || "  ";
+		filledCard.trash = card.trash || null;
+		filledCard.junk = card.junk || "  ";
+		filledCard.gain = card.gain || null;
+		filledCard.points = card.points || null;
+		filledCard.useTavern = card.useTavern || null;
+		filledCard.useVillagers = card.useVillagers || null;
+		filledCard.image = card.image || null;
+		return filledCard;
+	}
+
+	static getDistinctCardCosts = (cardSet) => {
+		return cardSet.filter(c => c.cost != null || c.debt != null).map(c => c.cost != null ? c.cost : c.debt).filter((val, index, self) => {
+			return self.indexOf(val) === index;
 		});
 	}
 }
 
-export default CardUtils;
+export default CardUtilities;
