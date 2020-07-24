@@ -224,6 +224,10 @@ class CardUtilities {
 
 	wikiPath = "http://wiki.dominionstrategy.com/";
 
+	// IDEA GET!
+	// So first, you need to fix the dual supply piles, where they have 2 differently named cards take up the same pile.
+	// You can fix this by having them display together all the time in the way the Dominion rules expect:
+	// One card type is pointing horizontally underneath the other card type. 
 	static buildCardSetUI(cardSet, cardsDiv) {
 		cardSet.forEach((card) => {
 			if(card == null || card.image == null)
@@ -232,15 +236,49 @@ class CardUtilities {
 			image.src = card.image;
 			image.height = 200;
 			image.className = "card-thumbnail";
+			image.id = card.name;
 			image.onclick = () => {
+				// TODO: Wrap this with a div and put a sibling div in here
+				// then when you hover the card, put some small text stating "Reroll?" such that it is slightly more intuitive.
 				// in here, pick a new random with same cost
 				let availableCards = validation.validateCardSet(_cards);
 				availableCards = this.filterByOtherCardSet(availableCards, cardSet);
 				availableCards = this.filterByCost(availableCards, card.cost);
 				availableCards = this.shuffle(availableCards);
 				let newCard = availableCards.pop();
+				if(newCard == null) {
+					console.log(availableCards);
+					console.log(card.cost);
+				}
+				// if(card.bottomPile != null) {
+				// 	document.getElementById(card.bottomPile).remove();
+				// }
 				image.src = newCard.image;
 			};
+			// if(card.topPile != null) {
+			// 	// then this card is the bottom pile.
+			// 	image.style.transform = 'rotate(-90deg)';
+			// 	let topImage = Utilities.img();
+			// 	let topCard = this.filterByNames(_cards, [card.topPile])[0];
+			// 	topImage.className = "card-thumbnail";
+			// 	topImage.src = topCard.image;
+			// 	topImage.height = 200;
+			// 	topImage.onclick = onclick.call(this, topImage);
+			// 	cardsDiv.appendChild(topImage);
+			// } else if (card.bottomPile != null) {
+			// 	// then this card is the top pile.
+			// 	let bottomImage = Utilities.img();
+			// 	let bottomCard = this.filterByNames(_cards, [card.bottomPile])[0];
+			// 	bottomImage.style.transform = 'rotate(-90deg)';
+			// 	bottomImage.id = bottomCard.name;
+			// 	bottomImage.className = "card-thumbnail";
+			// 	bottomImage.src = bottomCard.image;
+			// 	bottomImage.height = 200;
+			// 	cardsDiv.appendChild(bottomImage);
+			// 	image.onclick = onclick.call(this, bottomImage);
+			// } else {
+			// 	image.onclick = onclick.call(this, image);
+			// }
 			cardsDiv.appendChild(image);
 		});
 	}
@@ -318,6 +356,10 @@ class CardUtilities {
 
 	static getLandmarkCards = () => {
 		return this.filterByTypes(_cards, ["Landmark"]);
+	}
+
+	static getWayCards = () => {
+		return this.filterByTypes(_cards, ["Way"]);
 	}
 }
 

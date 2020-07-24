@@ -1,3 +1,22 @@
+// also bleughghhh..
+let download = (data, filename, type) => {
+    var file = new Blob([data], {type: type});
+    if (window.navigator.msSaveOrOpenBlob) // IE10+
+        window.navigator.msSaveOrOpenBlob(file, filename);
+    else { // Others
+        var a = document.createElement("a"),
+                url = URL.createObjectURL(file);
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(function() {
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);  
+        }, 0); 
+    }
+}
+
 let downloadJs = (content, filename) => {
   let json = JSON.stringify(content, null, 4);
   download(json, filename, ".js");
@@ -24,16 +43,23 @@ let modifyCardImages = (cards, images) => {
   });
   downloadJs(json, "ModifiedJson");
 }
-var imagesJson = {};
+var otherFileJson = {};
+
+let appendCards = (cards, newCards) => {
+  cards = cards.concat(newCards);
+  downloadJs(cards, "newcards");
+}
 
 let readSingleFile = (e) => {
-  let reader = getFileReader(e);
+  let reader = new FileReader();
+  let file = e.target.files[0];
   reader.onload = function(e) {
     let contents = e.target.result;
     //console.log(contents.split("var _cards = ")[1].slice(0, -1));
-    let json = JSON.parse(contents.split("var _cards = ")[1].slice(0, -1));
+    let json = JSON.parse(contents.split("var _cards = ")[1]);
     // modifyCardsJson(json);
-    modifyCardImages(json, imagesJson);
+    //modifyCardImages(json, imagesJson);
+    appendCards(json, otherFileJson);
     displayContents(contents);
   };
   reader.readAsText(file);
@@ -44,7 +70,8 @@ let displayContents = (contents) => {
   element.textContent = contents;
 }
 
-let readImages = (e) => {
+let readOtherFile = (e) => {
+  console.log('speak to me!');
   let file = e.target.files[0];
   if(!file)
     return;
@@ -52,7 +79,7 @@ let readImages = (e) => {
   reader.onload = function(e) {
     let contents = e.target.result;
     let json = JSON.parse(contents);
-    imagesJson = json;
+    otherFileJson = json;
   }
   reader.readAsText(file);
 }
@@ -80,8 +107,8 @@ let readPredefinedSets = (e) => {
 document.querySelector('#predefined-input')
   .addEventListener('change', readPredefinedSets, false);
 
-document.querySelector('#image-input')
-  .addEventListener('change', readImages, false);
+document.querySelector('#other-file-input')
+  .addEventListener('change', readOtherFile, false);
 
 document.querySelector('#file-input')
   .addEventListener('change', readSingleFile, false);

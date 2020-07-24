@@ -17,6 +17,7 @@ let buildSetChecklist = () => {
 		"Empires",
 		"Nocturne",
 		"Renaissance",
+		"Menagerie",
 		"Promo "
 	];
 
@@ -36,7 +37,8 @@ let buildSetChecklist = () => {
 		"Adventures",
 		"Empires",
 		"Nocturne",
-		"Renaissance"
+		"Renaissance",
+		"Menagerie"
 	];
 
 	let setElements = document.querySelector("#sets");

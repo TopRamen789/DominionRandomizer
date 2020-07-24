@@ -1,8 +1,26 @@
 <html>
 <head>
-<script type="text/javascript" src="src/utilities.js"></script>
 <script type="text/javascript">
 // http://wiki.dominionstrategy.com/index.php/List_of_cards
+
+// eww..
+let download = (data, filename, type) => {
+    var file = new Blob([data], {type: type});
+    if (window.navigator.msSaveOrOpenBlob) // IE10+
+        window.navigator.msSaveOrOpenBlob(file, filename);
+    else { // Others
+        var a = document.createElement("a"),
+                url = URL.createObjectURL(file);
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(function() {
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);  
+        }, 0); 
+    }
+}
 
 function getCards() {
 	let getCardsXhr = new XMLHttpRequest();
@@ -17,6 +35,11 @@ function getCards() {
 			let cells = row.children;
 			let card = {};
 			let costSrc = cells[3] != null ? cells[3].children.length > 0 ? cells[3].children[0].children[0].src : "" : "";
+			try {
+				card.image = row.querySelector("[src]").src.replace('https://cors-anywhere.herokuapp.com/', 'http://wiki.dominionstrategy.com/');
+			} catch {
+				console.error('it didn\'t work!!!');
+			}
 			card.name = cells[0] != null ? cells[0].textContent.trim() : "";
 			card.set = cells[1] != null ? cells[1].textContent.trim() : "";
 			card.types = cells[2] != null ? cells[2].textContent.trim() : "";
@@ -36,6 +59,49 @@ function getCards() {
 		let json = JSON.stringify(cards, null, "\t");
 		download(json, "DominionCards", ".json");
 		document.querySelector("#data").textContent = json;
+	};
+	getCardsXhr.send();
+}
+
+function getCardsFromExpansion(expansion) {
+	let getCardsXhr = new XMLHttpRequest();
+	getCardsXhr.open("GET", "https://cors-anywhere.herokuapp.com/http://wiki.dominionstrategy.com/index.php/List_of_cards");
+	getCardsXhr.responseType = "document";
+	getCardsXhr.onload = (document) => {
+		let rows = document.srcElement.response.body.querySelectorAll("tr");
+		let cards = [];
+		rows.forEach((row, idx) => {
+			if(idx === 0)
+				return;
+			let cells = row.children;
+			let set = cells[1] != null ? cells[1].textContent.trim() : "";
+			if(set.toLowerCase() === expansion.toLowerCase() && set !== "" && set !== null) {
+				let card = {};
+				let costSrc = cells[3] != null ? cells[3].children.length > 0 ? cells[3].children[0].children[0].src : "" : "";
+				try {
+					card.image = row.querySelector("[src]").src.replace('https://cors-anywhere.herokuapp.com/', 'http://wiki.dominionstrategy.com/');
+				} catch {
+					console.error('it didn\'t work!!!');
+				}
+				card.name = cells[0] != null ? cells[0].textContent.trim() : "";
+				card.set = set;
+				card.types = cells[2] != null ? cells[2].textContent.trim() : "";
+				card.costSrc = costSrc;
+				card.cost = costSrc != null ? parseInt(costSrc[costSrc.lastIndexOf("Coin")+4], 10) : "";
+				card.text = cells[4] != null ? cells[4].textContent.trim() : "";
+				card.actions = cells[5] != null ? cells[5].textContent.trim() : "";
+				card.cards = cells[6] != null ? cells[6].textContent.trim() : "";
+				card.buys = cells[7] != null ? cells[7].textContent.trim() : "";
+				card.coins = cells[8] != null ? cells[8].textContent.trim() : "";
+				card.trash = cells[9] != null ? cells[9].textContent.trim() : "";
+				card.junk = cells[10] != null ? cells[10].textContent.trim() : "";
+				card.gain = cells[11] != null ? cells[11].textContent.trim() : "";
+				card.points = cells[12] != null ? cells[12].textContent.trim() : "";
+				cards.push(card);
+			}
+		});
+		let json = JSON.stringify(cards, null, "\t");
+		download(json, `${expansion}-cards`, ".json");
 	};
 	getCardsXhr.send();
 }
@@ -98,7 +164,8 @@ function buildRecommendedPredefinedSets(hrefs) {
 }
 
 //getCardImages();
-getExpansionHrefs();
+//getExpansionHrefs();
+getCardsFromExpansion("Menagerie");
 </script>
 </head>
 <body>

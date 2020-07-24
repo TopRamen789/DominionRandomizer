@@ -264,7 +264,7 @@ var intrigueSets = [
         "Torturer",
         "Cache",
         "Cartographer",
-        "Jack of all Trades",
+        "Jack of All Trades",
         "Silk Road",
         "Tunnel",
         "Landscapes and Additional Cards"

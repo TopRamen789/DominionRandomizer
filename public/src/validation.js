@@ -7,11 +7,16 @@ let validateNotBasicSet = (cardSet) => {
 		"Gold",
 		"Platinum",
 		"Estate",
-		"Gardens", // this is doing some weird stuff for the regular randomizer..
+		"Gardens",
 		"Duchy",
 		"Province",
 		"Colony",
-		"Curse"
+		"Curse",
+		// For our preferences...
+		"Potion",
+		"Island",
+		"Distant Lands",
+		"Feodum",
 	];
 	return CardUtilities.filterByNotNames(cardSet, basicSetCards);
 }
@@ -62,7 +67,23 @@ let validateEmpires = (cardSet) => {
 		"types": "Victory - Castle",
 		"cost": 3,
 		"image": "http://wiki.dominionstrategy.com/images/thumb/d/df/Castles.jpg/200px-Castles.jpg",
-	}
+	};
+	let splitPiles = [
+		["Encampment","Plunder"],
+		["Patrician", "Emporium"],
+		["Settlers","Bustling Village"],
+		["Catapult","Rocks"],
+		["Gladiator","Fortune"]
+	];
+	// set bottom and top pile properties for split piles.
+	let topPiles = splitPiles.map(m => m[0]);
+	let bottomPiles = splitPiles.map(m => m[1]);
+	CardUtilities.filterByNames(cardSet, topPiles).forEach((c) => {
+		c.bottomPile = splitPiles.filter(s => s.indexOf(c.name) > -1)[0][1];
+	});
+	CardUtilities.filterByNames(cardSet, bottomPiles).forEach((c) => {
+		c.topPile = splitPiles.filter(s => s.indexOf(c.name) > -1)[0][0];
+	});
 	let empiresSet = CardUtilities.filterByNotType(cardSet, empiresTypes)
 	empiresSet.push(CardUtilities.fillCardProperties(castles));
 	return empiresSet;
@@ -91,6 +112,17 @@ let validateDarkAges = (cardSet) => {
 	};
 	darkAgesSet.push(CardUtilities.fillCardProperties(knights));
 	return CardUtilities.filterByNotNames(darkAgesSet, ["Spoils"]);
+}
+
+let validateMenagerie = (cardSet) => {
+	let menagerieTypes = [
+		"Way",
+	];
+	let menagerieCards = [
+		"Horse"
+	];
+	let menagerieSet = CardUtilities.filterByNotNames(cardSet, menagerieCards);
+	return CardUtilities.filterByNotType(menagerieSet, menagerieTypes);
 }
 
 let getSetPossibilities = (currentSet) => {
@@ -134,6 +166,7 @@ let validateCardSet = (givenSet) => {
 	availableSet = validateEmpires(availableSet);
 	availableSet = validateCornucopia(availableSet);
 	availableSet = validateDarkAges(availableSet);
+	availableSet = validateMenagerie(availableSet);
 	return availableSet;
 }
 

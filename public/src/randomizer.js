@@ -70,15 +70,8 @@ let buildCostCurve = (checkedSets) => {
 	if(checkedSets.indexOf('Seaside') > -1)
 		sets = sets.concat(seasideSets);
 
-	sets = sets.filter(set => !menagerieSets.map(m => m[0]).some(m => m === set[0]));
 	let chosenSet = CardUtilities.shuffle(sets).pop().map(card => card.replace(/^\w/, c => c.toUpperCase()));
-	chosenSet = chosenSet.filter(c => c != "Potion");
-	chosenSet = chosenSet.map(c => {
-		if(c == "Jack of all Trades") {
-			return "Jack of All Trades";
-		}
-		return c;
-	});
+	chosenSet = chosenSet.slice(1, 11);
 	let filteredSet = CardUtilities.filterByNames(availableCards, chosenSet);
 	let distinctCosts = CardUtilities.getDistinctCardCosts(filteredSet);
 	let costAggregates = [];
@@ -89,29 +82,57 @@ let buildCostCurve = (checkedSets) => {
 			number: number
 		});
 	}
+	let unfinishedSet = costAggregates.reduce((acc,val) => {return acc+val.number;},0) != 10;
+	let fourCost = chosenSet.filter(c => c == "Gardens" || c == "Potion" || c == "Island" || c == "Feodum");
+	let fiveCost = chosenSet.filter(c => c == "Distant Lands");
+	if(fourCost.length > 0 && unfinishedSet) {
+		let costFourAggregate = costAggregates.filter(c => c.cost == 4);
+		if(costFourAggregate.length === 0) {
+			costAggregates.push({cost: 4, number: 0});
+		}
+		costAggregates.filter(c => c.cost == 4)[0].number += fourCost.length;
+	}
+	if(fiveCost.length > 0 && unfinishedSet) {
+		let costFiveAggregate = costAggregates.filter(c => c.cost == 5);
+		if(costFiveAggregate.length === 0) {
+			costAggregates.push({cost: 5, number: 0});
+		}
+		costAggregates.filter(c => c.cost == 5)[0].number++;
+	}
+	let stillUnfinishedSet = costAggregates.reduce((acc,val) => {return acc+val.number;},0) != 10;
+	if(stillUnfinishedSet)
+		console.log(costAggregates, chosenSet);
 	return costAggregates;
+}
+
+let pickRandomCardsFromFilteredCards = (cards, expansions, number) => {
+	let filteredCards = CardUtilities.filterByExpansions(cards, expansions);
+	return CardUtilities.pickRandomCardsFromCardSet(filteredCards, number);
 }
 
 let generateSideboardCards = (checkedSets) => {
 	let sideboard = [];
 
 	if(checkedSets.includes("Adventures") || checkedSets.includes("Empires")) {
-		let eventCards = CardUtilities.getEventCards();
-		eventCards = CardUtilities.filterByExpansions(eventCards, checkedSets);
-		sideboard = sideboard.concat(CardUtilities.pickRandomCardsFromCardSet(eventCards, utilities.randomInRange(4,8)));
+		let eventCards = pickRandomCardsFromFilteredCards(CardUtilities.getEventCards(), checkedSets, utilities.randomInRange(4,8));
+		sideboard = sideboard.concat(eventCards);
 	}
 
 	if(checkedSets.includes("Renaissance")) {
-		let projectCards = CardUtilities.getProjectCards();
-		projectCards = CardUtilities.filterByExpansions(projectCards, checkedSets);
+		let projectCards = pickRandomCardsFromFilteredCards(CardUtilities.getProjectCards(), checkedSets, 4);
 		sideboard = sideboard.concat(CardUtilities.pickRandomCardsFromCardSet(projectCards, 4));
 	}
 
 	if(checkedSets.includes("Empires")) {
-		let landmarkCards = CardUtilities.getLandmarkCards();
-		landmarkCards = CardUtilities.filterByExpansions(landmarkCards, checkedSets);
-		sideboard = sideboard.concat(CardUtilities.pickRandomCardsFromCardSet(landmarkCards, 2)); 
+		let landmarkCards = pickRandomCardsFromFilteredCards(CardUtilities.getLandmarkCards(), checkedSets, 2);
+		sideboard = sideboard.concat(landmarkCards); 
 	}
+
+	if(checkedSets.includes("Menagerie")) {
+		let wayCards = pickRandomCardsFromFilteredCards(CardUtilities.getWayCards(), checkedSets, 2);
+		sideboard = sideboard.concat(wayCards);
+	}
+
 	return sideboard;
 }
 
