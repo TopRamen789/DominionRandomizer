@@ -2,6 +2,8 @@ import _cards from './data/cards_module';
 import utilities from './utilities';
 import validation from './validation';
 import CardUtilities from './CardUtilities';
+import CardEconomy from './CardEconomy';
+import predefinedSets from './data/predefined_cost_curves';
 
 let getCardNumberInputs = () => {
 	let inputs = [].slice.call(document.querySelectorAll("input"));
@@ -75,13 +77,13 @@ let buildCostCurve = (checkedSets) => {
 	let filteredSet = CardUtilities.filterByNames(availableCards, chosenSet);
 	let distinctCosts = CardUtilities.getDistinctCardCosts(filteredSet);
 	let costAggregates = [];
-	for(let i = 0; i < distinctCosts.length; i++) {
-		let number = filteredSet.filter(f => f.cost == distinctCosts[i]).length;
+	distinctCosts.forEach((cost) => {
+		let number = filteredSet.filter(f => f.cost == cost).length;
 		costAggregates.push({
-			cost: distinctCosts[i],
+			cost: cost,
 			number: number
 		});
-	}
+	});
 	let unfinishedSet = costAggregates.reduce((acc,val) => {return acc+val.number;},0) != 10;
 	let fourCost = chosenSet.filter(c => c == "Gardens" || c == "Potion" || c == "Island" || c == "Feodum");
 	let fiveCost = chosenSet.filter(c => c == "Distant Lands");
@@ -102,6 +104,7 @@ let buildCostCurve = (checkedSets) => {
 	let stillUnfinishedSet = costAggregates.reduce((acc,val) => {return acc+val.number;},0) != 10;
 	if(stillUnfinishedSet)
 		console.log(costAggregates, chosenSet);
+	// CardEconomy.rebuildPredefinedSetCostCurves();
 	return costAggregates;
 }
 
