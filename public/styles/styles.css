@@ -16,7 +16,8 @@
 .cardList {
 	margin-left: 20px;
 	display: grid;
-	grid-template-columns: 124px 124px 124px 124px 124px;
+	grid-template-columns: 145px 145px 145px 145px 145px;
+	grid-template-rows: 225px 225px;
 	justify-items: start;
 }
 
@@ -83,6 +84,10 @@ div {
 	color: #C0C0C0;
 }
 
+.split-pile {
+	position: relative;
+}
+
 .card-thumbnail:hover {
     position:relative;
     top:-25px;
@@ -91,6 +96,41 @@ div {
     height:auto;
     display:block;
     z-index:999;
+}
+
+.top-card-thumbnail {
+	position: absolute;
+	z-index:998;
+	top: 5px;
+	left: 10px;
+}
+
+.top-card-thumbnail:hover {
+	position:relative;
+	top:15px;
+	left:5px;
+	width:250px;
+	height:auto;
+	display:block;
+	z-index:999;
+}
+
+.bottom-card-thumbnail {
+	position: absolute;
+	z-index: 997;
+	left: -10px;
+	top: -15px;
+}
+
+.bottom-card-thumbnail:hover {
+	position: relative;
+	top: -40px;
+	left: -135px;
+	right: 0px;
+	width: 250px;
+	height: auto;
+	display: block;
+	z-index:999;
 }
 
 .sideboard-thumbnail:hover {

@@ -5,7 +5,7 @@
             <div class="cardListWrapper" style="display: flex; flex-direction: column">
                 <h1 id="cardSetHeader" style="align-self: center;"></h1>
                 <div id="randomizedCards" class="cardList"></div>
-                <div id="sideboard" style="display: grid; grid-template-columns: 204px 204px 204px 204px 204px 204px 204px; margin: 0 -240px"></div>
+                <div id="sideboard" style="display: grid; grid-template-columns: 204px 204px 204px 204px 204px 204px 204px; margin: 0 -150px"></div>
             </div>
         </div>
         <Chart :card-set="this.cardSet" />

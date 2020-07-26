@@ -224,6 +224,44 @@ class CardUtilities {
 
 	wikiPath = "http://wiki.dominionstrategy.com/";
 
+	static buildSplitPileBottom(topCardElement, card, onclick) {
+		// then this card is the top pile.
+		let splitDiv = Utilities.div();
+		splitDiv.className = "split-pile";
+		let bottomCardElement = Utilities.img();
+		let bottomCard = this.filterByNames(_cards, [card.bottomPile])[0];
+		bottomCardElement.id = bottomCard.name;
+		bottomCardElement.className = "bottom-card-thumbnail";
+		bottomCardElement.src = bottomCard.image;
+		bottomCardElement.height = 200;
+		topCardElement.onclick = () => { onclick.call(this, card); };
+		topCardElement.className = "top-card-thumbnail";
+		topCardElement.id = card.name;
+		topCardElement.src = card.image;
+		splitDiv.appendChild(topCardElement);
+		splitDiv.appendChild(bottomCardElement);
+		return splitDiv;
+	}
+
+	static buildSplitPileTop(bottomCardElement, card, onclick) {
+		// then this card is the bottom pile.
+		let splitDiv = Utilities.div();
+		splitDiv.className = "split-pile";
+		let topCardElement = Utilities.img();
+		let topCard = this.filterByNames(_cards, [card.topPile])[0];
+		bottomCardElement.className = "bottom-card-thumbnail";
+		bottomCardElement.src = card.image;
+		bottomCardElement.id = card.name;
+		topCardElement.onclick = () => { onclick.call(this, topCard); };
+		topCardElement.className = "top-card-thumbnail";
+		topCardElement.height = 200;
+		topCardElement.id = topCard.name;
+		topCardElement.src = topCard.image;
+		splitDiv.appendChild(topCardElement);
+		splitDiv.appendChild(bottomCardElement);
+		return splitDiv;
+	}
+
 	// IDEA GET!
 	// So first, you need to fix the dual supply piles, where they have 2 differently named cards take up the same pile.
 	// You can fix this by having them display together all the time in the way the Dominion rules expect:
@@ -237,49 +275,56 @@ class CardUtilities {
 			image.height = 200;
 			image.className = "card-thumbnail";
 			image.id = card.name;
-			image.onclick = () => {
-				// TODO: Wrap this with a div and put a sibling div in here
-				// then when you hover the card, put some small text stating "Reroll?" such that it is slightly more intuitive.
-				// in here, pick a new random with same cost
+			let onclick = (currentCard) => {
+				// TODO: Clean this up....
 				let availableCards = validation.validateCardSet(_cards);
 				availableCards = this.filterByOtherCardSet(availableCards, cardSet);
-				availableCards = this.filterByCost(availableCards, card.cost);
+				availableCards = this.filterByCost(availableCards, currentCard.cost);
 				availableCards = this.shuffle(availableCards);
+				let namesToFilter = [currentCard.name];
+				namesToFilter = currentCard.topPile != null ? namesToFilter.concat([currentCard.topPile]) : namesToFilter;
+				namesToFilter = currentCard.bottomPile != null ? namesToFilter.concat([currentCard.bottomPile]) : namesToFilter;
+				availableCards = CardUtilities.filterByNotNames(availableCards, namesToFilter);
 				let newCard = availableCards.pop();
-				if(newCard == null) {
-					console.log(availableCards);
-					console.log(card.cost);
+				cardSet.splice(cardSet.map(c => c.name).indexOf(currentCard.name), 1);
+				cardSet.push(newCard);
+				let shouldRebuildCard = false;
+				if(currentCard.bottomPile != null || currentCard.topPile != null) {
+					let bottomPile = document.getElementById(currentCard?.bottomPile);
+					if(bottomPile != null) {
+						bottomPile.parentElement.remove();
+					} else {
+						document.getElementById(currentCard?.topPile).parentElement.remove();
+					}
+					let image = Utilities.img();
+					image.src = newCard.image;
+					image.height = 200;
+					image.id = newCard.name;
+					shouldRebuildCard = true;
 				}
-				// if(card.bottomPile != null) {
-				// 	document.getElementById(card.bottomPile).remove();
-				// }
-				image.src = newCard.image;
+				if(newCard.bottomPile != null) {
+					cardsDiv.appendChild(this.buildSplitPileBottom(image, newCard, onclick));
+				} else if(newCard.topPile != null) {
+					document.getElementById(currentCard.name).remove();
+					cardsDiv.appendChild(this.buildSplitPileTop(image, newCard, onclick));
+				} else {
+					image.className = "card-thumbnail";
+					image.src = newCard.image;
+					image.onclick = () => { onclick.call(this, newCard); };
+				}
+				if(shouldRebuildCard) {
+					cardsDiv.appendChild(image);
+				}
+				
 			};
-			// if(card.topPile != null) {
-			// 	// then this card is the bottom pile.
-			// 	image.style.transform = 'rotate(-90deg)';
-			// 	let topImage = Utilities.img();
-			// 	let topCard = this.filterByNames(_cards, [card.topPile])[0];
-			// 	topImage.className = "card-thumbnail";
-			// 	topImage.src = topCard.image;
-			// 	topImage.height = 200;
-			// 	topImage.onclick = onclick.call(this, topImage);
-			// 	cardsDiv.appendChild(topImage);
-			// } else if (card.bottomPile != null) {
-			// 	// then this card is the top pile.
-			// 	let bottomImage = Utilities.img();
-			// 	let bottomCard = this.filterByNames(_cards, [card.bottomPile])[0];
-			// 	bottomImage.style.transform = 'rotate(-90deg)';
-			// 	bottomImage.id = bottomCard.name;
-			// 	bottomImage.className = "card-thumbnail";
-			// 	bottomImage.src = bottomCard.image;
-			// 	bottomImage.height = 200;
-			// 	cardsDiv.appendChild(bottomImage);
-			// 	image.onclick = onclick.call(this, bottomImage);
-			// } else {
-			// 	image.onclick = onclick.call(this, image);
-			// }
-			cardsDiv.appendChild(image);
+			if(card.topPile != null) {
+				cardsDiv.appendChild(this.buildSplitPileTop(image, card, onclick));
+			} else if (card.bottomPile != null) {
+				cardsDiv.appendChild(this.buildSplitPileBottom(image, card, onclick));
+			} else {
+				image.onclick = () => { onclick.call(this, card); };
+				cardsDiv.appendChild(image);
+			}
 		});
 	}
 
