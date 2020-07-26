@@ -276,9 +276,7 @@ class CardUtilities {
 			image.className = "card-thumbnail";
 			image.id = card.name;
 			let onclick = (currentCard) => {
-				// TODO: Wrap this with a div and put a sibling div in here
-				// then when you hover the card, put some small text stating "Reroll?" such that it is slightly more intuitive.
-				// in here, pick a new random with same cost
+				// TODO: Clean this up....
 				let availableCards = validation.validateCardSet(_cards);
 				availableCards = this.filterByOtherCardSet(availableCards, cardSet);
 				availableCards = this.filterByCost(availableCards, currentCard.cost);
@@ -286,9 +284,9 @@ class CardUtilities {
 				let namesToFilter = [currentCard.name];
 				namesToFilter = currentCard.topPile != null ? namesToFilter.concat([currentCard.topPile]) : namesToFilter;
 				namesToFilter = currentCard.bottomPile != null ? namesToFilter.concat([currentCard.bottomPile]) : namesToFilter;
-				cardSet = CardUtilities.filterByNotNames(cardSet, namesToFilter);
-				console.log(cardSet);
+				availableCards = CardUtilities.filterByNotNames(availableCards, namesToFilter);
 				let newCard = availableCards.pop();
+				cardSet.splice(cardSet.map(c => c.name).indexOf(currentCard.name), 1);
 				cardSet.push(newCard);
 				let shouldRebuildCard = false;
 				if(currentCard.bottomPile != null || currentCard.topPile != null) {
@@ -305,7 +303,6 @@ class CardUtilities {
 					shouldRebuildCard = true;
 				}
 				if(newCard.bottomPile != null) {
-					document.getElementById(currentCard.name).remove();
 					cardsDiv.appendChild(this.buildSplitPileBottom(image, newCard, onclick));
 				} else if(newCard.topPile != null) {
 					document.getElementById(currentCard.name).remove();
