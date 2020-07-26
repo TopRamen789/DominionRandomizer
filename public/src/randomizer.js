@@ -2,6 +2,7 @@ import _cards from './data/cards_module';
 import utilities from './utilities';
 import validation from './validation';
 import CardUtilities from './CardUtilities';
+import CardEconomy from './CardEconomy';
 
 let getCardNumberInputs = () => {
 	let inputs = [].slice.call(document.querySelectorAll("input"));
