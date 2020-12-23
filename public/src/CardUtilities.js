@@ -265,7 +265,7 @@ class CardUtilities {
 	// IDEA GET!
 	// So first, you need to fix the dual supply piles, where they have 2 differently named cards take up the same pile.
 	// You can fix this by having them display together all the time in the way the Dominion rules expect:
-	// One card type is pointing horizontally underneath the other card type. 
+	// One card type is pointing horizontally underneath the other card type.
 	static buildCardSetUI(cardSet, cardsDiv) {
 		cardSet.forEach((card) => {
 			if(card == null || card.image == null)

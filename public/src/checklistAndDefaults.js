@@ -18,7 +18,8 @@ let buildSetChecklist = () => {
 		"Nocturne",
 		"Renaissance",
 		"Menagerie",
-		"Promo "
+		"Promo ",
+		"Holiday"
 	];
 
 	// these are sets that me/family currently own, if you're browsing this, feel free to rip this out.
@@ -38,7 +39,7 @@ let buildSetChecklist = () => {
 		"Empires",
 		"Nocturne",
 		"Renaissance",
-		"Menagerie"
+		"Menagerie",
 	];
 
 	let setElements = document.querySelector("#sets");

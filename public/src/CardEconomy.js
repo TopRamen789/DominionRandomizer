@@ -7,19 +7,19 @@ class CardEconomy {
 
     static buildPredefinedSets() {
         let sets = [];
-        sets = sets.concat(alchemySets);
-        sets = sets.concat(cornucopiaSets);
-        sets = sets.concat(darkAgesSets);
-        sets = sets.concat(dominionBaseSets);
-        sets = sets.concat(empiresSets);
-        sets = sets.concat(guildsSets);
-        sets = sets.concat(hinterlandsSets);
-        sets = sets.concat(intrigueSets);
-        sets = sets.concat(menagerieSets);
-        sets = sets.concat(nocturneSets);
-        sets = sets.concat(prosperitySets);
-        sets = sets.concat(renaissanceSets);
-        sets = sets.concat(seasideSets);
+        // sets = sets.concat(alchemySets);
+        // sets = sets.concat(cornucopiaSets);
+        // sets = sets.concat(darkAgesSets);
+        // sets = sets.concat(dominionBaseSets);
+        // sets = sets.concat(empiresSets);
+        // sets = sets.concat(guildsSets);
+        // sets = sets.concat(hinterlandsSets);
+        // sets = sets.concat(intrigueSets);
+        // sets = sets.concat(menagerieSets);
+        // sets = sets.concat(nocturneSets);
+        // sets = sets.concat(prosperitySets);
+        // sets = sets.concat(renaissanceSets);
+        // sets = sets.concat(seasideSets);
         return sets;
     }
     

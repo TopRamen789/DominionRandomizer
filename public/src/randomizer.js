@@ -21,16 +21,78 @@ let getCardNumberInputs = () => {
 
 let buildRandomSetFromInputs = (cardNumbers, checkedSets) => {
 	let validatedCards = validation.validateCardSet(CardUtilities.filterByExpansions(_cards, checkedSets));
+	validatedCards = CardUtilities.filterByNotNames(validatedCards, ["Castles"]); // because we leave this in the supply by default
 	let randomizedCardSet = [];
-	cardNumbers.forEach((cardNumber, idx) => {
+	// Check min/max capabilities of validated cards.
+	let maxCost = Math.max.apply(null, cardNumbers.map(n => n.cost));
+	let minCost = Math.min.apply(null, cardNumbers.filter(c => c.cost != "").map(n => n.cost));
+	let noSuchMax = CardUtilities.filterByCost(validatedCards, maxCost).length == 0;
+	let noSuchMin = CardUtilities.filterByCost(validatedCards, minCost).length == 0;
+	let noSuchDebt = CardUtilities.filterByCost(validatedCards, "").length == 0 
+		&& cardNumbers.find(c => c.cost == "") != null;
+
+	while(noSuchMax) {
+		//debugger;
+		console.log(`Max cost ${maxCost} doesn't exist in available cards.`);
+		cardNumbers.find(c => c.cost == maxCost).cost = maxCost-1;
+		maxCost -= 1;
+		noSuchMax = CardUtilities.filterByCost(validatedCards, maxCost).length == 0;
+	}
+
+	while(noSuchMin) {
+		//debugger;
+		console.log(`Min cost ${minCost} doesn't exist in available cards.`);
+		cardNumbers.find(c => c.cost == maxCost).cost = minCost+1;
+		minCost += 1;
+		noSuchMin = CardUtilities.filterByCost(validatedCards, minCost).length == 0;
+	}
+
+	if(noSuchDebt) {
+		//debugger;
+		console.log("Debt doesn't exist in available cards.", cardNumbers);
+		cardNumbers.find(c => c.cost == "").cost = Math.floor(Math.random() * (maxCost - minCost) + 1) + minCost;
+	}
+
+	let newCardNumbers = [];
+	cardNumbers.forEach((cardNumber) => {
 		for(let i = 0; i < cardNumber.number; i++) {
 			validatedCards = CardUtilities.filterByOtherCardSet(validatedCards, randomizedCardSet);
 			let cardSet = CardUtilities.filterByCost(validatedCards, cardNumber.cost);
 			cardSet = CardUtilities.shuffle(cardSet);
 			let card = cardSet.pop();
-			randomizedCardSet.push(card);
+			// Some cost curves don't match the available cards - i.e. a "Bank" from Prosperity
+			// costs 7, which is too high for some expansions to meet.
+			// and sometimes, there's not enough validated cards to satisfy some costs in a cost curve.
+			if(card == null) {
+				// Spread remainders, if any.
+				let numberDiff = cardNumber.number - i;
+				if(numberDiff > 0) {
+					console.log(i, cardNumber.number, numberDiff);
+					console.log("Not enough cards in available set to satsify cost curve, redistributing...");
+					let newCost = Math.floor(Math.random() * (maxCost - minCost) + 1) + minCost;
+					while(newCost == cardNumber.cost) {
+						newCost = Math.floor(Math.random() * (maxCost - minCost) + 1) + minCost;
+					}
+					for(let j = 0; j < numberDiff; j++) {
+						let cardSet = CardUtilities.filterByCost(validatedCards, newCost);
+						cardSet = CardUtilities.shuffle(cardSet);
+						let card = cardSet.pop();
+						randomizedCardSet.push(card);
+					}
+				}
+				// console.error("UNDEFINED", validatedCards.map(v => v.name));
+				// console.error("UNDEFINED", randomizedCardSet.map(v => v.name));
+				// console.error("UNDEFINED", cardNumber.cost);
+				// console.error("UNDEFINED", cardSet);
+			} else {
+				randomizedCardSet.push(card);
+			}
 		}
 	});
+
+	// if(randomizedCardSet.length == 10) {
+	// 	console.log(randomizedCardSet);
+	// }
 	return randomizedCardSet;
 }
 
@@ -40,37 +102,54 @@ let buildRandomCostDistributionFromSets = (checkedSets) => {
 	let standardDeviation = findStandardDeviation(costs);
 }
 
-let buildCostCurve = (checkedSets) => {
+let buildCostCurve = (checkedSets, withCheckedSetValidation) => {
 	let availableCards = validation.validateCardSet(_cards);
 	let sets = [];
 
-	// Extra set checking because the sets don't have a primary key to the expansion they came from.
-	if(checkedSets.indexOf('Alchemy') > -1)
+	if(withCheckedSetValidation) {
+		// Extra set checking because the sets don't have a primary key to the expansion they came from.
+		if(checkedSets.indexOf('Alchemy') > -1)
+			sets = sets.concat(alchemySets);
+		if(checkedSets.indexOf('Cornucopia') > -1)
+			sets = sets.concat(cornucopiaSets);
+		if(checkedSets.indexOf('Dark Ages') > -1)
+			sets = sets.concat(darkAgesSets);
+		if(checkedSets.indexOf('Base, 1E') > -1)
+			sets = sets.concat(dominionBaseSets);
+		if(checkedSets.indexOf('Empires') > -1)
+			sets = sets.concat(empiresSets);
+		if(checkedSets.indexOf('Guilds') > -1)
+			sets = sets.concat(guildsSets);
+		if(checkedSets.indexOf('Hinterlands') > -1)
+			sets = sets.concat(hinterlandsSets);
+		if(checkedSets.indexOf('Intrigue 2E') > -1)
+			sets = sets.concat(intrigueSets);
+		if(checkedSets.indexOf('Menagerie') > -1)
+			sets = sets.concat(menagerieSets);
+		if(checkedSets.indexOf('Nocturne') > -1)
+			sets = sets.concat(nocturneSets);
+		if(checkedSets.indexOf('Prosperity') > -1)
+			sets = sets.concat(prosperitySets);
+		if(checkedSets.indexOf('Renaissance') > -1)
+			sets = sets.concat(renaissanceSets);
+		if(checkedSets.indexOf('Seaside') > -1)
+			sets = sets.concat(seasideSets);
+	} else {
+		// concat all of them
 		sets = sets.concat(alchemySets);
-	if(checkedSets.indexOf('Cornucopia') > -1)
 		sets = sets.concat(cornucopiaSets);
-	if(checkedSets.indexOf('Dark Ages') > -1)
 		sets = sets.concat(darkAgesSets);
-	if(checkedSets.indexOf('Base, 1E') > -1)
 		sets = sets.concat(dominionBaseSets);
-	if(checkedSets.indexOf('Empires') > -1)
 		sets = sets.concat(empiresSets);
-	if(checkedSets.indexOf('Guilds') > -1)
 		sets = sets.concat(guildsSets);
-	if(checkedSets.indexOf('Hinterlands') > -1)
 		sets = sets.concat(hinterlandsSets);
-	if(checkedSets.indexOf('Intrigue 2E') > -1)
 		sets = sets.concat(intrigueSets);
-	if(checkedSets.indexOf('Menagerie') > -1)
 		sets = sets.concat(menagerieSets);
-	if(checkedSets.indexOf('Nocturne') > -1)
 		sets = sets.concat(nocturneSets);
-	if(checkedSets.indexOf('Prosperity') > -1)
 		sets = sets.concat(prosperitySets);
-	if(checkedSets.indexOf('Renaissance') > -1)
 		sets = sets.concat(renaissanceSets);
-	if(checkedSets.indexOf('Seaside') > -1)
 		sets = sets.concat(seasideSets);
+	}
 
 	let chosenSet = CardUtilities.shuffle(sets).pop().map(card => card.replace(/^\w/, c => c.toUpperCase()));
 	chosenSet = chosenSet.slice(1, 11);
@@ -151,15 +230,46 @@ let displaySelectedSets = () => {
 
 let randomize = () => {
 	let checkedSets = utilities.getCheckedExpansions();
-	let cardNumbers = buildCostCurve(checkedSets);
+	let cardNumbers = buildCostCurve(checkedSets, true);
 	let randomCards = buildRandomSetFromInputs(cardNumbers, checkedSets);
 	CardUtilities.buildSelectedCardSet(randomCards);
 	const sideboard = addSideboardCards(checkedSets);
 	CardUtilities.buildSelectedSideboard(sideboard);
+	// this is pretty gross.
 	while(!randomCards.length == 10) {
 		randomize();
 	}
 	return randomCards;
 }
 
-export default {randomize};
+// let buildRandomHolidaySet = (cardNumbers) => {
+// 	let validatedCards = validation.validateCardSet(CardUtilities.filterByExpansions(_cards, ["Holiday"]));
+// 	let randomizedCardSet = [];
+// 	cardNumbers.forEach((cardNumber) => {
+// 		for(let i = 0; i < cardNumber.number; i++) {
+// 			validatedCards = CardUtilities.filterByOtherCardSet(validatedCards, randomizedCardSet);
+// 			let cardSet = CardUtilities.filterByCost(validatedCards, cardNumber.cost);
+// 			cardSet = CardUtilities.shuffle(cardSet);
+// 			let card = cardSet.pop();
+// 			randomizedCardSet.push(card);
+// 		}
+// 	});
+// 	return randomizedCardSet;
+// }
+
+let holidayRandomize = () => {
+	// we're not using checkedSets for anything but the sideboard
+	let checkedSets = ["Adventures", "Empires", "Renaissance", "Menagerie", "Holiday"];
+	let cardNumbers = buildCostCurve(checkedSets, false); // hence why we're passing false here.
+	let randomCards = buildRandomSetFromInputs(cardNumbers, ["Holiday"]);
+	CardUtilities.buildSelectedCardSet(randomCards);
+	const sideboard = addSideboardCards(checkedSets);
+	CardUtilities.buildSelectedSideboard(sideboard);
+	// still gross.
+	while(!randomCards.length == 10) {
+		randomize();
+	}
+	return randomCards;
+}
+
+export default {randomize, holidayRandomize};
