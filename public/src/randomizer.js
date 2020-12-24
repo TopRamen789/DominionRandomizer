@@ -4,7 +4,6 @@ import validation from './validation';
 import CardUtilities from './CardUtilities';
 import CardEconomy from './CardEconomy';
 import predefinedSets from './data/predefined_cost_curves';
-import seasonalCards from './data/seasonalcards';
 
 let getCardNumberInputs = () => {
 	let inputs = [].slice.call(document.querySelectorAll("input"));
