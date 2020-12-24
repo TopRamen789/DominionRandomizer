@@ -4,6 +4,7 @@ import validation from './validation';
 import CardUtilities from './CardUtilities';
 import CardEconomy from './CardEconomy';
 import predefinedSets from './data/predefined_cost_curves';
+import seasonalCards from './data/seasonalcards';
 
 let getCardNumberInputs = () => {
 	let inputs = [].slice.call(document.querySelectorAll("input"));
@@ -19,9 +20,11 @@ let getCardNumberInputs = () => {
 	return cardNumbers;
 }
 
-let buildRandomSetFromInputs = (cardNumbers, checkedSets) => {
-	let validatedCards = validation.validateCardSet(CardUtilities.filterByExpansions(_cards, checkedSets));
-	validatedCards = CardUtilities.filterByNotNames(validatedCards, ["Castles"]); // because we leave this in the supply by default
+let buildRandomSetFromInputs = (cardNumbers, checkedSets, validatedCards) => {
+	if(validatedCards == null) {
+		validatedCards = validation.validateCardSet(CardUtilities.filterByExpansions(_cards, checkedSets));
+		validatedCards = CardUtilities.filterByNotNames(validatedCards, ["Castles"]); // because we leave this in the supply by default
+	}
 	let randomizedCardSet = [];
 	// Check min/max capabilities of validated cards.
 	let maxCost = Math.max.apply(null, cardNumbers.map(n => n.cost));
@@ -228,10 +231,10 @@ let displaySelectedSets = () => {
 	buildCardSetUI(sets, document.querySelector("#displaySets"));
 }
 
-let randomize = () => {
-	let checkedSets = utilities.getCheckedExpansions();
-	let cardNumbers = buildCostCurve(checkedSets, true);
-	let randomCards = buildRandomSetFromInputs(cardNumbers, checkedSets);
+const randomize = () => {
+	const checkedSets = utilities.getCheckedExpansions();
+	const cardNumbers = buildCostCurve(checkedSets, true);
+	const randomCards = buildRandomSetFromInputs(cardNumbers, checkedSets);
 	CardUtilities.buildSelectedCardSet(randomCards);
 	const sideboard = addSideboardCards(checkedSets);
 	CardUtilities.buildSelectedSideboard(sideboard);
@@ -242,34 +245,86 @@ let randomize = () => {
 	return randomCards;
 }
 
-// let buildRandomHolidaySet = (cardNumbers) => {
-// 	let validatedCards = validation.validateCardSet(CardUtilities.filterByExpansions(_cards, ["Holiday"]));
-// 	let randomizedCardSet = [];
+// const buildRandomHolidaySet = (cardNumbers) => {
+// 	const validatedCards = validation.validateCardSet(CardUtilities.filterByExpansions(_cards, ["Holiday"]));
+// 	const randomizedCardSet = [];
 // 	cardNumbers.forEach((cardNumber) => {
 // 		for(let i = 0; i < cardNumber.number; i++) {
 // 			validatedCards = CardUtilities.filterByOtherCardSet(validatedCards, randomizedCardSet);
-// 			let cardSet = CardUtilities.filterByCost(validatedCards, cardNumber.cost);
+// 			const cardSet = CardUtilities.filterByCost(validatedCards, cardNumber.cost);
 // 			cardSet = CardUtilities.shuffle(cardSet);
-// 			let card = cardSet.pop();
+// 			const card = cardSet.pop();
 // 			randomizedCardSet.push(card);
 // 		}
 // 	});
 // 	return randomizedCardSet;
 // }
 
-let holidayRandomize = () => {
+const holidayRandomize = () => {
 	// we're not using checkedSets for anything but the sideboard
-	let checkedSets = ["Adventures", "Empires", "Renaissance", "Menagerie", "Holiday"];
-	let cardNumbers = buildCostCurve(checkedSets, false); // hence why we're passing false here.
-	let randomCards = buildRandomSetFromInputs(cardNumbers, ["Holiday"]);
+	const checkedSets = ["Adventures", "Empires", "Renaissance", "Menagerie", "Holiday"];
+	const cardNumbers = buildCostCurve(checkedSets, false); // hence why we're passing false here.
+	const randomCards = buildRandomSetFromInputs(cardNumbers, ["Holiday"]);
 	CardUtilities.buildSelectedCardSet(randomCards);
 	const sideboard = addSideboardCards(checkedSets);
 	CardUtilities.buildSelectedSideboard(sideboard);
 	// still gross.
 	while(!randomCards.length == 10) {
-		randomize();
+		holidayRandomize();
 	}
 	return randomCards;
 }
 
-export default {randomize, holidayRandomize};
+let winterSeasonalRandomize = () => {
+	const checkedSets = utilities.getCheckedExpansions();
+	const cardNumbers = buildCostCurve(checkedSets, false);
+
+	// This is a handpicked set of Kingdom cards to best match a wintery season - since the holiday card set won't be here by Christmas, maybe this'll work.
+	let validatedCards = CardUtilities.filterByNames(_cards, [
+		"Snowy Village",
+		"Sleigh",
+		"Supplies",
+		"Stockpile",
+		"Goatherd",
+		"Artisan",
+		"Workshop",
+		"Library",
+		"Market",
+		"Festival",
+		"Cellar",
+		"Chapel",
+		"Moneylender",
+		"Feast",
+		"Warehouse",
+		"Forge",
+		"Grand Market",
+		"Vault",
+		"Candlestick Maker",
+		"Baker",
+		"Taxman",
+		"Butcher",
+		"Masterpiece",
+		"Messenger",
+		"Storyteller",
+		"Artificer",
+		"Coin of the Realm",
+		"Charm",
+		"City Quarter",
+		"Royal Blacksmith",
+		"Bustling Village",
+		"Acting Troupe",
+		"Treasurer",
+		"Spices",
+		"Priest"
+	]);
+	const randomCards = buildRandomSetFromInputs(cardNumbers, checkedSets, validatedCards);
+	CardUtilities.buildSelectedCardSet(randomCards);
+	const sideboard = addSideboardCards(checkedSets);
+	CardUtilities.buildSelectedSideboard(sideboard);
+	while(!randomCards.length == 10) {
+		winterSeasonalRandomize();
+	}
+	return randomCards;
+}
+
+export default {randomize, holidayRandomize, winterSeasonalRandomize};
