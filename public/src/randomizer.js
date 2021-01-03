@@ -22,7 +22,8 @@ let getCardNumberInputs = () => {
 let buildRandomSetFromInputs = (cardNumbers, checkedSets, validatedCards) => {
 	if(validatedCards == null) {
 		validatedCards = validation.validateCardSet(CardUtilities.filterByExpansions(_cards, checkedSets));
-		validatedCards = CardUtilities.filterByNotNames(validatedCards, ["Castles"]); // because we leave this in the supply by default
+		validatedCards = CardUtilities.filterByNotNames(validatedCards, ["Castles", "Knights"]); // because we leave this in the supply by default
+		// temporarily removing knights - not in the Holiday supply.
 	}
 	let randomizedCardSet = [];
 	// Check min/max capabilities of validated cards.
@@ -207,7 +208,7 @@ let generateSideboardCards = (checkedSets) => {
 		sideboard = sideboard.concat(CardUtilities.pickRandomCardsFromCardSet(projectCards, 4));
 	}
 
-	if(checkedSets.includes("Empires")) {
+	if(checkedSets.includes("Empires") || checkedSets.includes("Holiday")) {
 		let landmarkCards = pickRandomCardsFromFilteredCards(CardUtilities.getLandmarkCards(), checkedSets, 2);
 		sideboard = sideboard.concat(landmarkCards); 
 	}
@@ -263,7 +264,7 @@ const holidayRandomize = () => {
 	// we're not using checkedSets for anything but the sideboard
 	const checkedSets = ["Adventures", "Empires", "Renaissance", "Menagerie", "Holiday"];
 	const cardNumbers = buildCostCurve(checkedSets, false); // hence why we're passing false here.
-	const randomCards = buildRandomSetFromInputs(cardNumbers, ["Holiday"]);
+	let randomCards = buildRandomSetFromInputs(cardNumbers, ["Holiday"]);
 	CardUtilities.buildSelectedCardSet(randomCards);
 	const sideboard = addSideboardCards(checkedSets);
 	CardUtilities.buildSelectedSideboard(sideboard);
@@ -316,7 +317,7 @@ let winterSeasonalRandomize = () => {
 		"Spices",
 		"Priest"
 	]);
-	const randomCards = buildRandomSetFromInputs(cardNumbers, checkedSets, validatedCards);
+	let randomCards = buildRandomSetFromInputs(cardNumbers, checkedSets, validatedCards);
 	CardUtilities.buildSelectedCardSet(randomCards);
 	const sideboard = addSideboardCards(checkedSets);
 	CardUtilities.buildSelectedSideboard(sideboard);

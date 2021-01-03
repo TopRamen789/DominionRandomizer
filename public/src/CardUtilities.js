@@ -271,7 +271,7 @@ class CardUtilities {
 			if(card == null || card.image == null)
 				return;
 			let image = Utilities.img();
-			image.src = card.image;
+			image.src = card.image.indexOf("wiki") > -1 ? card.image : `src/cards/${card.image}`;
 			image.height = 200;
 			image.className = "card-thumbnail";
 			image.id = card.name;
@@ -348,7 +348,7 @@ class CardUtilities {
 		Utilities.disposeChildren(sideboardDiv);
 		sideboard.forEach((card) => {
 			let sideboardCard = Utilities.img();
-			sideboardCard.src = card.image;
+			sideboardCard.src = card.image.indexOf('wiki') > -1 ? card.image : `src/cards/${card.image}`;
 			sideboardCard.height = 125;
 			sideboardCard.className = "sideboard-thumbnail";
 			sideboardCard.onclick = () => {

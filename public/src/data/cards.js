@@ -11041,7 +11041,7 @@ var _cards = [
         "useTavern": false,
         "useCoffers": false,
         "useVillagers": true,
-        "image": "blank.png"
+        "image": "Elves.jpg",
     },
     {
         "name": "Santa's Workshop",
@@ -11060,7 +11060,7 @@ var _cards = [
         "useTavern": false,
         "useCoffers": false,
         "useVillagers": true,
-        "image": "blank.png"
+        "image": "SantasWorkshop.jpg",
     },
     {
         "name": "Silent Night",
@@ -11079,7 +11079,7 @@ var _cards = [
         "useTavern": false,
         "useCoffers": false,
         "useVillagers": false,
-        "image": "blank.png"
+        "image": "SilentNight.jpg",
     },
     {
         "name": "Carolers",
@@ -11098,7 +11098,7 @@ var _cards = [
         "useTavern": false,
         "useCoffers": false,
         "useVillagers": false,
-        "image": "blank.png"
+        "image": "Carolers.jpg",
     },
     {
         "name": "Fruitcake",
@@ -11117,7 +11117,7 @@ var _cards = [
         "useTavern": false,
         "useCoffers": false,
         "useVillagers": false,
-        "image": "blank.png"
+        "image": "Fruitcake.jpg",
     },
     {
         "name": "Grinch",
@@ -11136,7 +11136,7 @@ var _cards = [
         "useTavern": false,
         "useCoffers": false,
         "useVillagers": false,
-        "image": "blank.png"
+        "image": "Grinch.jpg",
     },
     {
         "name": "Milk and Cookies",
@@ -11155,7 +11155,7 @@ var _cards = [
         "useTavern": false,
         "useCoffers": false,
         "useVillagers": false,
-        "image": "blank.png"
+        "image": "MilkandCookies.jpg",
     },
     {
         "name": "Reindeer",
@@ -11174,7 +11174,7 @@ var _cards = [
         "useTavern": false,
         "useCoffers": false,
         "useVillagers": false,
-        "image": "blank.png"
+        "image": "Reindeer.jpg",
     },
     {
         "name": "Santa's Village",
@@ -11193,7 +11193,7 @@ var _cards = [
         "useTavern": false,
         "useCoffers": false,
         "useVillagers": true,
-        "image": "blank.png"
+        "image": "SantasVillage.jpg",
     },
     {
         "name": "Krampus",
@@ -11212,7 +11212,7 @@ var _cards = [
         "useTavern": false,
         "useCoffers": false,
         "useVillagers": false,
-        "image": "blank.png"
+        "image": "Krampus.jpg",
     },
     {
         "name": "Nutcracker",
@@ -11231,7 +11231,7 @@ var _cards = [
         "useTavern": false,
         "useCoffers": false,
         "useVillagers": false,
-        "image": "blank.png"
+        "image": "Nutcracker.jpg",
     },
     {
         "name": "Snowman",
@@ -11250,7 +11250,7 @@ var _cards = [
         "useTavern": false,
         "useCoffers": false,
         "useVillagers": false,
-        "image": "blank.png"
+        "image": "Snowman.jpg",
     },
     {
         "name": "Scrooge",
@@ -11269,7 +11269,7 @@ var _cards = [
         "useTavern": false,
         "useCoffers": false,
         "useVillagers": false,
-        "image": "blank.png"
+        "image": "Scrooge.jpg",
     },
     {
         "name": "Ghost of Christmas Past",
@@ -11288,7 +11288,7 @@ var _cards = [
         "useTavern": false,
         "useCoffers": false,
         "useVillagers": false,
-        "image": "blank.png"
+        "image": "GhostofChristmasPast.jpg",
     },
     {
         "name": "Ghost of Christmas Present",
@@ -11307,7 +11307,7 @@ var _cards = [
         "useTavern": false,
         "useCoffers": false,
         "useVillagers": false,
-        "image": "blank.png"
+        "image": "GhostofChristmasPresent.jpg",
     },
     {
         "name": "Ghost of Christmas Future",
@@ -11326,7 +11326,7 @@ var _cards = [
         "useTavern": false,
         "useCoffers": false,
         "useVillagers": false,
-        "image": "blank.png"
+        "image": "GhostofChristmasFuture.jpg",
     },
     {
         "name": "Mistletoe",
@@ -11345,7 +11345,7 @@ var _cards = [
         "useTavern": false,
         "useCoffers": false,
         "useVillagers": false,
-        "image": "blank.png"
+        "image": "Mistletoe.jpg",
     },
     {
         "name": "Snow Globe",
@@ -11364,7 +11364,7 @@ var _cards = [
         "useTavern": false,
         "useCoffers": false,
         "useVillagers": false,
-        "image": "blank.png"
+        "image": "SnowGlobe.jpg",
     },
     {
         "name": "Sleigh Bells",
@@ -11383,7 +11383,7 @@ var _cards = [
         "useTavern": false,
         "useCoffers": false,
         "useVillagers": false,
-        "image": "blank.png"
+        "image": "SleighBells.jpg",
     },
     {
         "name": "Stockings",
@@ -11402,7 +11402,7 @@ var _cards = [
         "useTavern": false,
         "useCoffers": false,
         "useVillagers": false,
-        "image": "blank.png"
+        "image": "Stockings.jpg",
     },
     {
         "name": "Unwrap",
@@ -11421,7 +11421,7 @@ var _cards = [
         "useTavern": false,
         "useCoffers": false,
         "useVillagers": false,
-        "image": "blank.png"
+        "image": "Unwrap.jpg",
     },
     {
         "name": "Sugar Plum Fairy",
@@ -11440,7 +11440,7 @@ var _cards = [
         "useTavern": false,
         "useCoffers": false,
         "useVillagers": false,
-        "image": "blank.png"
+        "image": "SugarPlumFairy.jpg",
     },
     {
         "name": "Jolly Old Elf",
@@ -11459,7 +11459,7 @@ var _cards = [
         "useTavern": false,
         "useCoffers": false,
         "useVillagers": false,
-        "image": "blank.png"
+        "image": "JollyOldElf.jpg",
     },
     {
         "name": "White Elephant",
@@ -11478,7 +11478,7 @@ var _cards = [
         "useTavern": false,
         "useCoffers": false,
         "useVillagers": false,
-        "image": "blank.png"
+        "image": "WhiteElephant.jpg",
     },
     {
         "name": "Wishlist",
@@ -11497,7 +11497,7 @@ var _cards = [
         "useTavern": false,
         "useCoffers": false,
         "useVillagers": false,
-        "image": "blank.png"
+        "image": "Wishlist.jpg",
     },
     {
         "name": "Gift",
@@ -11516,7 +11516,7 @@ var _cards = [
         "useTavern": false,
         "useCoffers": false,
         "useVillagers": false,
-        "image": "blank.png"
+        "image": "Gift.jpg",
     },
     {
         "name": "Lump of Coal",
@@ -11535,7 +11535,7 @@ var _cards = [
         "useTavern": false,
         "useCoffers": false,
         "useVillagers": false,
-        "image": "blank.png"
+        "image": "LumpofCoal.jpg",
     },
     {
         "name": "Chimney",
@@ -11554,7 +11554,7 @@ var _cards = [
         "useTavern": false,
         "useCoffers": false,
         "useVillagers": false,
-        "image": "blank.png"
+        "image": "Chimney.jpg",
     },
     {
         "name": "Christmas Tree",
@@ -11573,6 +11573,101 @@ var _cards = [
         "useTavern": false,
         "useCoffers": false,
         "useVillagers": false,
-        "image": "blank.png"
+        "image": "ChristmasTree.jpg",
+    },
+    {
+        "name": "Magic Hat",
+        "set": "Holiday",
+        "types": "Action",
+        "cost": 4,
+        "text": "+1 Action, Play a Victory card from your hand. +1 Card per 1 VP it's currently worth.",
+        "actions": 1,
+        "cards": null,
+        "buys": null,
+        "coins": "  ",
+        "trash": null,
+        "junk": "  ",
+        "gain": null,
+        "points": null,
+        "useTavern": false,
+        "useCoffers": false,
+        "useVillagers": false,
+        "image": "MagicHat.jpg",
+    },
+    {
+        "name": "Present",
+        "set": "Holiday",
+        "types": "Action",
+        "cost": 3,
+        "text": "Trash this. Gain a random card from the Supply costing from 1 to 5.",
+        "actions": 0,
+        "cards": null,
+        "buys": null,
+        "coins": "  ",
+        "trash": null,
+        "junk": "  ",
+        "gain": null,
+        "points": null,
+        "useTavern": false,
+        "useCoffers": false,
+        "useVillagers": false,
+        "image": "Present.jpg",
+    },
+    {
+        "name": "Socks",
+        "set": "Holiday",
+        "types": "Action",
+        "cost": 2,
+        "text": "+2 Cards, When you gain this, act pleased.",
+        "actions": 0,
+        "cards": 2,
+        "buys": null,
+        "coins": "  ",
+        "trash": null,
+        "junk": "  ",
+        "gain": null,
+        "points": null,
+        "useTavern": false,
+        "useCoffers": false,
+        "useVillagers": false,
+        "image": "Socks.jpg",
+    },
+    {
+        "name": "Vacation",
+        "set": "Holiday",
+        "types": "Action - Duration",
+        "cost": 5,
+        "text": "This phase ends. Skip your Buy phase this turn. Skip your next turn. At the start of your next turn after that, +10 Cards, +2 Actions, and +2 Buys.",
+        "actions": 2,
+        "cards": 10,
+        "buys": 2,
+        "coins": "  ",
+        "trash": null,
+        "junk": "  ",
+        "gain": null,
+        "points": null,
+        "useTavern": false,
+        "useCoffers": false,
+        "useVillagers": false,
+        "image": "Vacation.jpg",
+    },
+    {
+        "name": "Tree",
+        "set": "Holiday",
+        "types": "Landmark",
+        "cost": null,
+        "text": "When you gain a card without buying it, take 2 VP from here. Setup: Put 6 VP here per player.",
+        "actions": null,
+        "cards": null,
+        "buys": null,
+        "coins": "  ",
+        "trash": null,
+        "junk": "  ",
+        "gain": null,
+        "points": null,
+        "useTavern": false,
+        "useCoffers": false,
+        "useVillagers": false,
+        "image": "Tree.jpg",
     }
 ]
