@@ -454,5 +454,3 @@ var adventuresSets = [
         "Mission"
     ]
 ];
-
-export default adventuresSets;

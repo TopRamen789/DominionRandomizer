@@ -110,10 +110,12 @@ function buildElement(text, elementProps) {
 
 let span = () => {};
 let div = () => {};
-let img = () => {};
+let img = () => {
+	let image = document.createElement('img');
+	return image;
+}
 
 span = buildElement.bind(span);
 div = buildElement.bind(div);
-img = buildElement.bind(img);
 
 export default {download, getCheckedExpansions, span, div, img, randomInRange, disposeChildren};

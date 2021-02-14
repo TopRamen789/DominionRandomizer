@@ -16,22 +16,26 @@ export default {
     },
     watch: {
         cardSet: function() {
-            let trace = {
-                text: this.cardSet.map(c => c.name),
-                x: this.cardSet.map(c => c.cost),
-                type: 'histogram',
-                marker: {
-                    color: 'gold'
-                },
-                spacing: 0.1
-            };
-            let data = [trace];
-            let layout = {
-                title: 'Card Costs',
-                paper_bgcolor: '#000000',
-                plot_bgcolor: '#000000'
-            };
-            Plotly.newPlot('costs-chart', data, layout, {staticPlot: true});
+            let isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+            console.log(isMobile, navigator.userAgent);
+            if(!isMobile) {
+                let trace = {
+                    text: this.cardSet.map(c => c.name),
+                    x: this.cardSet.map(c => c.cost),
+                    type: 'histogram',
+                    marker: {
+                        color: 'gold'
+                    },
+                    spacing: 0.1
+                };
+                let data = [trace];
+                let layout = {
+                    title: 'Card Costs',
+                    paper_bgcolor: '#000000',
+                    plot_bgcolor: '#000000'
+                };
+                Plotly.newPlot('costs-chart', data, layout, {staticPlot: true});
+            }
         }
     }
 }

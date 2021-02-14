@@ -271,6 +271,7 @@ class CardUtilities {
 			if(card == null || card.image == null)
 				return;
 			let image = Utilities.img();
+			image.alt = card.image;
 			image.src = card.image.indexOf("wiki") > -1 ? card.image : `src/cards/${card.image}`;
 			image.height = 200;
 			image.className = "card-thumbnail";
