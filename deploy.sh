@@ -2,6 +2,8 @@
 # abort on errorsset -e
 # build
 # npm run build
+npm install @vue/cli
+vue-cli-service build
 # navigate into the build output directory
 cd dist
 # if you are deploying to a custom domain
