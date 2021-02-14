@@ -1,8 +1,7 @@
 #!/usr/bin/env sh
 # abort on errorsset -e
 # build
-# npm run build
-npm build
+vue build
 # navigate into the build output directory
 cd dist
 # if you are deploying to a custom domain
