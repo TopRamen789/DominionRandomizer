@@ -1,5 +1,6 @@
 #!/usr/bin/env sh
-# abort on errorsset -e
+# abort on errors
+set -e
 # build
 vue build
 # navigate into the build output directory

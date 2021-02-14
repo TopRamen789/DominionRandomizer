@@ -1,3 +1,5 @@
 module.exports = {
-    publicPath: '/dominionrandomizer/'
+    publicPath: process.env.NODE_ENV === 'production'
+        ? '/dominionrandomizer/'
+        : '/'
 }
