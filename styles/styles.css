@@ -1,0 +1,144 @@
+.flex {
+	display: flex;
+}
+
+.inputs {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end;
+}
+
+.cardListWrapper {
+	display: flex;
+	width: 550px;
+}
+
+.cardList {
+	margin-left: 20px;
+	display: grid;
+	grid-template-columns: 145px 145px 145px 145px 145px;
+	grid-template-rows: 225px 225px;
+	justify-items: start;
+}
+
+.biasList {
+	display: grid;
+	grid-template-columns: 52px auto;
+}
+
+.dataList {
+	display: grid;
+	grid-template-columns: 24px 52px auto;
+}
+
+.displaySets {
+	width: 260px;
+}
+
+.border {
+	border-style: solid;
+	border-width: 1px;
+	border-color: white;
+}
+
+.load-set {
+	content: 'Load Set';
+}
+
+#error {
+	color: red;
+}
+
+.header {
+	border-color: white;
+	border-width: 0px;
+	border-bottom-width: 1px;
+	border-style: solid;
+}
+
+.anomalousHigh {
+	background-color: #00940a;
+}
+
+.anomalousLow {
+	background-color: #a62f00;
+}
+
+/*dark mode*/
+body {
+	background-color: black;
+	color: #C0C0C0;
+}
+
+button {
+	background-color: black;
+	color: #C0C0C0;
+}
+
+input {
+	background-color: black;
+	color: #C0C0C0;
+}
+
+div {	
+	color: #C0C0C0;
+}
+
+.split-pile {
+	position: relative;
+}
+
+.card-thumbnail:hover {
+    position:relative;
+    top:-25px;
+    left:-35px;
+    width:250px;
+    height:auto;
+    display:block;
+    z-index:999;
+}
+
+.top-card-thumbnail {
+	position: absolute;
+	z-index:998;
+	top: 5px;
+	left: 10px;
+}
+
+.top-card-thumbnail:hover {
+	position:relative;
+	top:15px;
+	left:5px;
+	width:250px;
+	height:auto;
+	display:block;
+	z-index:999;
+}
+
+.bottom-card-thumbnail {
+	position: absolute;
+	z-index: 997;
+	left: -10px;
+	top: -15px;
+}
+
+.bottom-card-thumbnail:hover {
+	position: relative;
+	top: -40px;
+	left: -135px;
+	right: 0px;
+	width: 250px;
+	height: auto;
+	display: block;
+	z-index:999;
+}
+
+.sideboard-thumbnail:hover {
+    position:relative;
+    top:-25px;
+    left:-35px;
+    width:400px;
+    height:auto;
+    display:block;
+    z-index:999;
+}
